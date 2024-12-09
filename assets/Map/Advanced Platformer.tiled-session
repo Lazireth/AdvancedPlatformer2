@@ -1,0 +1,104 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "testLevel.tmx",
+    "automapping.whileDrawing": false,
+    "expandedProjectPaths": [
+        "."
+    ],
+    "fileStates": {
+        "Ground Tileset v1.1.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Ground Tileset v1.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 0.9,
+            "scaleInEditor": 1
+        },
+        "Item Sprites.tsx": {
+            "scaleInEditor": 1
+        },
+        "Player.tsx": {
+            "scaleInDock": 1
+        },
+        "Simple Ground.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Special Tiles.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Test level.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 0.0625,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 2992,
+                "y": 1752
+            }
+        },
+        "testLevel.tmx": {
+            "expandedObjectLayers": [
+                3,
+                4
+            ],
+            "scale": 0.5,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 1576,
+                "y": 1051
+            }
+        },
+        "testTestLevel.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 733.3333333333333,
+                "y": 505.99999999999994
+            }
+        }
+    },
+    "frame.defaultDuration": 100,
+    "last.externalTilesetPath": "C:/Users/4183372/JavaProjects/AdvancedPlatformer/assets/Map",
+    "last.imagePath": "C:/Users/4183372/JavaProjects/AdvancedPlatformer/assets/Tilesets",
+    "map.fixedSize": true,
+    "map.height": 20,
+    "map.lastUsedFormat": "tmx",
+    "map.layerDataFormat": "1",
+    "map.tileHeight": 64,
+    "map.tileWidth": 64,
+    "map.width": 30,
+    "openFiles": [
+        "testLevel.tmx",
+        "Ground Tileset v1.tsx",
+        "Special Tiles.tsx"
+    ],
+    "project": "Advanced Platformer.tiled-project",
+    "property.type": "string",
+    "recentFiles": [
+        "Item Sprites.tsx",
+        "Special Tiles.tsx",
+        "Ground Tileset v1.tsx",
+        "testLevel.tmx",
+        "Simple Ground.tsx",
+        "testTestLevel.tmx",
+        "Test level.tmx",
+        "Ground Tileset v1.1.tsx"
+    ],
+    "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 64,
+        "width": 48
+    }
+}
