@@ -110,14 +110,12 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void resize(int width, int height) {
-        GameCore.viewport.update(width, height, true);
-        GameCore.camera.setToOrtho(false,GameCore.WIDTH,GameCore.HEIGHT);
-        level.updateRenderer();
-        Gdx.app.debug("GameScreen.resize","New screen size"+GameCore.viewport.getScreenWidth()+","+ GameCore.viewport.getScreenHeight());
+        game.resize(width,height);
     }
 
     @Override
     public void show() {
+        //GameCore.viewport.apply();
         GameCore.camera.setToOrtho(false,GameCore.WIDTH,GameCore.HEIGHT);
         level.updateRenderer();
     }

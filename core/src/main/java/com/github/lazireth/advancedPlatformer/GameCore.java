@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.github.lazireth.advancedPlatformer.Screens.DeathScreen;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
+import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class GameCore extends Game {
@@ -17,7 +18,6 @@ public class GameCore extends Game {
     public static float pixelsPerUnit = 64f;
 
     public static FitViewport viewport;
-
 
 
     public static InputHandler inputHandler;
@@ -42,8 +42,17 @@ public class GameCore extends Game {
         Gdx.input.setInputProcessor(inputHandler);
 
         gameScreen=new GameScreen(this);
-        deathScreen=new DeathScreen();
+        deathScreen=new DeathScreen(this);
         loadDeathScreen();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
+        gameScreen.level.updateRenderer();
+        deathScreen.myCamera.update();
+        Gdx.app.debug("GameCore.resize","New screen size"+viewport.getScreenWidth()+","+viewport.getScreenHeight());
+
     }
 
     @Override
