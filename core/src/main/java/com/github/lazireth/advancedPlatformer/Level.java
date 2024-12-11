@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Level implements Disposable{
-    public final TextureMapObjectRenderer renderer;
+    ;
     public AssetManager assetManager=new AssetManager();
     public TiledMap map;
     public int[] firstRenderLayer;
@@ -29,8 +29,8 @@ public class Level implements Disposable{
     public Level(int levelNumber){
         getMapToLoad(levelNumber);
         // set up renderer
-        renderer=new TextureMapObjectRenderer(map,GameCore.unitsPerPixel);
-        renderer.setView(GameCore.camera);
+        GameCore.renderer=new TextureMapObjectRenderer(map,GameCore.unitsPerPixel);
+        GameCore.renderer.setView(GameCore.camera);
         // build primary level collision
         MapBodyBuilder.buildShapes(map, GameScreen.world,"Primary Level Collision");
         // make array of Tile Layers to render
@@ -134,11 +134,11 @@ public class Level implements Disposable{
     }
 
     public void render(){
-        renderer.render(firstRenderLayer);//render tiles
-        renderer.begin();
-        renderer.renderInteractableObjects(interactableObjects);
-        GameScreen.player.render(renderer);
-        renderer.end();
+        GameCore.renderer.render(firstRenderLayer);//render tiles
+        GameCore.renderer.begin();
+        GameCore.renderer.renderInteractableObjects(interactableObjects);
+        GameScreen.player.render(GameCore.renderer);
+        GameCore.renderer.end();
     }
     private void loadQuestionBlocks(MapObjects questionBlocks, TiledMapTile[] tileSprites, Map<String, TiledMapTile>   itemTiles){
         for(int questionBlockIndex=0;questionBlockIndex< questionBlocks.getCount() ;questionBlockIndex++){//for each question block
@@ -158,11 +158,11 @@ public class Level implements Disposable{
     /// call me when the camera is changed or updated.
     /// generally called when camera position changes
     public void updateRenderer(){
-        renderer.setView(GameCore.camera);
+        GameCore.renderer.setView(GameCore.camera);
     }
     public void dispose(){
         map.dispose();
         assetManager.dispose();
-        renderer.dispose();
+        GameCore.renderer.dispose();
     }
 }

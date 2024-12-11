@@ -18,6 +18,7 @@ import com.github.lazireth.advancedPlatformer.objects.InteractableObject;
 
 import java.util.ArrayList;
 
+import static com.github.lazireth.advancedPlatformer.GameCore.pixelsPerUnit;
 import static com.github.lazireth.advancedPlatformer.GameCore.unitsPerPixel;
 
 /// got the initial code for this from
@@ -69,26 +70,28 @@ public class TextureMapObjectRenderer extends OrthogonalTiledMapRenderer {
             sr.end();
         }
     }
-    public void renderText(BitmapFont bitmapFont, String str, float inX, float inY){
-        renderText(bitmapFont,str,inX,inY,true,true);
+    public void drawText(String str, BitmapFont bitmapFont, float x, float y){
+        drawText(str,bitmapFont,x,y,true,true);
     }
-    public void renderText(BitmapFont bitmapFont, String str, float inX, float inY, boolean centerX, boolean centerY){
+    public void drawText(String str, BitmapFont bitmapFont, float x, float y, boolean centerX, boolean centerY){
         // Sources for how to do what this method does
         // Deepscorn at https://gamedev.stackexchange.com/questions/73688/why-is-my-text-is-too-large-even-when-scaled-to-05f-in-libgdx
         // bemeyer at https://stackoverflow.com/questions/16600547/how-get-a-string-width-in-libgdx
         Matrix4 originalMatrix = batch.getProjectionMatrix().cpy();
-        batch.setProjectionMatrix(originalMatrix.cpy().scale(unitsPerPixel,unitsPerPixel,1));
+
 
         layout.setText(bitmapFont,str);
-        float x=inX;
-        float y=inY;
+        float xPos=x*pixelsPerUnit;
+        float yPos=y*pixelsPerUnit;
         if(centerX){
-            x-=layout.width;
+            System.out.println(layout.width/2);
+            xPos-=layout.width/2;
         }
         if(centerY){
-            y-=layout.height;
+            yPos+=layout.height/2;
         }
-        bitmapFont.draw(batch,str,x,y);
+        batch.setProjectionMatrix(originalMatrix.cpy().scale(unitsPerPixel,unitsPerPixel,1));
+        bitmapFont.draw(batch,str,xPos,yPos);
         batch.setProjectionMatrix(originalMatrix);
     }
 
