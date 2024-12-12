@@ -67,7 +67,7 @@
   <object id="160" x="13440" y="0" height="896"/>
   <object id="161" x="0" y="0" height="896"/>
  </objectgroup>
- <objectgroup id="12" name="Player">
+ <objectgroup id="12" name="Player Layer">
   <object id="169" name="Player" gid="29" x="512" y="640" width="64" height="64"/>
  </objectgroup>
  <group id="6" name="Interactive Objects">
