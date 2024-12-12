@@ -23,7 +23,7 @@
   <object id="72" x="8192" y="384" width="256" height="64"/>
   <object id="73" x="8256" y="640" width="128" height="64"/>
   <object id="74" x="7744" y="384" width="192" height="64"/>
-  <object id="79" x="126" y="896" width="4290" height="128"/>
+  <object id="79" x="0" y="896" width="4414" height="128"/>
   <object id="80" x="3648" y="640" width="128" height="256"/>
   <object id="81" x="2944" y="640" width="128" height="256"/>
   <object id="82" x="2432" y="704" width="128" height="192"/>
@@ -68,7 +68,7 @@
   <object id="161" x="0" y="0" height="896"/>
  </objectgroup>
  <objectgroup id="12" name="Player">
-  <object id="169" gid="29" x="576" y="640" width="64" height="64"/>
+  <object id="169" name="Player" gid="29" x="512" y="640" width="64" height="64"/>
  </objectgroup>
  <group id="6" name="Interactive Objects">
   <objectgroup id="4" name="Question Blocks">

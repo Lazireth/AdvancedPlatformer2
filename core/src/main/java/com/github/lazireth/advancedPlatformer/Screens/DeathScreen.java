@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.lazireth.advancedPlatformer.GameCore;
-import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
 import static com.github.lazireth.advancedPlatformer.GameCore.*;
 import static com.github.lazireth.advancedPlatformer.InputHandler.keys;
@@ -18,10 +17,9 @@ import static com.github.lazireth.advancedPlatformer.InputHandler.keys;
 public class DeathScreen extends ScreenAdapter {
     final private GameCore game;
 
-    float restartTimer=-1;
-
+    float restartTimer=5;
+    boolean countDown=false;
     BitmapFont fontCalibri;
-    TextureMapObjectRenderer textureMapObjectRenderer;
     public DeathScreen(final GameCore game){
         this.game=game;
         System.out.println(WIDTH*pixelsPerUnit+","+HEIGHT*pixelsPerUnit);
@@ -33,27 +31,28 @@ public class DeathScreen extends ScreenAdapter {
     }
     @Override
     public void render(float delta) {
-        input(delta);
+        input();
         update(delta);
         draw();
     }
-    void input(float delta){
-        if(keys[Keys.SPACE]&&restartTimer==-1){
-            restartTimer=5;
+    void input(){
+        if(keys[Keys.SPACE]){
+            countDown=true;
         }
     }
     private void update(float delta){
 
-        if(restartTimer>0){
+        if(countDown){
             restartTimer-=delta;
+        }
+        if(restartTimer<=0){
+            game.loadGameScreen();
         }
     }
     private void draw(){
         renderer.begin();
         ScreenUtils.clear(Color.BLACK);
-        if(restartTimer>0){
-            renderer.drawText((int)restartTimer+"",fontCalibri,WIDTH/2,HEIGHT/4*2);
-        }
+        renderer.drawText((int)restartTimer+"",fontCalibri,WIDTH/2,HEIGHT/4*2);
         renderer.drawText("Press SPACE To Start",fontCalibri,WIDTH/2,HEIGHT/4*1);
 
         renderer.end();
@@ -62,6 +61,8 @@ public class DeathScreen extends ScreenAdapter {
     @Override
     public void show() {
 
+        restartTimer=5;
+        countDown=false;
     }
 
     @Override

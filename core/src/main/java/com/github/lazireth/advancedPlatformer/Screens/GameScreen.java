@@ -1,6 +1,5 @@
 package com.github.lazireth.advancedPlatformer.Screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
@@ -29,7 +28,6 @@ public class GameScreen extends ScreenAdapter {
     GameCore game;
 
 
-
     public static World world;
 
     Box2DDebugRenderer debugRenderer;
@@ -42,7 +40,7 @@ public class GameScreen extends ScreenAdapter {
         debugRenderer=new Box2DDebugRenderer();
 
 
-        player=new Player(new Vector2(10,5),level.playerTextureTiles);
+        player=new Player(level.playerStartingPos,level.playerTextureTiles);
     }
 
 
@@ -62,12 +60,10 @@ public class GameScreen extends ScreenAdapter {
         GameCore.camera.update();
 
         level.render();
-        if(player.checkFallenOffMap()){
+        if(player.checkIfFallingOffMap()){
+            player.manageFallingOffMap();
             game.loadDeathScreen();
         }
-        //renders player inside level
-
-        //debugRenderer.render(world,GameCore.camera.combined);
     }
     private void doPhysicsStep(float deltaTime){
         float frameTime=Math.min(deltaTime, 0.25f);
@@ -102,7 +98,7 @@ public class GameScreen extends ScreenAdapter {
         if(updateCamera){
             GameCore.camera.position.set(cameraX,cameraY,0);
             GameCore.camera.update();
-            level.updateRenderer();
+            GameCore.renderer.setView(GameCore.camera);
         }
         //Camera movement end
         player.input(delta);
@@ -115,9 +111,10 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void show() {
-        //GameCore.viewport.apply();
-        GameCore.camera.setToOrtho(false,GameCore.WIDTH,GameCore.HEIGHT);
-        level.updateRenderer();
+        // is now handled by GameCore
+//        GameCore.viewport.apply();
+//        GameCore.camera.setToOrtho(false,GameCore.WIDTH,GameCore.HEIGHT);
+//        level.updateRenderer();
     }
 
     @Override

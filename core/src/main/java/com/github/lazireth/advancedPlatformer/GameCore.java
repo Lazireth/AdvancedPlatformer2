@@ -11,6 +11,8 @@ import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class GameCore extends Game {
+    public static boolean isDebuggingEnabled=true;
+
     public static TextureMapObjectRenderer renderer;
     public static float WIDTH=30;
     public static float HEIGHT=14;
@@ -45,21 +47,23 @@ public class GameCore extends Game {
 
         renderer.getBatch().setProjectionMatrix(viewport.getCamera().combined);
         deathScreen=new DeathScreen(this);
-//        loadGameScreen();
-        loadDeathScreen();
+
+        // todo
+        // implement intro screen with controls
+        loadGameScreen();
+
     }
 
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
-        gameScreen.level.updateRenderer();
+        renderer.setView(GameCore.camera);
         Gdx.app.debug("GameCore.resize","New screen size"+viewport.getScreenWidth()+","+viewport.getScreenHeight());
 
     }
 
     @Override
     public void render() {
-
         super.render();
         // Draw your application here.
     }

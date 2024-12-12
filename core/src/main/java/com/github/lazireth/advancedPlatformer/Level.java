@@ -5,6 +5,8 @@ import com.badlogic.gdx.maps.MapGroupLayer;
 import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.tiled.*;
+import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
 import com.github.lazireth.advancedPlatformer.objects.InteractableObject;
@@ -16,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Level implements Disposable{
-    ;
     public AssetManager assetManager=new AssetManager();
     public TiledMap map;
     public int[] firstRenderLayer;
@@ -26,22 +27,30 @@ public class Level implements Disposable{
     public final ArrayList<InteractableObject> interactableObjectsRemove=new ArrayList<>();
 
     public TiledMapTile[] playerTextureTiles;
+    public Vector2 playerStartingPos;
     public Level(int levelNumber){
         getMapToLoad(levelNumber);
         // set up renderer
         GameCore.renderer=new TextureMapObjectRenderer(map,GameCore.unitsPerPixel);
         GameCore.renderer.setView(GameCore.camera);
+
         // build primary level collision
         MapBodyBuilder.buildShapes(map, GameScreen.world,"Primary Level Collision");
+
         // make array of Tile Layers to render
         firstRenderLayer=new int[]{map.getLayers().getIndex("Tile Layer 1")};
+
         // load all tilesets
         TiledMapTileSets tileSets = map.getTileSets();
+
         // get helper variable to give interactable objects their other states
         Map<String, TiledMapTile[]> specialTilesMap = getTilesMapArray(tileSets.getTileSet("Special Tiles"));
         Map<String, TiledMapTile>   itemTiles       = getTilesMapSingle(tileSets.getTileSet("Item Sprites"));
-        playerTextureTiles=specialTilesMap.get("Player");
 
+        // grab some stuff for setting up the player
+        playerTextureTiles=specialTilesMap.get("Player");
+        TiledMapTileMapObject playerObject=(TiledMapTileMapObject)(map.getLayers().get("Player Layer").getObjects().get("Player"));
+        playerStartingPos=new Vector2(playerObject.getX()*GameCore.unitsPerPixel,playerObject.getY()*GameCore.unitsPerPixel);// also need to convert to game units
 
         // get the layer Group Layer that contains layers of each interactable tile type
         MapLayers objectSets = ((MapGroupLayer)map.getLayers().get("Interactive Objects")).getLayers();
@@ -58,6 +67,7 @@ public class Level implements Disposable{
 
             }
         }
+
     }
     // there is no good way to get a specific tile with iterating through tileSet
     // because the only way to get a tile is to call getTile(int id) and the ids are generated for each tile at runtime
@@ -154,11 +164,6 @@ public class Level implements Disposable{
         }else if(levelNumber>0){
             map=new TmxMapLoader().load("Map/level"+levelNumber+".tmx");
         }
-    }
-    /// call me when the camera is changed or updated.
-    /// generally called when camera position changes
-    public void updateRenderer(){
-        GameCore.renderer.setView(GameCore.camera);
     }
     public void dispose(){
         map.dispose();
