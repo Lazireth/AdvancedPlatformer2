@@ -50,10 +50,10 @@ public class Player{
 
     int ticksJumping;
     boolean jumping;
-    Vector2 initialPosition;
+    Vector2 startingPosition;//relative to the bottom left of the player
 
-    public Player(Vector2 initialPosition, TiledMapTile[] playerMapTiles){
-        this.initialPosition=initialPosition;
+    public Player(Vector2 startingPosition, TiledMapTile[] playerMapTiles){
+        this.startingPosition=startingPosition;
         this.playerMapTiles=playerMapTiles;
 
         playerTextures=new TextureRegion[playerMapTiles.length];
@@ -63,12 +63,9 @@ public class Player{
             playerTextureSizes[i]=new Vector2(playerTextures[i].getRegionWidth() * GameCore.unitsPerPixel, playerTextures[i].getRegionHeight() * GameCore.unitsPerPixel);
 
         }
-        addToWorld(initialPosition);
+        addToWorld(startingPosition);
     }
     public void input(float delta){
-//        System.out.println("\nPlayer pos: "+body.getPosition());
-//        System.out.println("Player vel: "+body.getLinearVelocity());
-
         if(jumping){
             if(keys[Input.Keys.UP]){
                 if(ticksJumping<JUMP_TICKS){
@@ -125,24 +122,28 @@ public class Player{
         }
 
     }
-    public boolean checkFallenOffMap(){
-        if(body.getPosition().y<-1){
-            System.out.println("death");
-            //reset variables
-            canJump=true;
-            framesOnGround=0;
-            spriteState=0;
-            health=1;
-            ticksJumping=0;
-            jumping=false;
-            body.getWorld().destroyBody(body);
-            addToWorld(initialPosition);
-            //reduce lives by 1
-            lives--;
-            return true;
-        }
-        return false;
+    public boolean checkIfFallingOffMap(){
+        return body.getPosition().y<-1;
     }
+    public void manageFallingOffMap(){
+        System.out.println("death by falling off map");
+        resetPlayer();
+        lives--;
+    }
+    public void resetPlayer(){
+        resetPlayer(startingPosition);
+    }
+    public void resetPlayer(Vector2 locationToSpawnAt){
+        canJump=true;
+        framesOnGround=0;
+        spriteState=0;
+        health=1;
+        ticksJumping=0;
+        jumping=false;
+        body.getWorld().destroyBody(body);
+        addToWorld(locationToSpawnAt);
+    }
+
     public void update(float delta){
         if(preservedVelocityWhenLandingLastTick){
             preservedVelocityWhenLandingLastTick=false;
@@ -150,15 +151,18 @@ public class Player{
             return;
         }
         if(preserveVelocityWhenLanding){
-
-            if(Math.abs(lastVelocity.y)>1&&body.getLinearVelocity().y==0){//pres
+            if(lastVelocity.y<1&&Math.abs(body.getLinearVelocity().y)<0.1){// need Math.abs(...)<0.1 instead of ...==0 in case ... is an incredibly small value
+                System.out.println("preserve vel");
                 body.setLinearVelocity(lastVelocity.x,body.getLinearVelocity().y);
+            }else{
+                System.out.println(body.getLinearVelocity().y);
             }
             preservedVelocityWhenLandingLastTick=true;
             preserveVelocityWhenLanding=false;
         }
-        lastVelocity=body.getLinearVelocity();
-        lastPosition=body.getPosition();
+
+        lastVelocity=body.getLinearVelocity().cpy();
+        lastPosition=body.getPosition().cpy();
     }
     public void wallCollide(){
         preserveVelocityWhenLanding=true;
@@ -178,6 +182,8 @@ public class Player{
     private void addToWorld(Vector2 startingPosition) {
         WIDTH = (playerMapTiles[spriteState].getProperties().get("WIDTH",int.class)-2)  * GameCore.unitsPerPixel;
         HEIGHT= (playerMapTiles[spriteState].getProperties().get("HEIGHT",int.class)-2) * GameCore.unitsPerPixel;
+        startingPosition.add(0.5f,HEIGHT/2);//cannot do WIDTH/2 for x because player is 0.75 units wide
+
         PolygonShape rectangle=new PolygonShape();
         rectangle.setAsBox(WIDTH/2,HEIGHT/2);
 
