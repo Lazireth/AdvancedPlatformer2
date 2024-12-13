@@ -1,9 +1,9 @@
 package com.github.lazireth.advancedPlatformer.Screens;
 
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -11,8 +11,6 @@ import com.github.lazireth.advancedPlatformer.CollisionListener;
 import com.github.lazireth.advancedPlatformer.GameCore;
 import com.github.lazireth.advancedPlatformer.Level;
 import com.github.lazireth.advancedPlatformer.Player;
-
-import static com.github.lazireth.advancedPlatformer.InputHandler.keys;
 
 
 public class GameScreen extends ScreenAdapter {
@@ -31,7 +29,6 @@ public class GameScreen extends ScreenAdapter {
     public static World world;
 
     Box2DDebugRenderer debugRenderer;
-
     public GameScreen(final GameCore game){
         this.game=game;
         world=new World(new Vector2(0,-20),true);
@@ -48,7 +45,9 @@ public class GameScreen extends ScreenAdapter {
     public void render(float delta) {
         input(delta);
         //Gdx.app.log("GameScreen.render","Player velocity: "+player.getVelocity());
+        Vector2 playerPositionInitial=player.getPosition();
         doPhysicsStep(delta);
+        updateCamera(playerPositionInitial);
 
         //update game here
 
@@ -74,36 +73,16 @@ public class GameScreen extends ScreenAdapter {
         }
     }
     private void input(float delta){
-        float cameraMoveAmount=0.25f;
-        //Camera movement start
-        boolean updateCamera=false;
-        float cameraX = GameCore.camera.position.x;
-        float cameraY = GameCore.camera.position.y;
-        if(keys[Keys.W]){
-            cameraY+=cameraMoveAmount;
-            updateCamera=true;
-        }
-        if(keys[Keys.S]){
-            cameraY-=cameraMoveAmount;
-            updateCamera=true;
-        }
-        if(keys[Keys.A]){
-            cameraX-=cameraMoveAmount;
-            updateCamera=true;
-        }
-        if(keys[Keys.D]){
-            cameraX+=cameraMoveAmount;
-            updateCamera=true;
-        }
-        if(updateCamera){
-            GameCore.camera.position.set(cameraX,cameraY,0);
-            GameCore.camera.update();
-            GameCore.renderer.setView(GameCore.camera);
-        }
-        //Camera movement end
         player.input(delta);
     }
-
+    private void updateCamera(Vector2 playerPositionInitial){
+        Vector2 playerChange=player.getPosition().sub(playerPositionInitial);
+        Vector3 playerChangeCleaned=new Vector3(playerChange.x,0,0);
+        GameCore.cameraPos.add(playerChangeCleaned);
+        GameCore.camera.position.set(GameCore.cameraPos);
+        GameCore.camera.update();
+        GameCore.renderer.setView(GameCore.camera);
+    }
     @Override
     public void resize(int width, int height) {
         game.resize(width,height);
