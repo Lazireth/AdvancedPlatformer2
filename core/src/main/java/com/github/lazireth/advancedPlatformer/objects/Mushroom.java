@@ -49,9 +49,7 @@ public class Mushroom extends InteractableObject{
             return;
         }
         if(body==null){
-            System.out.println("\nmove "+y);
             y+=1/32.0f;
-            System.out.println(y);
             if(y>initialY+HEIGHT){
                 addToWorld();
                 body.applyLinearImpulse(new Vector2(0.4f,0),body.getPosition(),true);

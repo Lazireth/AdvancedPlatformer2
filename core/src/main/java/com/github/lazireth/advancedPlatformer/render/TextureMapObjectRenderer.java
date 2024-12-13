@@ -77,6 +77,7 @@ public class TextureMapObjectRenderer extends OrthogonalTiledMapRenderer {
         // Sources for how to do what this method does
         // Deepscorn at https://gamedev.stackexchange.com/questions/73688/why-is-my-text-is-too-large-even-when-scaled-to-05f-in-libgdx
         // bemeyer at https://stackoverflow.com/questions/16600547/how-get-a-string-width-in-libgdx
+        // bemeyer at https://stackoverflow.com/questions/16600547/how-get-a-string-width-in-libgdx
         Matrix4 originalMatrix = batch.getProjectionMatrix().cpy();
 
 
@@ -84,7 +85,6 @@ public class TextureMapObjectRenderer extends OrthogonalTiledMapRenderer {
         float xPos=x*pixelsPerUnit;
         float yPos=y*pixelsPerUnit;
         if(centerX){
-            System.out.println(layout.width/2);
             xPos-=layout.width/2;
         }
         if(centerY){

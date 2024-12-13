@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
@@ -22,8 +23,13 @@ public class Player{
     static final float FRICTION=0.8f;
     float MASS;
 
-    private static final float MAX_RIGHT_VELOCITY=5;// m/s
-    private static final float MAX_LEFT_VELOCITY=-5;// m/s
+    private static final float MAX_RIGHT_WALK_SPEED=5;
+    private static final float MAX_RIGHT_RUN_SPEED=9;
+    private static final float MAX_LEFT_WALK_SPEED=-5;
+    private static final float MAX_LEFT_RUN_SPEED=-9;
+
+    private static final float MAX_RIGHT_VELOCITY=9;// m/s
+    private static final float MAX_LEFT_VELOCITY=-9;// m/s
     private static final float MIN_VELOCITY=0.2f;   // m/s
 
     static final int TIME_ON_GROUND_BEFORE_JUMP=5;
@@ -49,8 +55,10 @@ public class Player{
     boolean preservedVelocityWhenLandingLastTick=false;
 
     int ticksJumping;
-    boolean jumping;
+    boolean isJumping;
     Vector2 startingPosition;//relative to the bottom left of the player
+
+    boolean isRunning;
 
     public Player(Vector2 startingPosition, TiledMapTile[] playerMapTiles){
         this.startingPosition=startingPosition;
@@ -66,16 +74,16 @@ public class Player{
         addToWorld(startingPosition);
     }
     public void input(float delta){
-        if(jumping){
-            if(keys[Input.Keys.UP]){
+        if(isJumping){
+            if(keys[Input.Keys.W]){
                 if(ticksJumping<JUMP_TICKS){
                     body.applyLinearImpulse(PLAYER_JUMP_IMPULSE,body.getPosition(),true);
                     ticksJumping++;
                 }else{
-                    jumping=false;
+                    isJumping =false;
                 }
             }else{
-                jumping=false;
+                isJumping =false;
             }
         }
         if(canJump){
@@ -83,10 +91,10 @@ public class Player{
                 canJump=false;
                 framesOnGround=0;
             }else
-            if(keys[Input.Keys.UP]){
+            if(keys[Input.Keys.W]){
                 body.applyLinearImpulse(PLAYER_JUMP_IMPULSE,body.getPosition(),true);
                 canJump=false;
-                jumping=true;
+                isJumping =true;
                 ticksJumping=1;
                 framesOnGround=0;
             }
@@ -97,17 +105,40 @@ public class Player{
             }
         }
 
-        if(!(keys[Input.Keys.LEFT]&&keys[Input.Keys.RIGHT])){//if both are not pressed
-            if(keys[Input.Keys.LEFT]&&getXVelocity()>MAX_LEFT_VELOCITY){//check left
-                body.applyLinearImpulse(PLAYER_MOVE_LEFT_IMPULSE,getPosition(),true);
-            }else
-                if(keys[Input.Keys.RIGHT]&&getXVelocity()<MAX_RIGHT_VELOCITY){//check right
-                body.applyLinearImpulse(PLAYER_MOVE_RIGHT_IMPULSE,getPosition(),true);
-
-            }else//if not keys pressed and almost stopped kill velocity
-                if(body.getLinearVelocity().x<MIN_VELOCITY&&body.getLinearVelocity().x>-MIN_VELOCITY){
-                body.setLinearVelocity(0,body.getLinearVelocity().y);
+        if(keys[Input.Keys.A]&&!keys[Input.Keys.D]){//check right
+            if(isRunning){
+                if(getXVelocity()>MAX_LEFT_RUN_SPEED){
+                    body.applyLinearImpulse(PLAYER_MOVE_LEFT_IMPULSE,getPosition(),true);
+                }
+            }else{
+                if(getXVelocity()>MAX_LEFT_WALK_SPEED){
+                    body.applyLinearImpulse(PLAYER_MOVE_LEFT_IMPULSE,getPosition(),true);
+                }else if(keys[Input.Keys.K]){
+                    body.applyLinearImpulse(PLAYER_MOVE_LEFT_IMPULSE,getPosition(),true);
+                    isRunning=true;
+                }
             }
+        }
+        if(keys[Input.Keys.D]&&!keys[Input.Keys.A]){//check right
+            if(isRunning){
+                if(getXVelocity()<MAX_RIGHT_RUN_SPEED){
+                    body.applyLinearImpulse(PLAYER_MOVE_RIGHT_IMPULSE,getPosition(),true);
+                }
+            }else{
+                if(getXVelocity()<MAX_RIGHT_WALK_SPEED){
+                    body.applyLinearImpulse(PLAYER_MOVE_RIGHT_IMPULSE,getPosition(),true);
+                }else if(keys[Input.Keys.K]){
+                    body.applyLinearImpulse(PLAYER_MOVE_RIGHT_IMPULSE,getPosition(),true);
+                    isRunning=true;
+                }
+            }
+        }
+
+        if(Math.abs(getXVelocity())<MAX_RIGHT_RUN_SPEED){
+            isRunning=false;
+        }
+        if(!keys[Input.Keys.A]&&!keys[Input.Keys.D]&&Math.abs(body.getLinearVelocity().x)<MIN_VELOCITY){
+            body.setLinearVelocity(0,body.getLinearVelocity().y);
         }
     }
     public void render(TextureMapObjectRenderer renderer){
@@ -139,9 +170,10 @@ public class Player{
         spriteState=0;
         health=1;
         ticksJumping=0;
-        jumping=false;
+        isJumping =false;
         body.getWorld().destroyBody(body);
         addToWorld(locationToSpawnAt);
+        GameCore.cameraPos=new Vector3(locationToSpawnAt.x,GameCore.camera.position.y,GameCore.camera.position.z);
     }
 
     public void update(float delta){
@@ -152,10 +184,7 @@ public class Player{
         }
         if(preserveVelocityWhenLanding){
             if(lastVelocity.y<1&&Math.abs(body.getLinearVelocity().y)<0.1){// need Math.abs(...)<0.1 instead of ...==0 in case ... is an incredibly small value
-                System.out.println("preserve vel");
                 body.setLinearVelocity(lastVelocity.x,body.getLinearVelocity().y);
-            }else{
-                System.out.println(body.getLinearVelocity().y);
             }
             preservedVelocityWhenLandingLastTick=true;
             preserveVelocityWhenLanding=false;
@@ -214,8 +243,8 @@ public class Player{
 
     public float getYVelocity(){return body.getLinearVelocity().y;}
     public float getXVelocity(){return body.getLinearVelocity().x;}
-    public Vector2 getVelocity(){return body.getLinearVelocity();}
+    public Vector2 getVelocity(){return body.getLinearVelocity().cpy();}
     public float getYPosition(){return body.getPosition().y;}
     public float getXPosition(){return body.getPosition().x;}
-    public Vector2 getPosition(){return body.getPosition();}
+    public Vector2 getPosition(){return body.getPosition().cpy();}
 }
