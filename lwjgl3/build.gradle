@@ -12,6 +12,8 @@ buildscript {
 }
 plugins {
   id "application"
+  // Apply GraalVM Native Image plugin
+  id("org.panteleyev.jpackageplugin") version '1.6.0'
 }
 apply plugin: 'io.github.fourlastor.construo'
 
@@ -106,7 +108,10 @@ construo {
       }
       create("winX64", Target.Windows) {
         architecture.set(Target.Architecture.X86_64)
+        // the url in the next line is for java 17
         jdkUrl.set("https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.12%2B7/OpenJDK17U-jdk_x64_windows_hotspot_17.0.12_7.zip")
+        // this one is for java 21
+//        jdkUrl.set("https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.5%2B11/OpenJDK21U-jdk_x64_windows_hotspot_21.0.5_11.zip")
         // Uncomment the next line to show a console when the game runs, to print messages.
         //useConsole.set(true)
       }

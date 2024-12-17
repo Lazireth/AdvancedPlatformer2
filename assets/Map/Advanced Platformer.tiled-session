@@ -50,14 +50,14 @@
                 6
             ],
             "expandedObjectLayers": [
-                3,
-                4
+                4,
+                3
             ],
             "scale": 0.5,
             "selectedLayer": 2,
             "viewCenter": {
                 "x": 630,
-                "y": 1409
+                "y": 1410
             }
         },
         "testTestLevel.tmx": {
