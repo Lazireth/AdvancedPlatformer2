@@ -75,29 +75,14 @@
    <properties>
     <property name="WhichInteractableObject" value="QuestionBlock"/>
    </properties>
-   <object id="167" name="QB 4" gid="25" x="192" y="704" width="64" height="64">
-    <properties>
-     <property name="Held Object" value="None"/>
-    </properties>
-   </object>
-   <object id="166" name="QB 3" gid="25" x="320" y="704" width="64" height="64">
-    <properties>
-     <property name="Held Object" value="None"/>
-    </properties>
-   </object>
-   <object id="152" name="QB 2" gid="25" x="448" y="704" width="64" height="64">
+   <object id="153" name="QB 1" gid="25" x="1472" y="704" width="64" height="64">
     <properties>
      <property name="Held Object" value="Mushroom"/>
     </properties>
    </object>
-   <object id="153" name="QB 1" gid="25" x="1472" y="704" width="64" height="64">
-    <properties>
-     <property name="Held Object" value="None"/>
-    </properties>
-   </object>
    <object id="154" name="QB 0" gid="25" x="1344" y="704" width="64" height="64">
     <properties>
-     <property name="Held Object" value="None"/>
+     <property name="Held Object" value="Mushroom"/>
     </properties>
    </object>
   </objectgroup>

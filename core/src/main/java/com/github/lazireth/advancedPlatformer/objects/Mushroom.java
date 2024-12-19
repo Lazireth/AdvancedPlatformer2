@@ -23,6 +23,8 @@ public class Mushroom extends InteractableObject{
     boolean doBounce=false;
     boolean toCollect=false;
     public Mushroom(float inX, float inY, TextureRegion mySprite){
+        // todo
+        // gets stuck on interactable blocks
         x=inX;
         y=inY;
         initialY=y;

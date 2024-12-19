@@ -40,9 +40,9 @@ public class StartScreen extends ScreenAdapter {
         renderer.begin();
         ScreenUtils.clear(Color.BLACK);
         renderer.drawText("Advanced Platformer",calibri128,WIDTH/2,HEIGHT/4*3);
-        renderer.drawText("Move with W A S D",calibri64,WIDTH/2,HEIGHT/4*2);
-        renderer.drawText("Run with K",calibri64,WIDTH/2,HEIGHT/8*5);
-        renderer.drawText("Press SPACE To Start",calibri64,WIDTH/2,HEIGHT/4*1);
+        renderer.drawText("Move with W A S D",calibri64,WIDTH/2,HEIGHT/16*8);
+        renderer.drawText("Run with K",calibri64,WIDTH/2,HEIGHT/32*13);
+        renderer.drawText("Press SPACE To Start",calibri64,WIDTH/2,HEIGHT/16*4);
 
         renderer.end();
     }

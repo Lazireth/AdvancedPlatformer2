@@ -33,36 +33,36 @@ public class GameScreen extends ScreenAdapter {
         this.game=game;
         world=new World(new Vector2(0,-20),true);
         world.setContactListener(new CollisionListener());
-//        level=new Level(-2);
-//        debugRenderer=new Box2DDebugRenderer();
-//
-//
-//        player=new Player(level.playerStartingPos,level.playerTextureTiles);
+        level=new Level(-2);
+        debugRenderer=new Box2DDebugRenderer();
+
+
+        player=new Player(level.playerStartingPos,level.playerTextureTiles);
     }
 
 
     @Override
     public void render(float delta) {
-//        input(delta);
-//        //Gdx.app.log("GameScreen.render","Player velocity: "+player.getVelocity());
-//        Vector2 playerPositionInitial=player.getPosition();
-//        doPhysicsStep(delta);
-//        updateCamera(playerPositionInitial);
-//
-//        //update game here
-//
-//        level.update();
-//        player.update(delta);
-//
+        input(delta);
+        //Gdx.app.log("GameScreen.render","Player velocity: "+player.getVelocity());
+        Vector2 playerPositionInitial=player.getPosition();
+        doPhysicsStep(delta);
+        updateCamera(playerPositionInitial);
+
+        //update game here
+
+        level.update();
+        player.update(delta);
+
 
         ScreenUtils.clear(Color.BLACK);
-//        GameCore.camera.update();
-//
-//        level.render();
-//        if(player.checkIfFallingOffMap()){
-//            player.manageFallingOffMap();
-//            game.loadDeathScreen();
-//        }
+        GameCore.camera.update();
+
+        level.render();
+        if(player.checkIfFallingOffMap()){
+            player.manageFallingOffMap();
+            game.loadDeathScreen();
+        }
     }
     private void doPhysicsStep(float deltaTime){
         float frameTime=Math.min(deltaTime, 0.25f);
