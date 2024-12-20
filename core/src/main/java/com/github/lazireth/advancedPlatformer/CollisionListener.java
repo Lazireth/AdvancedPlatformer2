@@ -3,6 +3,7 @@ package com.github.lazireth.advancedPlatformer;
 import com.badlogic.gdx.physics.box2d.*;
 import com.github.lazireth.advancedPlatformer.objects.InteractableObject;
 import com.github.lazireth.advancedPlatformer.objects.Mushroom;
+import com.github.lazireth.advancedPlatformer.objects.OneUP;
 
 public class CollisionListener implements ContactListener {
 
@@ -39,6 +40,7 @@ public class CollisionListener implements ContactListener {
     private void oneNull(Fixture goodFixture, Fixture nullFixture, Object object){
         switch (object){
             case Mushroom mushroom ->mushroom.bounce();
+            case OneUP oneUP ->oneUP.bounce();
             case Player player ->player.wallCollide();
             case null, default -> {}
         }

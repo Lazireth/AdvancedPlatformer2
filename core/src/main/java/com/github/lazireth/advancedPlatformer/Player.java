@@ -167,8 +167,19 @@ public class Player{
     }
     public void manageFallingOffMap(){
         System.out.println("death by falling off map");
+        death();
+    }
+    // todo
+    // implement GameOver
+    public void death(){
         resetPlayer();
         lives--;
+        if(lives<0){
+
+            System.out.println("You ran out of lives");
+            //loadScreenGameOver();
+            //return;
+        }
     }
     public void resetPlayer(){
         resetPlayer(startingPosition);
@@ -215,6 +226,10 @@ public class Player{
         spriteState=1;
         health=2;
         addToWorld(startingPosition);
+    }
+    public void collectOneUP(){
+        System.out.println("You got a 1UP");
+        lives++;
     }
 
     private void addToWorld(Vector2 startingPosition) {

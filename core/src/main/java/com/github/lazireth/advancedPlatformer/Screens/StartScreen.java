@@ -43,6 +43,8 @@ public class StartScreen extends ScreenAdapter {
         renderer.drawText("Move with W A S D",calibri64,WIDTH/2,HEIGHT/16*8);
         renderer.drawText("Run with K",calibri64,WIDTH/2,HEIGHT/32*13);
         renderer.drawText("Press SPACE To Start",calibri64,WIDTH/2,HEIGHT/16*4);
+        renderer.drawText("Code is on github at:",calibri64,WIDTH/2,HEIGHT/16*2);
+        renderer.drawText("github.com/Lazireth/AdvancedPlatformer",calibri64,WIDTH/2,HEIGHT/16*1);
 
         renderer.end();
     }

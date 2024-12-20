@@ -11,7 +11,7 @@
  </tile>
  <tile id="1">
   <properties>
-   <property name="Local ID" type="int" value="1"/>
+   <property name="Related Object" value="OneUP"/>
   </properties>
  </tile>
 </tileset>

@@ -94,7 +94,6 @@ public class Level implements Disposable{
                 if(relatedObject==null){
                     continue;
                 }
-                System.out.println("relatedObject1 "+relatedObject);
                 if(objectTilesMap.get(relatedObject)==null){
                     objectTilesMap.put(relatedObject,new ArrayList<>());
                 }
@@ -150,7 +149,7 @@ public class Level implements Disposable{
         GameScreen.player.render(GameCore.renderer);
         GameCore.renderer.end();
     }
-    private void loadQuestionBlocks(MapObjects questionBlocks, TiledMapTile[] tileSprites, Map<String, TiledMapTile>   itemTiles){
+    private void loadQuestionBlocks(MapObjects questionBlocks, TiledMapTile[] tileSprites, Map<String,TiledMapTile> itemTiles){
         for(int questionBlockIndex=0;questionBlockIndex< questionBlocks.getCount() ;questionBlockIndex++){//for each question block
             // add it to interactableObjects
             interactableObjects.add(

@@ -61,6 +61,7 @@ public class QuestionBlock extends InteractableObject{
         }
         switch(heldObject){
             case "Mushroom"->new Mushroom(getXPosition(),getYPosition()+yPositionModifier,heldObjectSprite);
+            case "OneUP"->new OneUP(getXPosition(),getYPosition()+yPositionModifier,heldObjectSprite);
         }
     }
 

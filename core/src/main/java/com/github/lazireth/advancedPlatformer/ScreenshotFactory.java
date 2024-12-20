@@ -24,8 +24,7 @@ public class ScreenshotFactory {
             Pixmap pixmap = getScreenshot(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
             PixmapIO.writePNG(fh, pixmap);
             pixmap.dispose();
-        }catch (Exception e){
-        }
+        }catch (Exception e){}
     }
 
     private static Pixmap getScreenshot(int x, int y, int w, int h, boolean yDown){

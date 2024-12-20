@@ -12,7 +12,7 @@ import com.github.lazireth.advancedPlatformer.Player;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
-public class Mushroom extends InteractableObject{
+public class OneUP extends InteractableObject{
     final float WIDTH;
     final float HEIGHT;
     final TextureRegion mySprite;
@@ -22,7 +22,7 @@ public class Mushroom extends InteractableObject{
 
     boolean doBounce=false;
     boolean toCollect=false;
-    public Mushroom(float inX, float inY, TextureRegion mySprite){
+    public OneUP(float inX, float inY, TextureRegion mySprite){
         // todo
         // gets stuck on interactable blocks
         x=inX;
@@ -46,7 +46,7 @@ public class Mushroom extends InteractableObject{
     public void update() {
         if(toCollect){
 
-            GameScreen.player.collectMushroom();
+            GameScreen.player.collectOneUP();
 
             body.getWorld().destroyBody(body);
             GameCore.gameScreen.level.interactableObjectsRemove.add(this);
@@ -82,7 +82,7 @@ public class Mushroom extends InteractableObject{
     //actual make it do something
     public void startInteraction(Player player) {
         toCollect=true;
-        System.out.println("collected Mushroom");
+        System.out.println("collected 1UP");
     }
 
     private void addToWorld() {

@@ -17,10 +17,12 @@ public class DeathScreen extends ScreenAdapter {
 
     float restartTimer=5;
     boolean countDown=false;
-    BitmapFont fontCalibri;
+    BitmapFont calibri64;
+    BitmapFont calibri128;
     public DeathScreen(final GameCore game){
         this.game=game;
-        fontCalibri=FontManager.getFont("Calibri",64);
+        calibri64= FontManager.getFont("Calibri",64);
+        calibri128= FontManager.getFont("Calibri",128);
     }
     @Override
     public void render(float delta) {
@@ -45,8 +47,10 @@ public class DeathScreen extends ScreenAdapter {
     private void draw(){
         renderer.begin();
         ScreenUtils.clear(Color.BLACK);
-        renderer.drawText((int)restartTimer+"",fontCalibri,WIDTH/2,HEIGHT/4*2);
-        renderer.drawText("Press SPACE To Start",fontCalibri,WIDTH/2,HEIGHT/4*1);
+        renderer.drawText("Advanced Platformer",calibri128,WIDTH/2,HEIGHT/4*3);
+
+        renderer.drawText((int)restartTimer+"",calibri64,WIDTH/2,HEIGHT/4*2);
+        renderer.drawText("Press SPACE To Start",calibri64,WIDTH/2,HEIGHT/4*1);
 
         renderer.end();
     }
