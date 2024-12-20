@@ -1,9 +1,6 @@
 package com.github.lazireth.advancedPlatformer;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.math.Vector2;
@@ -16,7 +13,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
-import java.util.zip.Deflater;
 
 import static com.github.lazireth.advancedPlatformer.InputHandler.keys;
 

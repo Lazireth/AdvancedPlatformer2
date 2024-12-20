@@ -88,7 +88,6 @@ public class OneUP extends InteractableObject{
     private void addToWorld() {
         Rectangle rectangle = new Rectangle(x,y,WIDTH,HEIGHT);
 
-
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(rectangle.x,rectangle.y);
