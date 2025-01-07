@@ -46,7 +46,7 @@ public class OneUP extends InteractableObject{
     public void update() {
         if(toCollect){
 
-            GameScreen.player.collectOneUP();
+            GameScreen.player.collectItem("OneUP");
 
             body.getWorld().destroyBody(body);
             GameCore.gameScreen.level.interactableObjectsRemove.add(this);

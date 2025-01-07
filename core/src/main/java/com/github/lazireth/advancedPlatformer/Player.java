@@ -3,6 +3,7 @@ package com.github.lazireth.advancedPlatformer;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -39,16 +40,20 @@ public class Player{
     private Vector2 PLAYER_MOVE_LEFT_IMPULSE;
     private Vector2 PLAYER_MOVE_RIGHT_IMPULSE;
 
+    int state=0;
+    // 0 is normal
+    // 1 is big (caused by mushroom)
+
     boolean canJump=true;//player can jump after their vertical velocity has been 0 for 5 frames
     int framesOnGround=0;
-    int spriteState=0;
     int health=1;
     int lives=5;
 
     private Body body;
-    public TiledMapTile[]  playerMapTiles;
-    public TextureRegion[] playerTextures;
-    public Vector2[] playerTextureSizes;
+
+    public TiledMapTile[][]  playerSpriteTiles;
+    public TextureRegion[][] playerSprites;
+
 
     private Vector2 lastVelocity=new Vector2(0,0);
     private Vector2 lastPosition=new Vector2(0,0);
@@ -61,19 +66,35 @@ public class Player{
 
     boolean isRunning;
 
-    public Player(Vector2 startingPosition, TiledMapTile[] playerMapTiles){
+    public Player(Vector2 startingPosition, TiledMapTileSet playerSpriteTileSet){
         this.startingPosition=startingPosition;
-        this.playerMapTiles=playerMapTiles;
 
-        playerTextures=new TextureRegion[playerMapTiles.length];
-        playerTextureSizes=new Vector2[playerMapTiles.length];
-        for(int i=0;i<playerMapTiles.length;i++){
-            playerTextures[i]=playerMapTiles[i].getTextureRegion();
-            playerTextureSizes[i]=new Vector2(playerTextures[i].getRegionWidth() * GameCore.unitsPerPixel, playerTextures[i].getRegionHeight() * GameCore.unitsPerPixel);
+        int maxPlayerState = 0; int maxStateIndex=0;
+        for(TiledMapTile tile:playerSpriteTileSet){//gets the largest of player state and the max number of sprites associated with a state
+            try{
+                if(tile.getProperties().get("Player State",int.class)>maxPlayerState){
+                    maxPlayerState=tile.getProperties().get("Player State",int.class);
+                }
+                if(tile.getProperties().get("State Index",int.class)>maxStateIndex){
+                    maxStateIndex=tile.getProperties().get("State Index",int.class);
+                }
+            } catch (Exception ignore) {}
+        }
+        playerSpriteTiles=new TiledMapTile[maxPlayerState+1][maxStateIndex+1];// +1 because arrays need to big 1 bigger than their largest index
+        playerSprites=new TextureRegion[maxPlayerState+1][maxStateIndex+1];
 
+        for(TiledMapTile tile:playerSpriteTileSet){//gets the largest of player state and the max number of sprites associated with a state
+            try{
+                playerSpriteTiles[tile.getProperties().get("Player State",int.class)][tile.getProperties().get("State Index",int.class)]
+                    =tile;
+                playerSprites[tile.getProperties().get("Player State",int.class)][tile.getProperties().get("State Index",int.class)]
+                    =tile.getTextureRegion();
+            } catch (Exception ignore) {}
         }
         addToWorld(startingPosition);
     }
+
+
     public void input(float delta){
         if(keys[Input.Keys.L]){
             keys[Input.Keys.L]=false;
@@ -147,13 +168,13 @@ public class Player{
         }
     }
     public void render(TextureMapObjectRenderer renderer){
-        switch (spriteState){
+        switch (state){
             case 0->{
-                renderer.renderObject(playerTextures[0],getXPosition(),getYPosition(),playerTextureSizes[0].x,playerTextureSizes[0].y);
+                renderer.renderObject(playerSprites[0][0],getXPosition(),getYPosition(),1,1);//width and height are in gameUnits
             }
             case 1->{
-                renderer.renderObject(playerTextures[1],getXPosition(),getYPosition()+playerTextureSizes[1].y/2,playerTextureSizes[1].x,playerTextureSizes[1].y);//top tile
-                renderer.renderObject(playerTextures[2],getXPosition(),getYPosition()-playerTextureSizes[1].y/2,playerTextureSizes[2].x,playerTextureSizes[2].y);//bottom tile
+                renderer.renderObject(playerSprites[1][0],getXPosition(),getYPosition()+0.5f,1,1);//top tile
+                renderer.renderObject(playerSprites[1][1],getXPosition(),getYPosition()-0.5f,1,1);//bottom tile
             }
         }
 
@@ -168,14 +189,13 @@ public class Player{
     // todo
     // implement GameOver
     public void death(){
-        resetPlayer();
         lives--;
         if(lives<0){
-
             System.out.println("You ran out of lives");
             //loadScreenGameOver();
             //return;
         }
+        resetPlayer();
     }
     public void resetPlayer(){
         resetPlayer(startingPosition);
@@ -183,7 +203,7 @@ public class Player{
     public void resetPlayer(Vector2 locationToSpawnAt){
         canJump=true;
         framesOnGround=0;
-        spriteState=0;
+        state=0;
         health=1;
         ticksJumping=0;
         isJumping =false;
@@ -209,28 +229,29 @@ public class Player{
         lastVelocity=body.getLinearVelocity().cpy();
         lastPosition=body.getPosition().cpy();
     }
-    public void wallCollide(){
-        preserveVelocityWhenLanding=true;
-    }
-    public void collectMushroom(){
-        if(health>1){
-            //add score
-            return;
-        }
-        Vector2 startingPosition=body.getPosition().add(0,0.5f);
-        body.getWorld().destroyBody(body);
-        spriteState=1;
-        health=2;
-        addToWorld(startingPosition);
-    }
-    public void collectOneUP(){
-        System.out.println("You got a 1UP");
-        lives++;
-    }
 
+    public void collectItem(String item){
+        switch (item){
+            case "Mushroom"->{
+                if(health>1){
+                    //add score
+                    return;
+                }
+                Vector2 startingPosition=body.getPosition().add(0,0.5f);
+                body.getWorld().destroyBody(body);
+                state =1;
+                health=2;
+                addToWorld(startingPosition);
+            }
+            case "OneUP"->{
+                System.out.println("You got a 1UP");
+                lives++;
+            }
+        }
+    }
     private void addToWorld(Vector2 startingPosition) {
-        WIDTH = (playerMapTiles[spriteState].getProperties().get("WIDTH",int.class)-2)  * GameCore.unitsPerPixel;
-        HEIGHT= (playerMapTiles[spriteState].getProperties().get("HEIGHT",int.class)-2) * GameCore.unitsPerPixel;
+        WIDTH = (playerSpriteTiles[state][0].getProperties().get("WIDTH",int.class)-2)  * GameCore.unitsPerPixel;// the -2 is so the player appears to be touching objects when colliding
+        HEIGHT= (playerSpriteTiles[state][0].getProperties().get("HEIGHT",int.class)-2) * GameCore.unitsPerPixel;
         startingPosition.add(0.5f,HEIGHT/2);//cannot do WIDTH/2 for x because player is 0.75 units wide
 
         PolygonShape rectangle=new PolygonShape();

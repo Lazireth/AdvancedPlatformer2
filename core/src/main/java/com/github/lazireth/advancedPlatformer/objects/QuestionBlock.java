@@ -33,16 +33,16 @@ public class QuestionBlock extends InteractableObject{
     String heldObject;
     TextureRegion heldObjectSprite;
 
-    public QuestionBlock(MapObject questionBlock, TiledMapTile[] tileSprites, Map<String, TiledMapTile> itemTiles){
+    public QuestionBlock(MapObject questionBlock, Map<String,TiledMapTile[]> environmentTileset){
         this.questionBlock = (TiledMapTileMapObject)questionBlock;
         if(!questionBlock.getProperties().get("Held Object",String.class).equals("None")){
             heldObject=questionBlock.getProperties().get("Held Object",String.class);
-            heldObjectSprite=itemTiles.get(heldObject).getTextureRegion();
+            heldObjectSprite=environmentTileset.get(heldObject)[0].getTextureRegion();
         }
         // load sprites
 
-        sprites[0] = tileSprites[0].getTextureRegion();// before interaction
-        sprites[1] = tileSprites[1].getTextureRegion();// after interaction
+        sprites[0] = environmentTileset.get("QuestionBlock")[0].getTextureRegion();// before interaction
+        sprites[1] = environmentTileset.get("QuestionBlock")[1].getTextureRegion();// after interaction
 
         //get with and convert from pixel to game units
         WIDTH = sprites[0].getRegionWidth()  * GameCore.unitsPerPixel;

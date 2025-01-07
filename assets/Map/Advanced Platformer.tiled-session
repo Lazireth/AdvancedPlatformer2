@@ -9,6 +9,14 @@
         "."
     ],
     "fileStates": {
+        "Environment Sprites.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Environment Tileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "Ground Tileset v1.1.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
@@ -22,6 +30,22 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "Item Tiles.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Player Sprites.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Player Tiles.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Player Tileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "Player.tsx": {
             "scaleInDock": 1
         },
@@ -32,7 +56,11 @@
         "Special Tiles.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 1,
-            "scaleInEditor": 1.5
+            "scaleInEditor": 1
+        },
+        "Special Tileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "Test level.tmx": {
             "expandedObjectLayers": [
@@ -88,21 +116,25 @@
         "Special Tiles.tsx"
     ],
     "project": "Advanced Platformer.tiled-project",
-    "property.type": "string",
+    "property.type": "int",
     "recentFiles": [
-        "Special Tiles.tsx",
+        "Special Tileset.tsx",
+        "Environment Tileset.tsx",
         "Ground Tileset v1.tsx",
-        "testLevel.tmx",
+        "Player Tileset.tsx",
         "Item Sprites.tsx",
-        "Simple Ground.tsx",
-        "testTestLevel.tmx",
-        "Test level.tmx",
-        "Ground Tileset v1.1.tsx"
+        "Special Tiles.tsx",
+        "Player Tiles.tsx",
+        "Environment Sprites.tsx",
+        "Item Tiles.tsx",
+        "Player Sprites.tsx",
+        "testLevel.tmx",
+        "Simple Ground.tsx"
     ],
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
         "height": 64,
-        "width": 48
+        "width": 64
     }
 }

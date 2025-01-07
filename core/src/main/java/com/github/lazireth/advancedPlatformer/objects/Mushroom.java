@@ -46,7 +46,7 @@ public class Mushroom extends InteractableObject{
     public void update() {
         if(toCollect){
 
-            GameScreen.player.collectMushroom();
+            GameScreen.player.collectItem("Mushroom");
 
             body.getWorld().destroyBody(body);
             GameCore.gameScreen.level.interactableObjectsRemove.add(this);

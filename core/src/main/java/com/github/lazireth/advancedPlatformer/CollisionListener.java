@@ -41,7 +41,7 @@ public class CollisionListener implements ContactListener {
         switch (object){
             case Mushroom mushroom ->mushroom.bounce();
             case OneUP oneUP ->oneUP.bounce();
-            case Player player ->player.wallCollide();
+            case Player player ->player.preserveVelocityWhenLanding=true;
             case null, default -> {}
         }
     }
