@@ -37,7 +37,7 @@ public class GameScreen extends ScreenAdapter {
         debugRenderer=new Box2DDebugRenderer();
 
 
-        player=new Player(level.playerStartingPos,level.playerSpriteTiles);
+        player=new Player(level.playerObject,level.playerSpriteTiles);
     }
 
 

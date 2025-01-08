@@ -33,8 +33,8 @@ public class QuestionBlock extends InteractableObject{
     String heldObject;
     TextureRegion heldObjectSprite;
 
-    public QuestionBlock(MapObject questionBlock, Map<String,TiledMapTile[]> environmentTileset){
-        this.questionBlock = (TiledMapTileMapObject)questionBlock;
+    public QuestionBlock(TiledMapTileMapObject questionBlock, Map<String,TiledMapTile[]> environmentTileset){
+        this.questionBlock = questionBlock;
         if(!questionBlock.getProperties().get("Held Object",String.class).equals("None")){
             heldObject=questionBlock.getProperties().get("Held Object",String.class);
             heldObjectSprite=environmentTileset.get(heldObject)[0].getTextureRegion();

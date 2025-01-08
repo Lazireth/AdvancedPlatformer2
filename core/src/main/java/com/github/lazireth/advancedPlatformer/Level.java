@@ -1,22 +1,17 @@
 package com.github.lazireth.advancedPlatformer;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g3d.Environment;
-import com.badlogic.gdx.maps.MapGroupLayer;
-import com.badlogic.gdx.maps.MapLayers;
-import com.badlogic.gdx.maps.MapObjects;
+import com.badlogic.gdx.maps.*;
 import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
 import com.github.lazireth.advancedPlatformer.objects.InteractableObject;
 import com.github.lazireth.advancedPlatformer.objects.QuestionBlock;
+import com.github.lazireth.advancedPlatformer.objects.enemies.BasicEnemy;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 import java.util.Map;
 
 public class Level implements Disposable{
@@ -28,9 +23,8 @@ public class Level implements Disposable{
     public final ArrayList<InteractableObject> interactableObjectsAdd=new ArrayList<>();
     public final ArrayList<InteractableObject> interactableObjectsRemove=new ArrayList<>();
 
-    public TiledMapTile[] playerTextureTiles;
-    public Vector2 playerStartingPos;
     public TiledMapTileSet playerSpriteTiles;
+    public TiledMapTileMapObject playerObject;
 
     public Level(int levelNumber){
         getMapToLoad(levelNumber);
@@ -42,31 +36,28 @@ public class Level implements Disposable{
 
         MapBodyBuilder.buildShapes(map, GameScreen.world,"Primary Level Collision");// build primary level collision
 
-
-
-        // get helper variable to give interactable objects their data and sprites
-
         Map<String, TiledMapTile[]> environmentTileset=getTilesMapArray(tileSets.getTileSet("Environment Tileset"));
-        playerSpriteTiles = tileSets.getTileSet("Player Tileset");
-        System.out.println("playerSpriteTiles "+playerSpriteTiles.size());
+        Map<String, TiledMapTile[]> npcTileset=getTilesMapArray(tileSets.getTileSet("NPC Tileset"));
 
-        // get player start position
-        TiledMapTileMapObject playerObject=(TiledMapTileMapObject)(map.getLayers().get("Player Layer").getObjects().get("Player"));
-        playerStartingPos=new Vector2(playerObject.getX()*GameCore.unitsPerPixel,playerObject.getY()*GameCore.unitsPerPixel);// also need to convert to game units
+        playerSpriteTiles = tileSets.getTileSet("Player Tileset");
+        playerObject=(TiledMapTileMapObject)(map.getLayers().get("Player Layer").getObjects().get("Player"));
+
 
         // get the folder of layers (each layer has a different interactable object)
         MapLayers objectSets = ((MapGroupLayer)map.getLayers().get("InteractableObjects")).getLayers();
 
         // for each type of interactable tile in the folder "Interactive Objects"
-        for(int objectTypeIndex=0;objectTypeIndex<objectSets.size();objectTypeIndex++){
+        for(MapLayer mapLayer:objectSets){
 
             // gets the layer's name to determine what type of object it holds
-            switch(objectSets.get(objectTypeIndex).getName()){
+            switch(mapLayer.getName()){
 
                 case "QuestionBlock"->{
-                    loadQuestionBlocks(objectSets.get(objectTypeIndex).getObjects(), environmentTileset);
+                    loadQuestionBlocks(mapLayer.getObjects(), environmentTileset);
                 }
-
+                case "Enemy"->{
+                    loadEnemies(mapLayer.getObjects(), npcTileset);
+                }
             }
         }
 
@@ -85,8 +76,8 @@ public class Level implements Disposable{
         return tiles;
     }
     // very good spaghetti
-    public Map<String, TiledMapTile[]> getTilesMapArray(TiledMapTileSet tileSet){//file contains sprites for multiple things with multiple states
-
+    public Map<String, TiledMapTile[]> getTilesMapArray(TiledMapTileSet tileSet){
+        //file contains sprites for multiple things with multiple states
         //first chunk of code gets it in a map of arraylists each arraylist is mapped to an object type
         Map<String, ArrayList<TiledMapTile>> objectTilesMap=new HashMap<>();
         for(TiledMapTile tile:tileSet){
@@ -120,7 +111,6 @@ public class Level implements Disposable{
 
         return objectTilesMapArray;
     }
-
     public void update(){
         for(InteractableObject object:interactableObjects){
             object.update();
@@ -141,11 +131,18 @@ public class Level implements Disposable{
         GameCore.renderer.end();
     }
     private void loadQuestionBlocks(MapObjects questionBlocks, Map<String,TiledMapTile[]> environmentTileset){
-        for(int questionBlockIndex=0;questionBlockIndex< questionBlocks.getCount() ;questionBlockIndex++){//for each question block
-            // add it to interactableObjects
-            interactableObjects.add(
-                new QuestionBlock(questionBlocks.get("QB "+questionBlockIndex),
-                    environmentTileset));
+
+        for (MapObject questionBlock : questionBlocks) {
+            interactableObjects.add(new QuestionBlock((TiledMapTileMapObject)questionBlock, environmentTileset));
+        }
+    }
+    private void loadEnemies(MapObjects enemies, Map<String,TiledMapTile[]> npcTileset){
+        for (MapObject enemy : enemies) {
+            switch (((TiledMapTileMapObject)enemy).getTile().getProperties().get("Related Object",String.class)){
+                case "BasicEnemy"->{
+                    interactableObjects.add(new BasicEnemy((TiledMapTileMapObject)enemy, npcTileset));
+                }
+            }
         }
     }
     private void getMapToLoad(int levelNumber){

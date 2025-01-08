@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
+import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -66,8 +67,8 @@ public class Player{
 
     boolean isRunning;
 
-    public Player(Vector2 startingPosition, TiledMapTileSet playerSpriteTileSet){
-        this.startingPosition=startingPosition;
+    public Player(TiledMapTileMapObject playerObject, TiledMapTileSet playerSpriteTileSet){
+        startingPosition=new Vector2(playerObject.getX()*GameCore.unitsPerPixel,playerObject.getY()*GameCore.unitsPerPixel);
 
         int maxPlayerState = 0; int maxStateIndex=0;
         for(TiledMapTile tile:playerSpriteTileSet){//gets the largest of player state and the max number of sprites associated with a state

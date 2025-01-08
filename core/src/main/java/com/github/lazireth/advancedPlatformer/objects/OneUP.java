@@ -12,11 +12,10 @@ import com.github.lazireth.advancedPlatformer.Player;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
-public class OneUP extends InteractableObject{
+public class OneUP extends Bounceable {
     final float WIDTH;
     final float HEIGHT;
     final TextureRegion mySprite;
-    private Body body;
     float x,y;
     float initialY;
 
@@ -56,26 +55,10 @@ public class OneUP extends InteractableObject{
             y+=1/32.0f;
             if(y>initialY+HEIGHT){
                 addToWorld();
-                body.applyLinearImpulse(new Vector2(0.4f,0),body.getPosition(),true);
+                body.setLinearVelocity(new Vector2(2f,0));
             }
         }else if(!doBounce){
             y=body.getPosition().y;
-        }
-    }
-    public void bounce(){
-        if(!doBounce){
-            if(y!=body.getPosition().y){
-                return;
-            }else{
-                doBounce=true;
-            }
-        }
-        if(body.getLinearVelocity().x>0){
-            body.setLinearVelocity(0,0);
-            body.applyLinearImpulse(new Vector2(-0.2f,0),body.getPosition(),true);
-        }else{
-            body.setLinearVelocity(0,0);
-            body.applyLinearImpulse(new Vector2(0.2f,0),body.getPosition(),true);
         }
     }
     //todo
