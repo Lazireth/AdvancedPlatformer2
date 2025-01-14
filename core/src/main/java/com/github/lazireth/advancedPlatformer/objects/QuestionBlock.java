@@ -10,10 +10,12 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.github.lazireth.advancedPlatformer.GameCore;
+import com.github.lazireth.advancedPlatformer.Level;
 import com.github.lazireth.advancedPlatformer.Player;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class QuestionBlock extends InteractableObject{
@@ -28,25 +30,24 @@ public class QuestionBlock extends InteractableObject{
     TiledMapTileMapObject questionBlock;
 
     int currentSprite=0;
-    TextureRegion[] sprites=new TextureRegion[2];
+    public ArrayList<TextureRegion> sprites;
 
     String heldObject;
-    TextureRegion heldObjectSprite;
 
-    public QuestionBlock(TiledMapTileMapObject questionBlock, Map<String,TiledMapTile[]> environmentTileset){
+    public QuestionBlock(TiledMapTileMapObject questionBlock, Level level){
         this.questionBlock = questionBlock;
-        if(!questionBlock.getProperties().get("Held Object",String.class).equals("None")){
+        try{
             heldObject=questionBlock.getProperties().get("Held Object",String.class);
-            heldObjectSprite=environmentTileset.get(heldObject)[0].getTextureRegion();
+        } catch (Exception e) {
+            heldObject=null;
         }
         // load sprites
 
-        sprites[0] = environmentTileset.get("QuestionBlock")[0].getTextureRegion();// before interaction
-        sprites[1] = environmentTileset.get("QuestionBlock")[1].getTextureRegion();// after interaction
+        sprites=getSpritesFor("QuestionBlock");
 
         //get with and convert from pixel to game units
-        WIDTH = sprites[0].getRegionWidth()  * GameCore.unitsPerPixel;
-        HEIGHT = sprites[0].getRegionHeight()* GameCore.unitsPerPixel;
+        WIDTH = sprites.getFirst().getRegionWidth()  * GameCore.unitsPerPixel;
+        HEIGHT = sprites.getFirst().getRegionHeight()* GameCore.unitsPerPixel;
 
         // build collision
         addToWorld();
@@ -60,8 +61,8 @@ public class QuestionBlock extends InteractableObject{
             return;
         }
         switch(heldObject){
-            case "Mushroom"->new Mushroom(getXPosition(),getYPosition()+yPositionModifier,heldObjectSprite);
-            case "OneUP"->new OneUP(getXPosition(),getYPosition()+yPositionModifier,heldObjectSprite);
+            case "Mushroom"->new Mushroom(getXPosition(),getYPosition()+yPositionModifier);
+            case "OneUP"->new OneUP(getXPosition(),getYPosition()+yPositionModifier);
         }
     }
 
@@ -104,7 +105,7 @@ public class QuestionBlock extends InteractableObject{
         body.createFixture(shape, 0);
     }
     public void render(TextureMapObjectRenderer renderer){
-        renderer.renderObject(sprites[currentSprite], body.getPosition().x, body.getPosition().y+yPositionModifier,WIDTH,HEIGHT);
+        renderer.renderObject(sprites.get(currentSprite), body.getPosition().x, body.getPosition().y+yPositionModifier,WIDTH,HEIGHT);
     }
     float getYVelocity(){
         return body.getLinearVelocity().y;

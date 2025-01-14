@@ -21,13 +21,13 @@ public class Mushroom extends Bounceable {
 
     boolean doBounce=false;
     boolean toCollect=false;
-    public Mushroom(float inX, float inY, TextureRegion mySprite){
+    public Mushroom(float inX, float inY){
         // todo
         // gets stuck on interactable blocks
         x=inX;
         y=inY;
         initialY=y;
-        this.mySprite = mySprite;
+        mySprite = getSpritesFor("Mushroom").getFirst();
         WIDTH = mySprite.getRegionWidth()  * GameCore.unitsPerPixel;
         HEIGHT = mySprite.getRegionHeight()* GameCore.unitsPerPixel;
         GameCore.gameScreen.level.interactableObjectsAdd.add(this);

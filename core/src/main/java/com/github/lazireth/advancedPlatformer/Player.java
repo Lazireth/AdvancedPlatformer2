@@ -3,7 +3,6 @@ package com.github.lazireth.advancedPlatformer;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
-import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -15,6 +14,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
+
+import java.util.ArrayList;
 
 import static com.github.lazireth.advancedPlatformer.InputHandler.keys;
 
@@ -52,8 +53,8 @@ public class Player{
 
     private Body body;
 
-    public TiledMapTile[][]  playerSpriteTiles;
-    public TextureRegion[][] playerSprites;
+    public ArrayList<TiledMapTile> tiles;
+    public ArrayList<TextureRegion> sprites;
 
 
     private Vector2 lastVelocity=new Vector2(0,0);
@@ -67,30 +68,15 @@ public class Player{
 
     boolean isRunning;
 
-    public Player(TiledMapTileMapObject playerObject, TiledMapTileSet playerSpriteTileSet){
+    public Player(TiledMapTileMapObject playerObject, ArrayList<TiledMapTile> playerTilesIn){
+        System.out.println("playerTilesIn "+playerTilesIn.size());
         startingPosition=new Vector2(playerObject.getX()*GameCore.unitsPerPixel,playerObject.getY()*GameCore.unitsPerPixel);
+        tiles =playerTilesIn;
 
-        int maxPlayerState = 0; int maxStateIndex=0;
-        for(TiledMapTile tile:playerSpriteTileSet){//gets the largest of player state and the max number of sprites associated with a state
-            try{
-                if(tile.getProperties().get("Player State",int.class)>maxPlayerState){
-                    maxPlayerState=tile.getProperties().get("Player State",int.class);
-                }
-                if(tile.getProperties().get("State Index",int.class)>maxStateIndex){
-                    maxStateIndex=tile.getProperties().get("State Index",int.class);
-                }
-            } catch (Exception ignore) {}
-        }
-        playerSpriteTiles=new TiledMapTile[maxPlayerState+1][maxStateIndex+1];// +1 because arrays need to big 1 bigger than their largest index
-        playerSprites=new TextureRegion[maxPlayerState+1][maxStateIndex+1];
+        sprites =new ArrayList<>();
 
-        for(TiledMapTile tile:playerSpriteTileSet){//gets the largest of player state and the max number of sprites associated with a state
-            try{
-                playerSpriteTiles[tile.getProperties().get("Player State",int.class)][tile.getProperties().get("State Index",int.class)]
-                    =tile;
-                playerSprites[tile.getProperties().get("Player State",int.class)][tile.getProperties().get("State Index",int.class)]
-                    =tile.getTextureRegion();
-            } catch (Exception ignore) {}
+        for(TiledMapTile tile: tiles){
+            sprites.add(tile.getTextureRegion());
         }
         addToWorld(startingPosition);
     }
@@ -171,11 +157,10 @@ public class Player{
     public void render(TextureMapObjectRenderer renderer){
         switch (state){
             case 0->{
-                renderer.renderObject(playerSprites[0][0],getXPosition(),getYPosition(),1,1);//width and height are in gameUnits
+                renderer.renderObject(sprites.get(0),getXPosition(),getYPosition(),1,1);//width and height are in gameUnits
             }
             case 1->{
-                renderer.renderObject(playerSprites[1][0],getXPosition(),getYPosition()+0.5f,1,1);//top tile
-                renderer.renderObject(playerSprites[1][1],getXPosition(),getYPosition()-0.5f,1,1);//bottom tile
+                renderer.renderObject(sprites.get(1),getXPosition(),getYPosition(),1,2);
             }
         }
 
@@ -251,8 +236,8 @@ public class Player{
         }
     }
     private void addToWorld(Vector2 startingPosition) {
-        WIDTH = (playerSpriteTiles[state][0].getProperties().get("WIDTH",int.class)-2)  * GameCore.unitsPerPixel;// the -2 is so the player appears to be touching objects when colliding
-        HEIGHT= (playerSpriteTiles[state][0].getProperties().get("HEIGHT",int.class)-2) * GameCore.unitsPerPixel;
+        WIDTH = (tiles.get(state).getProperties().get("WIDTH",int.class)-2)  * GameCore.unitsPerPixel;// the -2 is so the player appears to be touching objects when colliding
+        HEIGHT= (tiles.get(state).getProperties().get("HEIGHT",int.class)-2) * GameCore.unitsPerPixel;
         startingPosition.add(0.5f,HEIGHT/2);//cannot do WIDTH/2 for x because player is 0.75 units wide
 
         PolygonShape rectangle=new PolygonShape();

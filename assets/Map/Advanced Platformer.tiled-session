@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "testLevel.tmx",
+    "activeFile": "Environment Tileset.tsx",
     "automapping.whileDrawing": false,
     "expandedProjectPaths": [
         "."
@@ -31,6 +31,22 @@
             "scaleInEditor": 1
         },
         "Item Tiles.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "NPC Tileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Player Sprite 0.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Player Sprite 1.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Player Sprite 2.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
@@ -78,14 +94,14 @@
                 6
             ],
             "expandedObjectLayers": [
-                4,
-                3
+                3,
+                4
             ],
-            "scale": 0.5,
+            "scale": 1.5,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 630,
-                "y": 1410
+                "x": 613.3333333333334,
+                "y": 674.3333333333333
             }
         },
         "testTestLevel.tmx": {
@@ -102,7 +118,7 @@
     },
     "frame.defaultDuration": 100,
     "last.externalTilesetPath": "C:/Users/4183372/JavaProjects/AdvancedPlatformer/assets/Map",
-    "last.imagePath": "C:/Users/4183372/JavaProjects/AdvancedPlatformer/assets/Tilesets",
+    "last.imagePath": "C:/Users/Henry/IdeaProjects/AdvancedPlatformer/assets/Tilesets",
     "map.fixedSize": true,
     "map.height": 20,
     "map.lastUsedFormat": "tmx",
@@ -113,28 +129,32 @@
     "openFiles": [
         "testLevel.tmx",
         "Ground Tileset v1.tsx",
-        "Special Tiles.tsx"
+        "NPC Tileset.tsx",
+        "Player Tileset.tsx",
+        "Player Sprite 0.tsx",
+        "Player Sprite 1.tsx",
+        "Environment Tileset.tsx"
     ],
     "project": "Advanced Platformer.tiled-project",
-    "property.type": "int",
+    "property.type": "string",
     "recentFiles": [
-        "Special Tileset.tsx",
-        "Environment Tileset.tsx",
+        "testLevel.tmx",
         "Ground Tileset v1.tsx",
+        "NPC Tileset.tsx",
         "Player Tileset.tsx",
+        "Player Sprite 0.tsx",
+        "Player Sprite 1.tsx",
+        "Environment Tileset.tsx",
+        "Player Sprite 2.tsx",
+        "Special Tileset.tsx",
         "Item Sprites.tsx",
         "Special Tiles.tsx",
-        "Player Tiles.tsx",
-        "Environment Sprites.tsx",
-        "Item Tiles.tsx",
-        "Player Sprites.tsx",
-        "testLevel.tmx",
-        "Simple Ground.tsx"
+        "Player Tiles.tsx"
     ],
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
-        "height": 64,
+        "height": 128,
         "width": 64
     }
 }

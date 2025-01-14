@@ -23,12 +23,14 @@ public class Level implements Disposable{
     public final ArrayList<InteractableObject> interactableObjectsAdd=new ArrayList<>();
     public final ArrayList<InteractableObject> interactableObjectsRemove=new ArrayList<>();
 
-    public TiledMapTileSet playerSpriteTiles;
+    private final Map<String, ArrayList<TiledMapTile>> tilesByRelatedObject =new HashMap<>();
+
     public TiledMapTileMapObject playerObject;
 
     public Level(int levelNumber){
         getMapToLoad(levelNumber);
         TiledMapTileSets tileSets = map.getTileSets();// load all tilesets
+        loadTilesets(tileSets);
 
         GameCore.renderer=new TextureMapObjectRenderer(map,GameCore.unitsPerPixel);
         GameCore.renderer.setView(GameCore.camera);
@@ -36,10 +38,7 @@ public class Level implements Disposable{
 
         MapBodyBuilder.buildShapes(map, GameScreen.world,"Primary Level Collision");// build primary level collision
 
-        Map<String, TiledMapTile[]> environmentTileset=getTilesMapArray(tileSets.getTileSet("Environment Tileset"));
-        Map<String, TiledMapTile[]> npcTileset=getTilesMapArray(tileSets.getTileSet("NPC Tileset"));
 
-        playerSpriteTiles = tileSets.getTileSet("Player Tileset");
         playerObject=(TiledMapTileMapObject)(map.getLayers().get("Player Layer").getObjects().get("Player"));
 
 
@@ -53,10 +52,10 @@ public class Level implements Disposable{
             switch(mapLayer.getName()){
 
                 case "QuestionBlock"->{
-                    loadQuestionBlocks(mapLayer.getObjects(), environmentTileset);
+                    loadQuestionBlocks(mapLayer.getObjects());
                 }
                 case "Enemy"->{
-                    loadEnemies(mapLayer.getObjects(), npcTileset);
+                    //loadEnemies(mapLayer.getObjects());
                 }
             }
         }
@@ -75,42 +74,48 @@ public class Level implements Disposable{
         }
         return tiles;
     }
-    // very good spaghetti
-    public Map<String, TiledMapTile[]> getTilesMapArray(TiledMapTileSet tileSet){
-        //file contains sprites for multiple things with multiple states
-        //first chunk of code gets it in a map of arraylists each arraylist is mapped to an object type
-        Map<String, ArrayList<TiledMapTile>> objectTilesMap=new HashMap<>();
+
+    public ArrayList<TiledMapTile> getTilesFor(String relatedObject){
+        return tilesByRelatedObject.get(relatedObject);
+    }
+    public void loadTilesets(TiledMapTileSets tileSetsToLoad){
+        for(TiledMapTileSet tileSet:tileSetsToLoad){
+            loadTileset(tileSet);
+        }
+        for(String key : tilesByRelatedObject.keySet()){
+            orderArrayListByTileState(tilesByRelatedObject.get(key));
+        }
+    }
+    public void loadTileset(TiledMapTileSet tileSet){
         for(TiledMapTile tile:tileSet){
             try{
-
-                String relatedObject=tile.getProperties().get("Related Object",String.class);
+                String relatedObject=tile.getProperties().get("relatedObject",String.class);
                 if(relatedObject==null){
                     continue;
                 }
-                if(objectTilesMap.get(relatedObject)==null){
-                    objectTilesMap.put(relatedObject,new ArrayList<>());
+                if(tilesByRelatedObject.get(relatedObject)==null){
+                    tilesByRelatedObject.put(relatedObject,new ArrayList<>());
                 }
-                objectTilesMap.get(relatedObject).add(tile);
+                tilesByRelatedObject.get(relatedObject).add(tile);
             } catch (Exception ignore) {}
         }
-
-        Map<String, TiledMapTile[]> objectTilesMapArray=new HashMap<>();
-        //this converts it from an arraylist to an array and sorts the tiles
-        System.out.println("objectTilesMap "+ Arrays.toString(objectTilesMap.keySet().toArray()));
-        for(String relatedObject:objectTilesMap.keySet()){
-            TiledMapTile[] tempTiledMapTile=new TiledMapTile[objectTilesMap.get(relatedObject).size()];
-            for(int i=0;i<tempTiledMapTile.length;i++){
-                try{
-                    tempTiledMapTile[objectTilesMap.get(relatedObject).get(i).getProperties().get("State",int.class)]=objectTilesMap.get(relatedObject).get(i);
-                } catch (Exception e) {
-                    tempTiledMapTile[0]=objectTilesMap.get(relatedObject).get(i);
-                }
-            }
-            objectTilesMapArray.put(relatedObject,tempTiledMapTile);
-        }
-
-        return objectTilesMapArray;
     }
+    public void orderArrayListByTileState(ArrayList<TiledMapTile> arrayList){
+        if(arrayList.size()==1){
+            return;
+        }
+        for(int i=1;i<arrayList.size();i++){
+            TiledMapTile key=arrayList.get(i);
+            int j=i-1;
+
+            while(j>=0&&arrayList.get(j).getProperties().get("state",int.class)>key.getProperties().get("state",int.class)){
+                arrayList.set(j+1,arrayList.get(j));
+                j--;
+            }
+            arrayList.set(j+1,key);
+        }
+    }
+
     public void update(){
         for(InteractableObject object:interactableObjects){
             object.update();
@@ -130,17 +135,17 @@ public class Level implements Disposable{
         GameScreen.player.render(GameCore.renderer);
         GameCore.renderer.end();
     }
-    private void loadQuestionBlocks(MapObjects questionBlocks, Map<String,TiledMapTile[]> environmentTileset){
+    private void loadQuestionBlocks(MapObjects questionBlocks){
 
         for (MapObject questionBlock : questionBlocks) {
-            interactableObjects.add(new QuestionBlock((TiledMapTileMapObject)questionBlock, environmentTileset));
+            interactableObjects.add(new QuestionBlock((TiledMapTileMapObject)questionBlock, this));
         }
     }
-    private void loadEnemies(MapObjects enemies, Map<String,TiledMapTile[]> npcTileset){
+    private void loadEnemies(MapObjects enemies){
         for (MapObject enemy : enemies) {
             switch (((TiledMapTileMapObject)enemy).getTile().getProperties().get("Related Object",String.class)){
                 case "BasicEnemy"->{
-                    interactableObjects.add(new BasicEnemy((TiledMapTileMapObject)enemy, npcTileset));
+                    interactableObjects.add(new BasicEnemy((TiledMapTileMapObject)enemy, this));
                 }
             }
         }

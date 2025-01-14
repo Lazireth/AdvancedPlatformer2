@@ -21,13 +21,13 @@ public class OneUP extends Bounceable {
 
     boolean doBounce=false;
     boolean toCollect=false;
-    public OneUP(float inX, float inY, TextureRegion mySprite){
+    public OneUP(float inX, float inY){
         // todo
         // gets stuck on interactable blocks
         x=inX;
         y=inY;
         initialY=y;
-        this.mySprite = mySprite;
+        mySprite = getSpritesFor("OneUP").getFirst();
         WIDTH = mySprite.getRegionWidth()  * GameCore.unitsPerPixel;
         HEIGHT = mySprite.getRegionHeight()* GameCore.unitsPerPixel;
         GameCore.gameScreen.level.interactableObjectsAdd.add(this);
