@@ -2,17 +2,15 @@ package com.github.lazireth.advancedPlatformer;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.github.lazireth.advancedPlatformer.objects.Bounceable;
 import com.github.lazireth.advancedPlatformer.objects.InteractableObject;
 import com.github.lazireth.advancedPlatformer.objects.Mushroom;
 import com.github.lazireth.advancedPlatformer.objects.OneUP;
-
-import java.util.Arrays;
 
 public class CollisionListener implements ContactListener {
 
 
     @Override
+    /// Called when two fixtures begin to touch
     public void beginContact(Contact contact) {
         Fixture fixtureA;
         Fixture fixtureB;
@@ -42,76 +40,24 @@ public class CollisionListener implements ContactListener {
         // add other cases where both fixtureA and B need to be not null here
     }
     private void oneNull(Fixture goodFixture, Fixture nullFixture, Object object, Contact contact){
-        if(object.getClass().isInstance(Bounceable.class)){
-            //if the object is bounceable
-            if(checksIfObjectShouldBounce((InteractableObject)object,contact)){
-                //if it should bounce
-                switch ((InteractableObject)object){
-                    case Mushroom mushroom ->mushroom.bounce();
-                    case OneUP oneUP ->oneUP.bounce();
-                    default -> throw new IllegalStateException("Unexpected value: " + (object));
-                }
-            }
-        }
         switch (object){
+            case Mushroom mushroom -> mushroom.bounce((InteractableObject)object,contact);
+            case OneUP oneUP -> oneUP.bounce((InteractableObject)object,contact);
             case Player player ->player.preserveVelocityWhenLanding=true;
             case null, default -> {}
         }
     }
     // I know this method is big and has a lot of if statements, but I don't think it can get much better with the current approach
-    boolean checksIfObjectShouldBounce(InteractableObject object, Contact contact){
-        Vector2 pos=object.body.getPosition();
-        Vector2[] corners={pos.cpy().add(0.5f,0.5f),pos.cpy().add(0.5f,-0.5f),pos.cpy().add(-0.5f,-0.5f),pos.cpy().add(-0.5f,0.5f)};
-
-        if(contact.getWorldManifold().getNumberOfContactPoints()==2){//one full side is colliding
-            if(object.body.getLinearVelocity().x>0){
-                //moving to the right
-                if(diffLessThan(corners[0].x,contact.getWorldManifold().getPoints()[0].x,0.1f)){
-                    //right side is colliding
-                    if(diffLessThan(corners[0],contact.getWorldManifold().getPoints()[0],0.1f)&&
-                        diffLessThan(corners[1],contact.getWorldManifold().getPoints()[1],0.1f)){
-                        //TR and point 0    BR and point 1
-                        return true;
-                    }else if(diffLessThan(corners[0],contact.getWorldManifold().getPoints()[1],0.1f)&&
-                        diffLessThan(corners[1],contact.getWorldManifold().getPoints()[0],0.1f)){
-                        //TR and point 1    BR and point 0
-                        return true;
-                    }
-                }
-            }else{
-                //moving to the left
-                if(diffLessThan(corners[3].x,contact.getWorldManifold().getPoints()[0].x,0.1f)){
-                    //left side is colliding
-                    if(diffLessThan(corners[3],contact.getWorldManifold().getPoints()[0],0.1f)&&
-                        diffLessThan(corners[2],contact.getWorldManifold().getPoints()[1],0.1f)){
-                        //TL and point 0    BL and point 1
-                        return true;
-                    }else if(diffLessThan(corners[3],contact.getWorldManifold().getPoints()[1],0.1f)&&
-                        diffLessThan(corners[2],contact.getWorldManifold().getPoints()[0],0.1f)){
-                        //TL and point 1    BL and point 0
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-    boolean diffLessThan(float a, float b, float threshold){
-        return Math.abs(a-b)<threshold;
-    }
-    boolean diffLessThan(Vector2 a, Vector2 b, float threshold){
-        return Math.abs(a.x-b.x)<threshold&&Math.abs(a.y-b.y)<threshold;
-    }
     private boolean playerCollision(Object objectA, Object objectB){
         if(objectA.getClass().equals(Player.class)){//true if objectA is a player
             if(objectB instanceof InteractableObject){
-                ((InteractableObject)objectB).startInteraction((Player)objectA);
+                ((InteractableObject)objectB).startInteractionWithPlayer((Player)objectA);
             }
             return true;
         }else
         if(objectB.getClass().equals(Player.class)){//true if objectB is a player
             if(objectA instanceof InteractableObject){
-                ((InteractableObject)objectA).startInteraction((Player)objectB);
+                ((InteractableObject)objectA).startInteractionWithPlayer((Player)objectB);
             }
             return true;
         }
@@ -133,24 +79,28 @@ public class CollisionListener implements ContactListener {
 
 
 
-
-
-
     @Override
+    /// Called when two fixtures cease to touch
     public void endContact(Contact contact) {
 
     }
 
     @Override
-    public void preSolve(Contact contact, Manifold manifold) {
+    /// This is called after a contact is updated. This allows you to inspect a contact before it goes to the solver. If you are
+    /// careful, you can modify the contact manifold (e.g. disable contact). A copy of the old manifold is provided so that you can
+	/// detect changes. Note: this is called only for awake bodies. Note: this is called even when the number of contact points is
+	/// zero. Note: this is not called for sensors. Note: if you set the number of contact points to zero, you will not get an
+	/// EndContact callback. However, you may get a BeginContact callback the next step.
+    public void preSolve(Contact contact, Manifold manifold) {// what this is https://stackoverflow.com/a/27335246
     }
 
     @Override
+    /// This lets you inspect a contact after the solver is finished. This is useful for inspecting impulses. Note: the contact
+    /// manifold does not include time of impact impulses, which can be arbitrarily large if the sub-step is small. Hence, the
+    /// impulse is provided explicitly in a separate data structure. Note: this is only called for contacts that are touching,
+    /// solid, and awake.
     public void postSolve(Contact contact, ContactImpulse contactImpulse) {
     }
     // taken from https://stackoverflow.com/questions/23309326/implement-nand-only-by-and
     // simplified to what it is by IntelliJ
-    public boolean nand(boolean a, boolean b){
-        return (!a || !b);
-    }
 }

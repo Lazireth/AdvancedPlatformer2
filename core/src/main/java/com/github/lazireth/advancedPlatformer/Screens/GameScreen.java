@@ -51,7 +51,7 @@ public class GameScreen extends ScreenAdapter {
 
         //update game here
 
-        level.update();
+        level.update(delta);
         player.update(delta);
 
 

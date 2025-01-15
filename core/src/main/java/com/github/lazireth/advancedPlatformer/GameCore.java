@@ -33,6 +33,7 @@ public class GameCore extends Game {
     public static StartScreen startScreen;
     @Override
     public void create() {
+
         Gdx.app.setLogLevel(Application.LOG_NONE);
 
         camera=new OrthographicCamera();

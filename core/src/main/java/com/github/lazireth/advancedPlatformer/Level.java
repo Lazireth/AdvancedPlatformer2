@@ -31,6 +31,7 @@ public class Level implements Disposable{
         getMapToLoad(levelNumber);
         TiledMapTileSets tileSets = map.getTileSets();// load all tilesets
         loadTilesets(tileSets);
+        InteractableObject.currentLevel=this;
 
         GameCore.renderer=new TextureMapObjectRenderer(map,GameCore.unitsPerPixel);
         GameCore.renderer.setView(GameCore.camera);
@@ -116,9 +117,9 @@ public class Level implements Disposable{
         }
     }
 
-    public void update(){
+    public void update(float delta){
         for(InteractableObject object:interactableObjects){
-            object.update();
+            object.update(delta);
         }
         while(!interactableObjectsAdd.isEmpty()){
             interactableObjects.addFirst(interactableObjectsAdd.removeFirst());
@@ -138,14 +139,14 @@ public class Level implements Disposable{
     private void loadQuestionBlocks(MapObjects questionBlocks){
 
         for (MapObject questionBlock : questionBlocks) {
-            interactableObjects.add(new QuestionBlock((TiledMapTileMapObject)questionBlock, this));
+            interactableObjects.add(new QuestionBlock((TiledMapTileMapObject)questionBlock));
         }
     }
     private void loadEnemies(MapObjects enemies){
         for (MapObject enemy : enemies) {
             switch (((TiledMapTileMapObject)enemy).getTile().getProperties().get("Related Object",String.class)){
                 case "BasicEnemy"->{
-                    interactableObjects.add(new BasicEnemy((TiledMapTileMapObject)enemy, this));
+                    interactableObjects.add(new BasicEnemy((TiledMapTileMapObject)enemy));
                 }
             }
         }

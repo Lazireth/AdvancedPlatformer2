@@ -32,8 +32,6 @@ public class Player{
     private static final float MAX_LEFT_WALK_SPEED=-5;
     private static final float MAX_LEFT_RUN_SPEED=-9;
 
-    private static final float MAX_RIGHT_VELOCITY=9;// m/s
-    private static final float MAX_LEFT_VELOCITY=-9;// m/s
     private static final float MIN_VELOCITY=0.2f;   // m/s
 
     static final int TIME_ON_GROUND_BEFORE_JUMP=5;
@@ -69,7 +67,6 @@ public class Player{
     boolean isRunning;
 
     public Player(TiledMapTileMapObject playerObject, ArrayList<TiledMapTile> playerTilesIn){
-        System.out.println("playerTilesIn "+playerTilesIn.size());
         startingPosition=new Vector2(playerObject.getX()*GameCore.unitsPerPixel,playerObject.getY()*GameCore.unitsPerPixel);
         tiles =playerTilesIn;
 

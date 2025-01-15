@@ -1,22 +1,19 @@
 package com.github.lazireth.advancedPlatformer.objects;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.github.lazireth.advancedPlatformer.GameCore;
-import com.github.lazireth.advancedPlatformer.Level;
 import com.github.lazireth.advancedPlatformer.Player;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 public class QuestionBlock extends InteractableObject{
     final float WIDTH;
@@ -34,32 +31,28 @@ public class QuestionBlock extends InteractableObject{
 
     String heldObject;
 
-    public QuestionBlock(TiledMapTileMapObject questionBlock, Level level){
+    public QuestionBlock(TiledMapTileMapObject questionBlock){
         this.questionBlock = questionBlock;
         try{
             heldObject=questionBlock.getProperties().get("Held Object",String.class);
         } catch (Exception e) {
             heldObject=null;
         }
-        // load sprites
 
         sprites=getSpritesFor("QuestionBlock");
 
-        //get with and convert from pixel to game units
-        WIDTH = sprites.getFirst().getRegionWidth()  * GameCore.unitsPerPixel;
-        HEIGHT = sprites.getFirst().getRegionHeight()* GameCore.unitsPerPixel;
+        WIDTH = pixelsToUnits(sprites.getFirst().getRegionWidth());
+        HEIGHT= pixelsToUnits(sprites.getFirst().getRegionHeight());
 
-        // build collision
-        addToWorld();
+
+        // create sensor
+        makeSensor();
 
         // needed for interactions
         body.setUserData(this);
     }
 
     private void dropItem(){
-        if(heldObject==null){
-            return;
-        }
         switch(heldObject){
             case "Mushroom"->new Mushroom(getXPosition(),getYPosition()+yPositionModifier);
             case "OneUP"->new OneUP(getXPosition(),getYPosition()+yPositionModifier);
@@ -67,7 +60,7 @@ public class QuestionBlock extends InteractableObject{
     }
 
     @Override
-    public void update() {
+    public void update(float delta) {
         if(ticksAfterInteraction>=0&&ticksAfterInteraction<=24){
             if(ticksAfterInteraction<12){
                 yPositionModifier+=1/48.0f;
@@ -87,25 +80,37 @@ public class QuestionBlock extends InteractableObject{
     }
 
 
-    public void startInteraction(Player player){
-        if(player.getYVelocity()>0&&player.getYPosition()+Player.HEIGHT/2<getYPosition()-HEIGHT/2&&ticksAfterInteraction==-1){
+    public void startInteractionWithPlayer(Player player){
+        if(player.getYPosition()+Player.HEIGHT/2<getYPosition()-HEIGHT/2&&ticksAfterInteraction==-1){
             ticksAfterInteraction=0;
         }
     }
-    private void addToWorld() {
-        Rectangle rectangle = new Rectangle(questionBlock.getX()/GameCore.pixelsPerUnit,questionBlock.getY()/GameCore.pixelsPerUnit,WIDTH,HEIGHT);
-
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(WIDTH/2, HEIGHT/2);
+    private void makeSensor() {
+        float width=WIDTH+ 2*GameCore.unitsPerPixel;//need to be slightly larger so they can be touched by the player
+        float height=HEIGHT+ 2*GameCore.unitsPerPixel;
+        float x=pixelsToUnits(questionBlock.getX());
+        float y=pixelsToUnits(questionBlock.getY());
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.KinematicBody;
-        bodyDef.position.set(rectangle.x + rectangle.width/2 , rectangle.y + HEIGHT/2);
+        bodyDef.position.set(x+width/2.0f,y+height/2.0f);
+
+
         body = GameScreen.world.createBody(bodyDef);
-        body.createFixture(shape, 0);
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width/2.0f, height/2.0f);
+
+        FixtureDef fixtureDefRect=new FixtureDef();
+        fixtureDefRect.shape=shape;
+        fixtureDefRect.isSensor=true;
+
+        body.createFixture(fixtureDefRect);
+        body.setUserData(this);
+
+        shape.dispose();
     }
     public void render(TextureMapObjectRenderer renderer){
-        renderer.renderObject(sprites.get(currentSprite), body.getPosition().x, body.getPosition().y+yPositionModifier,WIDTH,HEIGHT);
+        renderer.renderObject(sprites.get(currentSprite), getXPosition(), getYPosition()+yPositionModifier,WIDTH,HEIGHT);
     }
     float getYVelocity(){
         return body.getLinearVelocity().y;
@@ -114,10 +119,12 @@ public class QuestionBlock extends InteractableObject{
         return body.getLinearVelocity().x;
     }
     float getYPosition(){
-        return body.getPosition().y;
+        //body position got changed because detection box is slightly larger than sprite
+        return body.getPosition().y-GameCore.unitsPerPixel;
     }
     float getXPosition(){
-        return body.getPosition().x;
+        //body position got changed because detection box is slightly larger than sprite
+        return body.getPosition().x-GameCore.unitsPerPixel;
     }
     public void setVelocity(Vector2 velocity) {
         body.setLinearVelocity(velocity);

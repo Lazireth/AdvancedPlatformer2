@@ -2,26 +2,32 @@ package com.github.lazireth.advancedPlatformer.objects.enemies;
 
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
-import com.github.lazireth.advancedPlatformer.Level;
 import com.github.lazireth.advancedPlatformer.Player;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
-import java.util.Iterator;
-import java.util.Map;
+import java.util.ArrayList;
 
 public class BasicEnemy extends Enemy {
-    TiledMapTileMapObject basicEnemy;
+    //BasicEnemies move until they hit a wall then turn around
+    //and can only deal damage on contact
+    TiledMapTileMapObject myMapObject;
+    ArrayList<TiledMapTile> myTiles;
     String enemyType;
     int state;
-    public BasicEnemy (TiledMapTileMapObject enemy, Level level) {
-        basicEnemy =enemy;
 
-        enemyType= basicEnemy.getTile().getProperties().get("EnemyType",String.class);
-        state= basicEnemy.getTile().getProperties().get("State",int.class);
+    float health;
+    float damage;
+    float moveSpeed;
+    public BasicEnemy (TiledMapTileMapObject enemy) {
+        myMapObject =enemy;
 
-        getTilesFor("BasicEnemy");
+        enemyType= myMapObject.getTile().getProperties().get("EnemyType",String.class);
+        state= myMapObject.getTile().getProperties().get("State",int.class);
+
+        myTiles = getTilesFor("BasicEnemy");
+        loadStats();
     }
-    private void loadEnemyData(){
+    private void loadStats(){
 
     }
     @Override
@@ -45,12 +51,12 @@ public class BasicEnemy extends Enemy {
     }
 
     @Override
-    public void update() {
+    public void update(float delta) {
 
     }
 
     @Override
-    public void startInteraction(Player player) {
+    public void startInteractionWithPlayer(Player player) {
 
     }
 }

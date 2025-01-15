@@ -3,21 +3,19 @@ package com.github.lazireth.advancedPlatformer.objects;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.*;
 import com.github.lazireth.advancedPlatformer.GameCore;
 import com.github.lazireth.advancedPlatformer.Player;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
-public class OneUP extends Bounceable {
+public class OneUP extends InteractableObject {
     final float WIDTH;
     final float HEIGHT;
     final TextureRegion mySprite;
     float x,y;
     float initialY;
+    float moveSpeed=1.0f;
 
     boolean doBounce=false;
     boolean toCollect=false;
@@ -42,7 +40,7 @@ public class OneUP extends Bounceable {
     }
 
     @Override
-    public void update() {
+    public void update(float delta) {
         if(toCollect){
 
             GameScreen.player.collectItem("OneUP");
@@ -52,10 +50,10 @@ public class OneUP extends Bounceable {
             return;
         }
         if(body==null){
-            y+=1/32.0f;
+            y+=1.5f*delta;
             if(y>initialY+HEIGHT){
                 addToWorld();
-                body.setLinearVelocity(new Vector2(2f,0));
+                body.setLinearVelocity(new Vector2(moveSpeed,0));
             }
         }else if(!doBounce){
             y=body.getPosition().y;
@@ -63,7 +61,7 @@ public class OneUP extends Bounceable {
     }
     //todo
     //actual make it do something
-    public void startInteraction(Player player) {
+    public void startInteractionWithPlayer(Player player) {
         toCollect=true;
         System.out.println("collected 1UP");
     }
@@ -88,5 +86,58 @@ public class OneUP extends Bounceable {
         body.setUserData(this);
 
         shape.dispose();
+    }
+    public void bounce(InteractableObject object, Contact contact){
+        System.out.println("bounce");
+        if(checksIfObjectShouldBounce(object,contact)){
+            if(body.getLinearVelocity().x<0){
+                body.setLinearVelocity(moveSpeed,0);
+            }else{
+                body.setLinearVelocity(-moveSpeed,0);
+            }
+        }
+    }
+    boolean checksIfObjectShouldBounce(InteractableObject object, Contact contact){
+        Vector2 pos=object.body.getPosition();
+        Vector2[] corners={pos.cpy().add(0.5f,0.5f),pos.cpy().add(0.5f,-0.5f),pos.cpy().add(-0.5f,-0.5f),pos.cpy().add(-0.5f,0.5f)};
+
+        if(contact.getWorldManifold().getNumberOfContactPoints()==2){//one full side is colliding
+            if(object.body.getLinearVelocity().x>0){
+                //moving to the right
+                if(diffLessThan(corners[0].x,contact.getWorldManifold().getPoints()[0].x,0.1f)){
+                    //right side is colliding
+                    if(diffLessThan(corners[0],contact.getWorldManifold().getPoints()[0],0.1f)&&
+                        diffLessThan(corners[1],contact.getWorldManifold().getPoints()[1],0.1f)){
+                        //TR and point 0    BR and point 1
+                        return true;
+                    }else if(diffLessThan(corners[0],contact.getWorldManifold().getPoints()[1],0.1f)&&
+                        diffLessThan(corners[1],contact.getWorldManifold().getPoints()[0],0.1f)){
+                        //TR and point 1    BR and point 0
+                        return true;
+                    }
+                }
+            }else{
+                //moving to the left
+                if(diffLessThan(corners[3].x,contact.getWorldManifold().getPoints()[0].x,0.1f)){
+                    //left side is colliding
+                    if(diffLessThan(corners[3],contact.getWorldManifold().getPoints()[0],0.1f)&&
+                        diffLessThan(corners[2],contact.getWorldManifold().getPoints()[1],0.1f)){
+                        //TL and point 0    BL and point 1
+                        return true;
+                    }else if(diffLessThan(corners[3],contact.getWorldManifold().getPoints()[1],0.1f)&&
+                        diffLessThan(corners[2],contact.getWorldManifold().getPoints()[0],0.1f)){
+                        //TL and point 1    BL and point 0
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    boolean diffLessThan(float a, float b, float threshold){
+        return Math.abs(a-b)<threshold;
+    }
+    boolean diffLessThan(Vector2 a, Vector2 b, float threshold){
+        return Math.abs(a.x-b.x)<threshold&&Math.abs(a.y-b.y)<threshold;
     }
 }
