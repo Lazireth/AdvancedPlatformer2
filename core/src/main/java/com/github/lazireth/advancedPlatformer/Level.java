@@ -33,7 +33,7 @@ public class Level implements Disposable{
         loadTilesets(tileSets);
         InteractableObject.currentLevel=this;
 
-        GameCore.renderer=new TextureMapObjectRenderer(map,GameCore.unitsPerPixel);
+        GameCore.renderer=new TextureMapObjectRenderer(map,GameCore.metersPerPixel);
         GameCore.renderer.setView(GameCore.camera);
         firstRenderLayer=new int[]{map.getLayers().getIndex("Tile Layer 1")};// make array of Tile Layers to render
 

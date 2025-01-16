@@ -2,7 +2,6 @@ package com.github.lazireth.advancedPlatformer.objects;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -20,7 +19,6 @@ public class QuestionBlock extends InteractableObject{
     final float HEIGHT;
 
     private Body body;
-
     int ticksAfterInteraction=-1;
     float yPositionModifier=0;
 
@@ -31,6 +29,13 @@ public class QuestionBlock extends InteractableObject{
 
     String heldObject;
 
+    int animationState=0;
+    //0 is before animation
+    //1 is going up
+    //2 is going down
+    //3 is after animation
+    float[] animationVelocities={0,1.25f,-1.25f,0};
+    float[] animationPositions ={0,0.25f,0,0};
     public QuestionBlock(TiledMapTileMapObject questionBlock){
         this.questionBlock = questionBlock;
         try{
@@ -58,18 +63,61 @@ public class QuestionBlock extends InteractableObject{
             case "OneUP"->new OneUP(getXPosition(),getYPosition()+yPositionModifier);
         }
     }
-
+    float deltaSum=0;
     @Override
     public void update(float delta) {
         if(ticksAfterInteraction>=0&&ticksAfterInteraction<=24){
+            if(ticksAfterInteraction==0){
+                System.out.println("nano "+System.nanoTime());
+            }
             if(ticksAfterInteraction<12){
-                yPositionModifier+=1/48.0f;
+                deltaSum+=delta;
+                System.out.println("\ndelta "+delta);
+                System.out.println(3.7756023596f*delta);
+                yPositionModifier+=1.25f*delta;
                 if(ticksAfterInteraction==11){
+                    System.out.println("deltaSum "+deltaSum);
+                    System.out.println("nano "+System.nanoTime());
                     dropItem();
                 }
             }else
             if(ticksAfterInteraction<24){
-                yPositionModifier-=1/48.0f;
+                System.out.println("yPositionModifier "+yPositionModifier);
+                yPositionModifier-=1.25f*delta;
+
+            }else{
+                currentSprite=1;
+                yPositionModifier=0;
+            }
+            ticksAfterInteraction++;
+        }
+    }
+    public void update2(float delta) {
+        if(animationState==1){
+            body.setLinearVelocity(0,animationVelocities[animationState]);
+        }
+        if(animationState==2){
+            body.setLinearVelocity(0,animationVelocities[animationState]);
+        }
+
+        if(ticksAfterInteraction>=0&&ticksAfterInteraction<=24){
+            if(ticksAfterInteraction==0){
+                System.out.println("nano "+System.nanoTime());
+            }
+            if(ticksAfterInteraction<12){
+                deltaSum+=delta;
+                System.out.println("\ndelta "+delta);
+                System.out.println(3.7756023596f*delta);
+                yPositionModifier+=1.25f*delta;
+                if(ticksAfterInteraction==11){
+                    System.out.println("deltaSum "+deltaSum);
+                    System.out.println("nano "+System.nanoTime());
+                    dropItem();
+                }
+            }else
+            if(ticksAfterInteraction<24){
+                System.out.println("yPositionModifier "+yPositionModifier);
+                yPositionModifier-=1.25f*delta;
 
             }else{
                 currentSprite=1;
@@ -79,15 +127,15 @@ public class QuestionBlock extends InteractableObject{
         }
     }
 
-
     public void startInteractionWithPlayer(Player player){
         if(player.getYPosition()+Player.HEIGHT/2<getYPosition()-HEIGHT/2&&ticksAfterInteraction==-1){
             ticksAfterInteraction=0;
+            animationState=1;
         }
     }
     private void makeSensor() {
-        float width=WIDTH+ 2*GameCore.unitsPerPixel;//need to be slightly larger so they can be touched by the player
-        float height=HEIGHT+ 2*GameCore.unitsPerPixel;
+        float width=WIDTH+ 2*GameCore.metersPerPixel;//need to be slightly larger so they can be touched by the player
+        float height=HEIGHT+ 2*GameCore.metersPerPixel;
         float x=pixelsToUnits(questionBlock.getX());
         float y=pixelsToUnits(questionBlock.getY());
 
@@ -120,11 +168,11 @@ public class QuestionBlock extends InteractableObject{
     }
     float getYPosition(){
         //body position got changed because detection box is slightly larger than sprite
-        return body.getPosition().y-GameCore.unitsPerPixel;
+        return body.getPosition().y-GameCore.metersPerPixel;
     }
     float getXPosition(){
         //body position got changed because detection box is slightly larger than sprite
-        return body.getPosition().x-GameCore.unitsPerPixel;
+        return body.getPosition().x-GameCore.metersPerPixel;
     }
     public void setVelocity(Vector2 velocity) {
         body.setLinearVelocity(velocity);

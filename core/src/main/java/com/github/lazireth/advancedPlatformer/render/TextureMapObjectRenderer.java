@@ -18,8 +18,8 @@ import com.github.lazireth.advancedPlatformer.objects.InteractableObject;
 
 import java.util.ArrayList;
 
-import static com.github.lazireth.advancedPlatformer.GameCore.pixelsPerUnit;
-import static com.github.lazireth.advancedPlatformer.GameCore.unitsPerPixel;
+import static com.github.lazireth.advancedPlatformer.GameCore.pixelsPerMeter;
+import static com.github.lazireth.advancedPlatformer.GameCore.metersPerPixel;
 
 /// got the initial code for this from
 /// <a href="https://gamedev.stackexchange.com/questions/103696/tiled-object-layer-draw-sprites">...</a>
@@ -82,15 +82,15 @@ public class TextureMapObjectRenderer extends OrthogonalTiledMapRenderer {
 
 
         layout.setText(bitmapFont,str);
-        float xPos=x*pixelsPerUnit;
-        float yPos=y*pixelsPerUnit;
+        float xPos=x* pixelsPerMeter;
+        float yPos=y* pixelsPerMeter;
         if(centerX){
             xPos-=layout.width/2;
         }
         if(centerY){
             yPos+=layout.height/2;
         }
-        batch.setProjectionMatrix(originalMatrix.cpy().scale(unitsPerPixel,unitsPerPixel,1));
+        batch.setProjectionMatrix(originalMatrix.cpy().scale(metersPerPixel, metersPerPixel,1));
         bitmapFont.draw(batch,str,xPos,yPos);
         batch.setProjectionMatrix(originalMatrix);
     }

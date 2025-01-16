@@ -26,8 +26,8 @@ public class OneUP extends InteractableObject {
         y=inY;
         initialY=y;
         mySprite = getSpritesFor("OneUP").getFirst();
-        WIDTH = mySprite.getRegionWidth()  * GameCore.unitsPerPixel;
-        HEIGHT = mySprite.getRegionHeight()* GameCore.unitsPerPixel;
+        WIDTH = mySprite.getRegionWidth()  * GameCore.metersPerPixel;
+        HEIGHT = mySprite.getRegionHeight()* GameCore.metersPerPixel;
         GameCore.gameScreen.level.interactableObjectsAdd.add(this);
     }
     @Override

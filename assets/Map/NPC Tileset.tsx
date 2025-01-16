@@ -3,7 +3,10 @@
  <image source="../Tilesets/NPC Tileset.png" width="256" height="256"/>
  <tile id="0">
   <properties>
+   <property name="contactDamage" type="float" value="1"/>
    <property name="enemyType" value="Basic"/>
+   <property name="health" type="float" value="1"/>
+   <property name="moveSpeed" type="float" value="0"/>
    <property name="relatedObject" value="BasicEnemy"/>
    <property name="state" type="int" value="0"/>
   </properties>

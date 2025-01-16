@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "NPC Tileset.tsx",
+    "activeFile": "testLevel.tmx",
     "automapping.whileDrawing": false,
     "expandedProjectPaths": [
         "."
@@ -97,11 +97,11 @@
                 3,
                 4
             ],
-            "scale": 0.75,
-            "selectedLayer": 4,
+            "scale": 1.5,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 1294.6666666666665,
-                "y": 632.6666666666665
+                "x": 1111.3333333333333,
+                "y": 533
             }
         },
         "testTestLevel.tmx": {
@@ -137,12 +137,12 @@
     "project": "Advanced Platformer.tiled-project",
     "property.type": "bool",
     "recentFiles": [
-        "testLevel.tmx",
-        "Ground Tileset v1.tsx",
         "Environment Tileset.tsx",
         "Player Sprite 1.tsx",
         "Player Sprite 0.tsx",
         "NPC Tileset.tsx",
+        "Ground Tileset v1.tsx",
+        "testLevel.tmx",
         "Player Tileset.tsx",
         "Player Sprite 2.tsx",
         "Special Tileset.tsx",

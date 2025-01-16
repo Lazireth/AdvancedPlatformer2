@@ -1,5 +1,6 @@
 package com.github.lazireth.advancedPlatformer;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
@@ -66,8 +67,9 @@ public class Player{
 
     boolean isRunning;
 
+    boolean teleport;
     public Player(TiledMapTileMapObject playerObject, ArrayList<TiledMapTile> playerTilesIn){
-        startingPosition=new Vector2(playerObject.getX()*GameCore.unitsPerPixel,playerObject.getY()*GameCore.unitsPerPixel);
+        startingPosition=new Vector2(playerObject.getX()*GameCore.metersPerPixel,playerObject.getY()*GameCore.metersPerPixel);
         tiles =playerTilesIn;
 
         sprites =new ArrayList<>();
@@ -80,10 +82,7 @@ public class Player{
 
 
     public void input(float delta){
-        if(keys[Input.Keys.L]){
-            keys[Input.Keys.L]=false;
-            ScreenshotFactory.saveScreenshot();
-        }
+
         if(isJumping){
             if(keys[Input.Keys.W]){
                 if(ticksJumping<JUMP_TICKS){
@@ -150,7 +149,19 @@ public class Player{
         if(!keys[Input.Keys.A]&&!keys[Input.Keys.D]&&Math.abs(body.getLinearVelocity().x)<MIN_VELOCITY){
             body.setLinearVelocity(0,body.getLinearVelocity().y);
         }
+        if(keys[Input.Keys.L]){
+            teleport=true;
+            keys[Input.Keys.L]=false;
+//            ScreenshotFactory.saveScreenshot();
+            Vector2 difference=body.getPosition().sub(targetPos);
+            System.out.println("\ndifference "+difference);
+            Vector2 neededVel=new Vector2(difference.x*-60,difference.y*-60);
+            System.out.println("neededVel "+neededVel);
+            System.out.println("FPS "+ Gdx.graphics.getFramesPerSecond());
+            body.setLinearVelocity(neededVel);
+        }
     }
+    Vector2 targetPos=new Vector2(20,10);
     public void render(TextureMapObjectRenderer renderer){
         switch (state){
             case 0->{
@@ -196,6 +207,21 @@ public class Player{
     }
 
     public void update(float delta){
+        if(teleport){
+            System.out.println("target "+targetPos);
+            System.out.println("position "+body.getPosition());
+            System.out.println("distance from target "+body.getPosition().sub(targetPos));
+            body.setLinearVelocity(0,0);
+            if(body.getPosition().sub(targetPos).x==0&&body.getPosition().sub(targetPos).y==0){
+                teleport=false;
+            }
+            Vector2 difference=body.getPosition().sub(targetPos);
+            System.out.println("\ndifference "+difference);
+            Vector2 neededVel=new Vector2(difference.x*-60,difference.y*-60);
+            System.out.println("neededVel "+neededVel);
+            System.out.println("FPS "+ Gdx.graphics.getFramesPerSecond());
+            body.setLinearVelocity(neededVel);
+        }
         if(preservedVelocityWhenLandingLastTick){
             preservedVelocityWhenLandingLastTick=false;
             preserveVelocityWhenLanding=false;
@@ -233,8 +259,8 @@ public class Player{
         }
     }
     private void addToWorld(Vector2 startingPosition) {
-        WIDTH = (tiles.get(state).getProperties().get("WIDTH",int.class)-2)  * GameCore.unitsPerPixel;// the -2 is so the player appears to be touching objects when colliding
-        HEIGHT= (tiles.get(state).getProperties().get("HEIGHT",int.class)-2) * GameCore.unitsPerPixel;
+        WIDTH = (tiles.get(state).getProperties().get("WIDTH",int.class)-2)  * GameCore.metersPerPixel;// the -2 is so the player appears to be touching objects when colliding
+        HEIGHT= (tiles.get(state).getProperties().get("HEIGHT",int.class)-2) * GameCore.metersPerPixel;
         startingPosition.add(0.5f,HEIGHT/2);//cannot do WIDTH/2 for x because player is 0.75 units wide
 
         PolygonShape rectangle=new PolygonShape();

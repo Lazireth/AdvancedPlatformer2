@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class MapBodyBuilder {
 
     // The pixels per tile. If your tiles are 16x16, this is set to 16f
-    static float pixelsPerUnit = GameCore.pixelsPerUnit;
+    static float pixelsPerUnit = GameCore.pixelsPerMeter;
 
     public static ArrayList<Body> buildShapes(TiledMap map, World world, String layer) {
         MapObjects objects = map.getLayers().get(layer).getObjects();

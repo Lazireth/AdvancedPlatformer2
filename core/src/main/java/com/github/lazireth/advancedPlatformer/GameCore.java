@@ -19,8 +19,8 @@ public class GameCore extends Game {
     public static float WIDTH=30;
     public static float HEIGHT=14;
     public static OrthographicCamera camera;
-    public static float unitsPerPixel = 1/64f;
-    public static float pixelsPerUnit = 64f;
+    public static float metersPerPixel = 1/64f;
+    public static float pixelsPerMeter = 64f;
     public static Vector3 cameraPos;
 
     public static FitViewport viewport;

@@ -26,8 +26,8 @@ public class Mushroom extends InteractableObject {
         y=inY;
         initialY=y;
         mySprite = getSpritesFor("Mushroom").getFirst();
-        WIDTH = mySprite.getRegionWidth()  * GameCore.unitsPerPixel;
-        HEIGHT = mySprite.getRegionHeight()* GameCore.unitsPerPixel;
+        WIDTH = mySprite.getRegionWidth()  * GameCore.metersPerPixel;
+        HEIGHT = mySprite.getRegionHeight()* GameCore.metersPerPixel;
         GameCore.gameScreen.level.interactableObjectsAdd.add(this);
     }
     @Override

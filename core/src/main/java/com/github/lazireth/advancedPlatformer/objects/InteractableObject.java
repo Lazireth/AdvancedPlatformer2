@@ -31,10 +31,10 @@ public abstract class InteractableObject{
         return textureList;
     }
     public float pixelsToUnits(float pixels){
-        return pixels*GameCore.unitsPerPixel;
+        return pixels*GameCore.metersPerPixel;
     }
     public float unitsToPixels(float units){
-        return Math.round(units*GameCore.pixelsPerUnit);
+        return Math.round(units*GameCore.pixelsPerMeter);
     }
     public abstract void render(TextureMapObjectRenderer renderer);
     public abstract void update(float delta);
