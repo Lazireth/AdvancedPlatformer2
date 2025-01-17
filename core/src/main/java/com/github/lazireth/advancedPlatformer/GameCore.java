@@ -16,17 +16,17 @@ public class GameCore extends Game {
     public static boolean isDebuggingEnabled=true;
 
     public static TextureMapObjectRenderer renderer;
-    public static float WIDTH=30;
-    public static float HEIGHT=14;
+    public static final float WIDTH=30;
+    public static final float HEIGHT=14;
     public static OrthographicCamera camera;
-    public static float metersPerPixel = 1/64f;
-    public static float pixelsPerMeter = 64f;
+    public static final float metersPerPixel = 1/64f;
+    public static final float pixelsPerMeter = 64f;
     public static Vector3 cameraPos;
 
     public static FitViewport viewport;
 
 
-    public static InputHandler inputHandler;
+    public static final InputHandler inputHandler=new InputHandler();;
 
     public static GameScreen gameScreen;
     public static DeathScreen deathScreen;
@@ -41,7 +41,6 @@ public class GameCore extends Game {
         viewport=new FitViewport(WIDTH,HEIGHT,camera);
 
 
-        inputHandler=new InputHandler();
         Gdx.input.setInputProcessor(inputHandler);
 
         gameScreen=new GameScreen(this);

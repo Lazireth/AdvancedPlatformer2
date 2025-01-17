@@ -6,9 +6,9 @@ import com.badlogic.gdx.physics.box2d.Body;
 import java.util.ArrayList;
 
 public class TimedMovement {
-    // while running do NOT change the body's position, velocity, or collision state
+    // while running do NOT change the body's position, velocity
     ArrayList<MovementStep> movementSteps;
-    int currentMovementStep=-1;
+    public int currentMovementStep=-1;
     Vector2 initialPosition;
     float timeSinceStarted=0;
     Body body;
@@ -16,24 +16,38 @@ public class TimedMovement {
     boolean initialCollisionState;
     boolean collisionCurrentlyEnabled;
 
-    boolean started=false;
-    boolean finished=false;
-    boolean resetting=false;
+    public boolean started=false;
+    public boolean finished=false;
+    public boolean resetting=false;
 
 
     public TimedMovement(ArrayList<MovementStep> movementStepsInput,Body bodyIn){
         movementSteps=movementStepsInput;
         body=bodyIn;
     }
-    void start(){//start the timed movement
+    public TimedMovement(ArrayList<MovementStep> movementStepsInput,Body bodyIn,boolean autoStart){
+        movementSteps=movementStepsInput;
+        body=bodyIn;
+        if(autoStart){
+            initialCollisionState=body.getFixtureList().get(0).isSensor();
+            collisionCurrentlyEnabled =initialCollisionState;
+            initialPosition=body.getPosition().cpy();
+
+            started=true;
+        }
+    }
+    public void start(){//start the timed movement
+        System.out.println("start");
         initialCollisionState=body.getFixtureList().get(0).isSensor();
         collisionCurrentlyEnabled =initialCollisionState;
         initialPosition=body.getPosition().cpy();
 
         started=true;
     }
-    void update(float delta){
+    public void update(float delta){
+
         if(!started){return;}
+
         if(resetting){
             Vector2 neededPos=body.getPosition().sub(initialPosition);
             Vector2 neededVel=new Vector2(neededPos.x*60,neededPos.y*60);
@@ -44,29 +58,27 @@ public class TimedMovement {
         }
         if(finished){return;}
         if(currentMovementStep+1>=movementSteps.size()){
+            System.out.println("finished");
             //if there is not a next movement step
             finished=true;
             return;
         }
+
         timeSinceStarted+=delta;
-        if(movementSteps.get(currentMovementStep+1).startTime>timeSinceStarted){
+        if(timeSinceStarted>movementSteps.get(currentMovementStep+1).startTime){
+            currentMovementStep+=1;
             body.setLinearVelocity(movementSteps.get(currentMovementStep).velocity);
             handleCollisionFlags();
-            currentMovementStep+=1;
         }
 
     }
     private void handleCollisionFlags(){
         switch (movementSteps.get(currentMovementStep).flag){
             case ON -> {
-                if(!collisionCurrentlyEnabled){
-                    setBodyCollisionTo(true);
-                }
+                setBodyCollisionTo(true);
             }
             case OFF -> {
-                if(collisionCurrentlyEnabled){
-                    setBodyCollisionTo(false);
-                }
+                setBodyCollisionTo(false);
             }
             case TOGGLE -> {
                 setBodyCollisionTo(!collisionCurrentlyEnabled);
@@ -79,11 +91,14 @@ public class TimedMovement {
         }
     }
     private void setBodyCollisionTo(boolean newState){
+        if(body.getFixtureList().get(0).isSensor()==newState){
+            return;
+        }
         for(int i=0;i<body.getFixtureList().size;i++){
             body.getFixtureList().get(i).setSensor(newState);
         }
     }
-    void reset(){
+    public void reset(){
         resetting=true;
         Vector2 neededPos=body.getPosition().sub(initialPosition);
         Vector2 neededVel=new Vector2(neededPos.x*60,neededPos.y*60);

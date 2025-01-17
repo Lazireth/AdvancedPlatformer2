@@ -1,6 +1,5 @@
 package com.github.lazireth.advancedPlatformer;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.github.lazireth.advancedPlatformer.objects.InteractableObject;
 import com.github.lazireth.advancedPlatformer.objects.Mushroom;
@@ -30,13 +29,14 @@ public class CollisionListener implements ContactListener {
         }
         //handles cases where zero are null
         if(userDataA!=null&&userDataB!=null){
-            zeroNulls(fixtureA, fixtureB, userDataA, userDataB);
+            zeroNulls(fixtureA, fixtureB, userDataA, userDataB,contact);
         }
     }
-    private void zeroNulls(Fixture fixtureA, Fixture fixtureB, Object userDataA, Object userDataB){
+    private void zeroNulls(Fixture fixtureA, Fixture fixtureB, Object userDataA, Object userDataB,Contact contact){
         if(playerCollision(userDataA, userDataB)){
             return;
         }
+        contact.setEnabled(false);
         // add other cases where both fixtureA and B need to be not null here
     }
     private void oneNull(Fixture goodFixture, Fixture nullFixture, Object object, Contact contact){
@@ -49,6 +49,7 @@ public class CollisionListener implements ContactListener {
     }
     // I know this method is big and has a lot of if statements, but I don't think it can get much better with the current approach
     private boolean playerCollision(Object objectA, Object objectB){
+        System.out.println("playerCollision");
         if(objectA.getClass().equals(Player.class)){//true if objectA is a player
             if(objectB instanceof InteractableObject){
                 ((InteractableObject)objectB).startInteractionWithPlayer((Player)objectA);

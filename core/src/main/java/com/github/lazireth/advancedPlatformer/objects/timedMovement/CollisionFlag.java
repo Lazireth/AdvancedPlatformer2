@@ -4,5 +4,6 @@ public enum CollisionFlag{
     ON,
     OFF,
     TOGGLE,
-    RESET
+    RESET,
+    NONE
 }

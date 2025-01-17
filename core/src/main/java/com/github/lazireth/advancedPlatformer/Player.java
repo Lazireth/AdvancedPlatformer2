@@ -33,6 +33,8 @@ public class Player{
     private static final float MAX_LEFT_WALK_SPEED=-5;
     private static final float MAX_LEFT_RUN_SPEED=-9;
 
+    private static final float PASSIVE_DECELERATION=0.1f;
+
     private static final float MIN_VELOCITY=0.2f;   // m/s
 
     static final int TIME_ON_GROUND_BEFORE_JUMP=5;
@@ -82,7 +84,6 @@ public class Player{
 
 
     public void input(float delta){
-
         if(isJumping){
             if(keys[Input.Keys.W]){
                 if(ticksJumping<JUMP_TICKS){

@@ -7,7 +7,13 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.github.lazireth.advancedPlatformer.GameCore;
 import com.github.lazireth.advancedPlatformer.Player;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
+import com.github.lazireth.advancedPlatformer.objects.timedMovement.MovementStep;
+import com.github.lazireth.advancedPlatformer.objects.timedMovement.TimedMovement;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
+
+import java.util.ArrayList;
+
+import static com.github.lazireth.advancedPlatformer.objects.timedMovement.CollisionFlag.*;
 
 public class OneUP extends InteractableObject {
     final float WIDTH;
@@ -15,10 +21,11 @@ public class OneUP extends InteractableObject {
     final TextureRegion mySprite;
     float x,y;
     float initialY;
-    float moveSpeed=1.0f;
+    float moveSpeed=2.0f;
 
     boolean doBounce=false;
     boolean toCollect=false;
+    TimedMovement timedMovement;
     public OneUP(float inX, float inY){
         // todo
         // gets stuck on interactable blocks
@@ -29,6 +36,12 @@ public class OneUP extends InteractableObject {
         WIDTH = mySprite.getRegionWidth()  * GameCore.metersPerPixel;
         HEIGHT = mySprite.getRegionHeight()* GameCore.metersPerPixel;
         GameCore.gameScreen.level.interactableObjectsAdd.add(this);
+        addToWorld(BodyDef.BodyType.KinematicBody,true);
+
+        ArrayList<MovementStep> movementSteps=new ArrayList<>();
+        movementSteps.addLast(new MovementStep(0,1,0, OFF));
+        movementSteps.addLast(new MovementStep(0,0,0.75f, ON));
+        timedMovement=new TimedMovement(movementSteps,body,true);
     }
     @Override
     public void render(TextureMapObjectRenderer renderer) {
@@ -49,14 +62,13 @@ public class OneUP extends InteractableObject {
             GameCore.gameScreen.level.interactableObjectsRemove.add(this);
             return;
         }
-        if(body==null){
-            y+=1.5f*delta;
-            if(y>initialY+HEIGHT){
-                addToWorld();
-                body.setLinearVelocity(new Vector2(moveSpeed,0));
-            }
-        }else if(!doBounce){
+        timedMovement.update(delta);
+        if(timedMovement.finished&&body.getType().equals(BodyDef.BodyType.KinematicBody)){
+            x=body.getPosition().x;
             y=body.getPosition().y;
+            body.getWorld().destroyBody(body);
+            addToWorld(BodyDef.BodyType.DynamicBody,false);
+            body.setLinearVelocity(2,0);
         }
     }
     //todo
@@ -66,11 +78,11 @@ public class OneUP extends InteractableObject {
         System.out.println("collected 1UP");
     }
 
-    private void addToWorld() {
+    private void addToWorld(BodyDef.BodyType bodyType,boolean isSensor) {
         Rectangle rectangle = new Rectangle(x,y,WIDTH,HEIGHT);
 
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.type = bodyType;
         bodyDef.position.set(rectangle.x,rectangle.y);
 
         body = GameScreen.world.createBody(bodyDef);
@@ -81,6 +93,7 @@ public class OneUP extends InteractableObject {
         fixtureDefRect.shape=shape;
         fixtureDefRect.friction=0;
         fixtureDefRect.density=0.1f;
+        fixtureDefRect.isSensor=isSensor;
 
         body.createFixture(fixtureDefRect);
         body.setUserData(this);
