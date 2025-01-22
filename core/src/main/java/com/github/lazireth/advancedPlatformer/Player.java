@@ -1,6 +1,5 @@
 package com.github.lazireth.advancedPlatformer;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
@@ -34,11 +33,9 @@ public class Player{
     private static final float MAX_LEFT_WALK_SPEED=-5;
     private static final float MAX_LEFT_RUN_SPEED=-9;
 
-    private static final float PASSIVE_DECELERATION=0.1f;
-
     private static final float MIN_VELOCITY=0.2f;   // m/s
 
-    static final int TIME_ON_GROUND_BEFORE_JUMP=5;
+    static final int TIME_ON_GROUND_BEFORE_JUMP=1;
     private Vector2 PLAYER_JUMP_IMPULSE;
     private static final int JUMP_TICKS=6;
     private Vector2 PLAYER_MOVE_LEFT_IMPULSE;
@@ -50,8 +47,8 @@ public class Player{
 
     boolean canJump=true;//player can jump after their vertical velocity has been 0 for 5 frames
     int framesOnGround=0;
-    int health=1;
-    int lives=5;
+    private int health=1;
+    private int lives=5;
 
     private Body body;
 
@@ -60,7 +57,6 @@ public class Player{
 
 
     private Vector2 lastVelocity=new Vector2(0,0);
-    private Vector2 lastPosition=new Vector2(0,0);
     boolean preserveVelocityWhenLanding=false;
     boolean preservedVelocityWhenLandingLastTick=false;
 
@@ -70,9 +66,10 @@ public class Player{
 
     boolean isRunning;
 
-    boolean teleport;
+    boolean hasDied =false;
+
+    long canTakeDamageAfter=0;
     public Player(TiledMapTileMapObject playerObject, ArrayList<TiledMapTile> playerTilesIn){
-        startingPosition=new Vector2(playerObject.getX()*GameCore.metersPerPixel,playerObject.getY()*GameCore.metersPerPixel);
         tiles =playerTilesIn;
 
         sprites =new ArrayList<>();
@@ -80,7 +77,8 @@ public class Player{
         for(TiledMapTile tile: tiles){
             sprites.add(tile.getTextureRegion());
         }
-        addToWorld(startingPosition);
+        startingPosition=new Vector2(pixelsToUnits(playerObject.getX()) , pixelsToUnits(playerObject.getY()));
+        addToWorld( pixelsToUnits(playerObject.getX()) , pixelsToUnits(playerObject.getY()) );
     }
 
 
@@ -97,6 +95,12 @@ public class Player{
                 isJumping =false;
             }
         }
+        if(body.getLinearVelocity().y==0){
+            framesOnGround++;
+            if(framesOnGround>=TIME_ON_GROUND_BEFORE_JUMP){
+                canJump=true;
+            }
+        }
         if(canJump){
             if(body.getLinearVelocity().y!=0){
                 canJump=false;
@@ -108,11 +112,6 @@ public class Player{
                 isJumping =true;
                 ticksJumping=1;
                 framesOnGround=0;
-            }
-        }else if(body.getLinearVelocity().y==0){
-            framesOnGround++;
-            if(framesOnGround>=TIME_ON_GROUND_BEFORE_JUMP){
-                canJump=true;
             }
         }
 
@@ -152,25 +151,18 @@ public class Player{
             body.setLinearVelocity(0,body.getLinearVelocity().y);
         }
         if(keys[Input.Keys.L]){
-            teleport=true;
             keys[Input.Keys.L]=false;
-//            ScreenshotFactory.saveScreenshot();
-            Vector2 difference=body.getPosition().sub(targetPos);
-            System.out.println("\ndifference "+difference);
-            Vector2 neededVel=new Vector2(difference.x*-60,difference.y*-60);
-            System.out.println("neededVel "+neededVel);
-            System.out.println("FPS "+ Gdx.graphics.getFramesPerSecond());
-            body.setLinearVelocity(neededVel);
+            ScreenshotFactory.saveScreenshot();
         }
     }
     Vector2 targetPos=new Vector2(20,10);
     public void render(TextureMapObjectRenderer renderer){
         switch (state){
             case 0->{
-                renderer.renderObject(sprites.get(0),getXPosition(),getYPosition(),1,1);//width and height are in gameUnits
+                renderer.renderObject(sprites.get(state),getXPosition(),getYPosition(),1,1);//width and height are in gameUnits
             }
             case 1->{
-                renderer.renderObject(sprites.get(1),getXPosition(),getYPosition(),1,2);
+                renderer.renderObject(sprites.get(state),getXPosition(),getYPosition(),1,2);
             }
         }
 
@@ -185,13 +177,27 @@ public class Player{
     // todo
     // implement GameOver
     public void death(){
+        System.out.println("death");
         lives--;
         if(lives<0){
             System.out.println("You ran out of lives");
             //loadScreenGameOver();
             //return;
         }
+        GameCore.gameScreen.level.levelReset();
         resetPlayer();
+
+    }
+    public void takeDamage(int damageTaken){
+        if(System.nanoTime()>=canTakeDamageAfter){
+            health-=damageTaken;
+            if(health<=0){
+                hasDied =true;
+            }else if(health==1){
+                state=0;
+                canTakeDamageAfter=System.nanoTime()+3L*1000000000;// number of seconds to nanoseconds
+            }
+        }
     }
     public void resetPlayer(){
         resetPlayer(startingPosition);
@@ -203,26 +209,31 @@ public class Player{
         health=1;
         ticksJumping=0;
         isJumping =false;
+        hasDied =false;
         body.getWorld().destroyBody(body);
-        addToWorld(locationToSpawnAt);
+        addToWorld(locationToSpawnAt.x,locationToSpawnAt.y);
         GameCore.cameraPos=new Vector3(locationToSpawnAt.x,GameCore.camera.position.y,GameCore.camera.position.z);
     }
 
     public void update(float delta){
-        if(teleport){
-            System.out.println("target "+targetPos);
-            System.out.println("position "+body.getPosition());
-            System.out.println("distance from target "+body.getPosition().sub(targetPos));
-            body.setLinearVelocity(0,0);
-            if(body.getPosition().sub(targetPos).x==0&&body.getPosition().sub(targetPos).y==0){
-                teleport=false;
-            }
-            Vector2 difference=body.getPosition().sub(targetPos);
-            System.out.println("\ndifference "+difference);
-            Vector2 neededVel=new Vector2(difference.x*-60,difference.y*-60);
-            System.out.println("neededVel "+neededVel);
-            System.out.println("FPS "+ Gdx.graphics.getFramesPerSecond());
-            body.setLinearVelocity(neededVel);
+//        if(teleport){
+//            System.out.println("target "+targetPos);
+//            System.out.println("position "+body.getPosition());
+//            System.out.println("distance from target "+body.getPosition().sub(targetPos));
+//            body.setLinearVelocity(0,0);
+//            if(body.getPosition().sub(targetPos).x==0&&body.getPosition().sub(targetPos).y==0){
+//                teleport=false;
+//            }
+//            Vector2 difference=body.getPosition().sub(targetPos);
+//            System.out.println("\ndifference "+difference);
+//            Vector2 neededVel=new Vector2(difference.x*-60,difference.y*-60);
+//            System.out.println("neededVel "+neededVel);
+//            System.out.println("FPS "+ Gdx.graphics.getFramesPerSecond());
+//            body.setLinearVelocity(neededVel);
+//        }
+        if(hasDied){
+            death();
+            return;
         }
         if(preservedVelocityWhenLandingLastTick){
             preservedVelocityWhenLandingLastTick=false;
@@ -238,7 +249,6 @@ public class Player{
         }
 
         lastVelocity=body.getLinearVelocity().cpy();
-        lastPosition=body.getPosition().cpy();
     }
 
     public void collectItem(String item){
@@ -248,11 +258,10 @@ public class Player{
                     //add score
                     return;
                 }
-                Vector2 startingPosition=body.getPosition().add(0,0.5f);
                 body.getWorld().destroyBody(body);
                 state =1;
                 health=2;
-                addToWorld(startingPosition);
+                addToWorld(startingPosition.x,startingPosition.y);
             }
             case "OneUP"->{
                 System.out.println("You got a 1UP");
@@ -260,13 +269,16 @@ public class Player{
             }
         }
     }
-    private void addToWorld(Vector2 startingPosition) {
+    private void addToWorld(float x, float y) {
         WIDTH = (tiles.get(state).getProperties().get("WIDTH",int.class)-2)  * GameCore.metersPerPixel;// the -2 is so the player appears to be touching objects when colliding
         HEIGHT= (tiles.get(state).getProperties().get("HEIGHT",int.class)-2) * GameCore.metersPerPixel;
-        startingPosition.add(0.5f,HEIGHT/2);//cannot do WIDTH/2 for x because player is 0.75 units wide
+        float yOffset=0;
+        if(state==1){
+            yOffset+=0.25f;//add a quarter of a meter
+        }
 
-        PolygonShape rectangle=new PolygonShape();
-        rectangle.setAsBox(WIDTH/2,HEIGHT/2);
+        PolygonShape shape=new PolygonShape();
+        shape.setAsBox(WIDTH/2,HEIGHT/2);
 
         MASS=WIDTH*HEIGHT*DENSITY;
 
@@ -277,13 +289,13 @@ public class Player{
         BodyDef bodyDef=new BodyDef();
         bodyDef.type=BodyType.DynamicBody;
         bodyDef.fixedRotation=true;
-        bodyDef.position.set(startingPosition);
+        bodyDef.position.set(x,y+yOffset);
 
         body= GameScreen.world.createBody(bodyDef);
 
 
         FixtureDef fixtureDefRect=new FixtureDef();
-        fixtureDefRect.shape=rectangle;
+        fixtureDefRect.shape=shape;
         fixtureDefRect.density=DENSITY;
         fixtureDefRect.friction=FRICTION;
         FilterCategory.PLAYER.makeFilter(fixtureDefRect.filter);
@@ -291,7 +303,7 @@ public class Player{
         body.createFixture(fixtureDefRect);
         body.setUserData(this);
 
-        rectangle.dispose();
+        shape.dispose();
     }
 
     public float getYVelocity(){return body.getLinearVelocity().y;}
@@ -300,4 +312,5 @@ public class Player{
     public float getYPosition(){return body.getPosition().y;}
     public float getXPosition(){return body.getPosition().x;}
     public Vector2 getPosition(){return body.getPosition().cpy();}
+    public float pixelsToUnits(float pixels){return pixels*GameCore.metersPerPixel;}
 }

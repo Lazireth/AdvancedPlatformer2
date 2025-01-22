@@ -43,6 +43,10 @@ public class Mushroom extends InteractableObject {
         movementSteps.addLast(new MovementStep(0,0,0.75f, ON));
         timedMovement=new TimedMovement(movementSteps,body,true);
     }
+    public void levelReset(){
+        body.getWorld().destroyBody(body);
+        GameCore.gameScreen.level.interactableObjectsRemove.add(this);
+    }
     @Override
     public void render(TextureMapObjectRenderer renderer) {
         if(body==null){

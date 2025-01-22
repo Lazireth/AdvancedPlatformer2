@@ -4,6 +4,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.github.lazireth.advancedPlatformer.objects.InteractableObject;
 import com.github.lazireth.advancedPlatformer.objects.Mushroom;
 import com.github.lazireth.advancedPlatformer.objects.OneUP;
+import com.github.lazireth.advancedPlatformer.objects.enemies.BasicEnemy;
 
 public class CollisionListener implements ContactListener {
 
@@ -49,6 +50,7 @@ public class CollisionListener implements ContactListener {
         switch (object){
             case Mushroom mushroom -> mushroom.bounce((InteractableObject)object,contact);
             case OneUP oneUP -> oneUP.bounce((InteractableObject)object,contact);
+            case BasicEnemy basicEnemy-> basicEnemy.bounce((InteractableObject)object,contact);
             case Player player ->player.preserveVelocityWhenLanding=true;
             case null, default -> {}
         }

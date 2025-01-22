@@ -39,4 +39,5 @@ public abstract class InteractableObject{
     public abstract void render(TextureMapObjectRenderer renderer);
     public abstract void update(float delta);
     public abstract void startInteractionWithPlayer(Player player);
+    public abstract void levelReset();
 }

@@ -56,26 +56,17 @@ public class Level implements Disposable{
                     loadQuestionBlocks(mapLayer.getObjects());
                 }
                 case "Enemy"->{
-                    //loadEnemies(mapLayer.getObjects());
+                    loadEnemies(mapLayer.getObjects());
                 }
             }
         }
 
     }
-    // there is no good way to get a specific tile with iterating through tileSet
-    // because the only way to get a tile is to call getTile(int id) and the ids are generated for each tile at runtime
-    // I hate it, but it is necessary
-    // also I just learned that IntelliJ has grammar check, you see that comma on the previous line, IntelliJ suggested that
-    public TiledMapTile[] getTilesArray(TiledMapTileSet tileSet){//use when a file contains tiles only one thing
-        TiledMapTile[] tiles=new TiledMapTile[tileSet.size()];
-        for(TiledMapTile tile:tileSet){
-            try{
-                tiles[tile.getProperties().get("Local ID",int.class)]=tile;
-            } catch (Exception ignore) {}
+    public void levelReset(){
+        for(InteractableObject object:interactableObjects){
+            object.levelReset();
         }
-        return tiles;
     }
-
     public ArrayList<TiledMapTile> getTilesFor(String relatedObject){
         return tilesByRelatedObject.get(relatedObject);
     }
@@ -137,14 +128,13 @@ public class Level implements Disposable{
         GameCore.renderer.end();
     }
     private void loadQuestionBlocks(MapObjects questionBlocks){
-
         for (MapObject questionBlock : questionBlocks) {
             interactableObjects.add(new QuestionBlock((TiledMapTileMapObject)questionBlock));
         }
     }
     private void loadEnemies(MapObjects enemies){
         for (MapObject enemy : enemies) {
-            switch (((TiledMapTileMapObject)enemy).getTile().getProperties().get("Related Object",String.class)){
+            switch (((TiledMapTileMapObject)enemy).getTile().getProperties().get("relatedObject",String.class)){
                 case "BasicEnemy"->{
                     interactableObjects.add(new BasicEnemy((TiledMapTileMapObject)enemy));
                 }
