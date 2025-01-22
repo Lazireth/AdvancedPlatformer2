@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.github.lazireth.advancedPlatformer.objects.FilterCategory;
 
 import java.util.ArrayList;
 
@@ -42,13 +43,11 @@ public class MapBodyBuilder {
             bd.type = BodyDef.BodyType.StaticBody;
             Body body = world.createBody(bd);
 
-//            FixtureDef fixtureDefRect=new FixtureDef();
-//            fixtureDefRect.shape=shape;
-//            fixtureDefRect.density=0.2f;
-//            fixtureDefRect.friction=0.5f;//friction coefficient of bricks
-//
-//            body.createFixture(fixtureDefRect);
-            body.createFixture(shape,0);
+            FixtureDef fixtureDefRect=new FixtureDef();
+            fixtureDefRect.shape=shape;
+            FilterCategory.WALL.makeFilter(fixtureDefRect.filter);
+
+            body.createFixture(fixtureDefRect);
 
             bodies.add(body);
             shape.dispose();

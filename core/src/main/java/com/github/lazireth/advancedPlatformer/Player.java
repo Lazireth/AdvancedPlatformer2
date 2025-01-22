@@ -13,6 +13,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
+import com.github.lazireth.advancedPlatformer.objects.FilterCategory;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
 
@@ -285,6 +286,7 @@ public class Player{
         fixtureDefRect.shape=rectangle;
         fixtureDefRect.density=DENSITY;
         fixtureDefRect.friction=FRICTION;
+        FilterCategory.PLAYER.makeFilter(fixtureDefRect.filter);
 
         body.createFixture(fixtureDefRect);
         body.setUserData(this);

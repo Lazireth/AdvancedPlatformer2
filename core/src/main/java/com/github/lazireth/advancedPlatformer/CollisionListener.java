@@ -20,15 +20,21 @@ public class CollisionListener implements ContactListener {
         fixtureB=contact.getFixtureB();
         userDataA=fixtureA.getBody().getUserData();
         userDataB=fixtureB.getBody().getUserData();
+        if(userDataA==null&&userDataB==null){
+            //both null
+            return;
+        }
 
         //handles cases where only one is null
-        if(userDataA!=null&&userDataB==null){
+        if(userDataA!=null){
+            //A not null
             oneNull(fixtureA,fixtureB,userDataA,contact);
-        }else if(userDataA==null&&userDataB!=null){
+        }else{
+            //B not null
             oneNull(fixtureB,fixtureA,userDataB,contact);
         }
-        //handles cases where zero are null
         if(userDataA!=null&&userDataB!=null){
+            //A and B not null
             zeroNulls(fixtureA, fixtureB, userDataA, userDataB,contact);
         }
     }

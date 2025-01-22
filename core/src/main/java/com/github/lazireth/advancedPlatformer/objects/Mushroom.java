@@ -96,6 +96,7 @@ public class Mushroom extends InteractableObject {
         fixtureDefRect.friction=0;
         fixtureDefRect.density=0.1f;
         fixtureDefRect.isSensor=isSensor;
+        FilterCategory.ITEM.makeFilter(fixtureDefRect.filter);
 
         body.createFixture(fixtureDefRect);
         body.setUserData(this);

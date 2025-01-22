@@ -22,7 +22,6 @@ import static com.github.lazireth.advancedPlatformer.objects.timedMovement.Colli
 public class QuestionBlock extends InteractableObject{
     final float WIDTH;
     final float HEIGHT;
-    int ticksAfterInteraction=-1;
     TiledMapTileMapObject questionBlock;
 
     int currentSprite=0;
@@ -76,7 +75,6 @@ public class QuestionBlock extends InteractableObject{
     public void startInteractionWithPlayer(Player player){
         if(player.getYPosition()+Player.HEIGHT/2<getYPosition()-HEIGHT/2&&!timedMovement.started){
             timedMovement.start();
-            //ticksAfterInteraction=0;
         }
     }
     private void makeSensor() {
@@ -97,6 +95,7 @@ public class QuestionBlock extends InteractableObject{
         FixtureDef fixtureDefRect=new FixtureDef();
         fixtureDefRect.shape=shape;
         fixtureDefRect.isSensor=true;
+        FilterCategory.SENSOR.makeSensorFilter(fixtureDefRect.filter,FilterCategory.PLAYER);
 
         body.createFixture(fixtureDefRect);
         body.setUserData(this);
