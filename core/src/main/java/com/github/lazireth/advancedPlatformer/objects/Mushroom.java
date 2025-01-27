@@ -23,7 +23,6 @@ public class Mushroom extends InteractableObject {
     float x,y;
     float moveSpeed=2.0f;
 
-    boolean doBounce=false;
     boolean toCollect=false;
 
     TimedMovement timedMovement;
@@ -89,6 +88,7 @@ public class Mushroom extends InteractableObject {
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = bodyType;
+        bodyDef.fixedRotation=true;
         bodyDef.position.set(rectangle.x,rectangle.y);
 
         body = GameScreen.world.createBody(bodyDef);
@@ -102,8 +102,7 @@ public class Mushroom extends InteractableObject {
         fixtureDefRect.isSensor=isSensor;
         FilterCategory.ITEM.makeFilter(fixtureDefRect.filter);
 
-        body.createFixture(fixtureDefRect);
-        body.setUserData(this);
+        body.createFixture(fixtureDefRect).setUserData(this);
 
         shape.dispose();
     }

@@ -13,6 +13,12 @@
    <property name="state" type="int" value="1"/>
   </properties>
  </tile>
+ <tile id="2">
+  <properties>
+   <property name="relatedObject" value="Brick"/>
+   <property name="state" type="int" value="0"/>
+  </properties>
+ </tile>
  <tile id="4">
   <properties>
    <property name="relatedObject" value="Mushroom"/>

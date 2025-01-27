@@ -11,4 +11,11 @@
    <object id="4" x="8" y="8" width="48" height="48"/>
   </objectgroup>
  </tile>
+ <tile id="1">
+  <properties>
+   <property name="enemyType" value="Basic"/>
+   <property name="relatedObject" value="BasicEnemy"/>
+   <property name="state" type="int" value="1"/>
+  </properties>
+ </tile>
 </tileset>

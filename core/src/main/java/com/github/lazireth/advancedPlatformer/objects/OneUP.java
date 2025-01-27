@@ -23,7 +23,6 @@ public class OneUP extends InteractableObject {
     float initialY;
     float moveSpeed=2.0f;
 
-    boolean doBounce=false;
     boolean toCollect=false;
     TimedMovement timedMovement;
     public OneUP(float inX, float inY){
@@ -36,12 +35,12 @@ public class OneUP extends InteractableObject {
         WIDTH = mySprite.getRegionWidth()  * GameCore.metersPerPixel;
         HEIGHT = mySprite.getRegionHeight()* GameCore.metersPerPixel;
         GameCore.gameScreen.level.interactableObjectsAdd.add(this);
-        addToWorld(BodyDef.BodyType.KinematicBody,true);
+        addToWorld();
 
         ArrayList<MovementStep> movementSteps=new ArrayList<>();
         movementSteps.addLast(new MovementStep(0,1,0, OFF));
-        movementSteps.addLast(new MovementStep(0,0,0.75f, ON));
-        timedMovement=new TimedMovement(movementSteps,body,true);
+        movementSteps.addLast(new MovementStep(2,0,0.75f, ON));
+        timedMovement=new TimedMovement(movementSteps,body,true, BodyDef.BodyType.DynamicBody);
     }
     public void levelReset(){
         body.getWorld().destroyBody(body);
@@ -67,13 +66,9 @@ public class OneUP extends InteractableObject {
             return;
         }
         timedMovement.update(delta);
-        if(timedMovement.finished&&body.getType().equals(BodyDef.BodyType.KinematicBody)){
-            x=body.getPosition().x;
-            y=body.getPosition().y;
-            body.getWorld().destroyBody(body);
-            addToWorld(BodyDef.BodyType.DynamicBody,false);
-            body.setLinearVelocity(2,0);
-        }
+//        if(timedMovement.finished){
+//            body.setLinearVelocity(2,0);
+//        }
     }
     //todo
     //actual make it do something
@@ -82,11 +77,12 @@ public class OneUP extends InteractableObject {
         System.out.println("collected 1UP");
     }
 
-    private void addToWorld(BodyDef.BodyType bodyType,boolean isSensor) {
+    private void addToWorld() {
         Rectangle rectangle = new Rectangle(x,y,WIDTH,HEIGHT);
 
         BodyDef bodyDef = new BodyDef();
-        bodyDef.type = bodyType;
+        bodyDef.type = BodyDef.BodyType.KinematicBody;
+        bodyDef.fixedRotation=true;
         bodyDef.position.set(rectangle.x,rectangle.y);
 
         body = GameScreen.world.createBody(bodyDef);
@@ -97,10 +93,9 @@ public class OneUP extends InteractableObject {
         fixtureDefRect.shape=shape;
         fixtureDefRect.friction=0;
         fixtureDefRect.density=0.1f;
-        fixtureDefRect.isSensor=isSensor;
+        fixtureDefRect.isSensor= true;
 
-        body.createFixture(fixtureDefRect);
-        body.setUserData(this);
+        body.createFixture(fixtureDefRect).setUserData(this);
 
         shape.dispose();
     }

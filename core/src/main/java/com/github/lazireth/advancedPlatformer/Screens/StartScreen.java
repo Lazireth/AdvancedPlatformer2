@@ -3,11 +3,13 @@ package com.github.lazireth.advancedPlatformer.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.lazireth.advancedPlatformer.FontManager;
 import com.github.lazireth.advancedPlatformer.GameCore;
+
 
 import static com.github.lazireth.advancedPlatformer.GameCore.*;
 import static com.github.lazireth.advancedPlatformer.GameCore.renderer;
@@ -45,9 +47,9 @@ public class StartScreen extends ScreenAdapter {
         renderer.drawText("Move with W A S D",calibri64,WIDTH/2,HEIGHT/16*8);
         renderer.drawText("Run with K",calibri64,WIDTH/2,HEIGHT/32*13);
         renderer.drawText("Press SPACE To Start",calibri64,WIDTH/2,HEIGHT/16*4);
-        if(highRefreshRate){
+        if(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate>61){
             renderer.drawText("Playing with a display refresh rate higher than 60",calibri64,WIDTH/2,HEIGHT/16*2f);
-            renderer.drawText("can cause minor graphical issues",calibri64,WIDTH/2,HEIGHT/16*0.6f);
+            renderer.drawText("can lead to unintended behavior",calibri64,WIDTH/2,HEIGHT/16*0.6f);
         }
         renderer.end();
         if(Gdx.graphics.getFramesPerSecond()>65){

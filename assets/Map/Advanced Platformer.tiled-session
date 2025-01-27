@@ -3,12 +3,30 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "NPC Tileset.tsx",
+    "activeFile": "testLevel.tmx",
     "automapping.whileDrawing": false,
     "expandedProjectPaths": [
         "."
     ],
     "fileStates": {
+        "1-2.tmx": {
+            "expandedGroupLayers": [
+                4
+            ],
+            "expandedObjectLayers": [
+                5,
+                2,
+                3,
+                6,
+                4
+            ],
+            "scale": 0.75,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 670,
+                "y": 703.3333333333334
+            }
+        },
         "Environment Sprites.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
@@ -94,14 +112,17 @@
                 6
             ],
             "expandedObjectLayers": [
+                3,
+                12,
+                6,
                 4,
-                3
+                15
             ],
-            "scale": 1,
+            "scale": 5.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 1917,
-                "y": 823.5
+                "x": 1443,
+                "y": 391.72727272727275
             }
         },
         "testTestLevel.tmx": {
@@ -120,14 +141,15 @@
     "last.externalTilesetPath": "C:/Users/4183372/JavaProjects/AdvancedPlatformer/assets/Map",
     "last.imagePath": "C:/Users/Henry/IdeaProjects/AdvancedPlatformer/assets/Tilesets",
     "map.fixedSize": true,
-    "map.height": 20,
+    "map.height": 15,
     "map.lastUsedFormat": "tmx",
     "map.layerDataFormat": "1",
     "map.tileHeight": 64,
     "map.tileWidth": 64,
-    "map.width": 30,
+    "map.width": 192,
     "openFiles": [
         "testLevel.tmx",
+        "1-2.tmx",
         "Ground Tileset v1.tsx",
         "NPC Tileset.tsx",
         "Player Sprite 0.tsx",
@@ -137,18 +159,18 @@
     "project": "Advanced Platformer.tiled-project",
     "property.type": "bool",
     "recentFiles": [
-        "testLevel.tmx",
-        "Ground Tileset v1.tsx",
         "Environment Tileset.tsx",
         "Player Sprite 1.tsx",
         "Player Sprite 0.tsx",
         "NPC Tileset.tsx",
+        "Ground Tileset v1.tsx",
+        "1-2.tmx",
+        "testLevel.tmx",
         "Player Tileset.tsx",
         "Player Sprite 2.tsx",
         "Special Tileset.tsx",
         "Item Sprites.tsx",
-        "Special Tiles.tsx",
-        "Player Tiles.tsx"
+        "Special Tiles.tsx"
     ],
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
     "tileset.lastUsedFormat": "tsx",

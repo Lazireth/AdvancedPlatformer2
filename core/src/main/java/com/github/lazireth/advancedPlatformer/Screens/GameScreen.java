@@ -17,8 +17,6 @@ public class GameScreen extends ScreenAdapter {
     private static final float TIME_STEP=1/60f;
     private static final int VELOCITY_ITERATIONS=4;
     private static final int POSITION_ITERATIONS=6;
-    private static final int MAX_VELOCITY=5;
-    private static final float MIN_VELOCITY=0.2f;
     private float accumulator=0;
 
     public Level level;
@@ -31,9 +29,9 @@ public class GameScreen extends ScreenAdapter {
     Box2DDebugRenderer debugRenderer;
     public GameScreen(final GameCore game){
         this.game=game;
-        world=new World(new Vector2(0,-20),true);
+        world=new World(new Vector2(0,-9.8f),true);
         world.setContactListener(new CollisionListener());
-        level=new Level(-2);
+        level=new Level("testLevel");
         debugRenderer=new Box2DDebugRenderer();
 
 
@@ -59,18 +57,35 @@ public class GameScreen extends ScreenAdapter {
         GameCore.camera.update();
 
         level.render();
+        debugRenderer.render(world,GameCore.camera.combined);
         if(player.checkIfFallingOffMap()){
             player.manageFallingOffMap();
             game.loadDeathScreen();
         }
     }
     private void doPhysicsStep(float deltaTime){
+        //int physicsSteps=0;
         float frameTime=Math.min(deltaTime, 0.25f);
         accumulator += frameTime;
-        while(accumulator >= TIME_STEP){
+//        while(accumulator >= TIME_STEP){
+//            System.out.println("accumulator "+accumulator+"\tTIME_STEP "+TIME_STEP);
+//            world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+//            accumulator -= TIME_STEP;
+//            physicsSteps++;
+//        }
+        if(accumulator > -TIME_STEP){
+            //System.out.println("accumulator "+accumulator+"\tTIME_STEP "+TIME_STEP);
             world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
             accumulator -= TIME_STEP;
+            //physicsSteps++;
         }
+        if(accumulator > TIME_STEP/2){
+            //System.out.println("accumulator "+accumulator+"\tTIME_STEP "+TIME_STEP);
+            world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+            accumulator -= TIME_STEP;
+            //physicsSteps++;
+        }
+        //System.out.println("physicsSteps "+physicsSteps+"\t accumulator "+accumulator+"\n");
     }
     private void input(float delta){
         player.input(delta);

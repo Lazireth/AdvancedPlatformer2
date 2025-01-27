@@ -6,6 +6,7 @@ import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
+import com.github.lazireth.advancedPlatformer.objects.Brick;
 import com.github.lazireth.advancedPlatformer.objects.InteractableObject;
 import com.github.lazireth.advancedPlatformer.objects.QuestionBlock;
 import com.github.lazireth.advancedPlatformer.objects.enemies.BasicEnemy;
@@ -27,8 +28,8 @@ public class Level implements Disposable{
 
     public TiledMapTileMapObject playerObject;
 
-    public Level(int levelNumber){
-        getMapToLoad(levelNumber);
+    public Level(String level){
+        map=new TmxMapLoader().load("Map/"+level+".tmx");
         TiledMapTileSets tileSets = map.getTileSets();// load all tilesets
         loadTilesets(tileSets);
         InteractableObject.currentLevel=this;
@@ -41,7 +42,9 @@ public class Level implements Disposable{
 
 
         playerObject=(TiledMapTileMapObject)(map.getLayers().get("Player Layer").getObjects().get("Player"));
-
+        if(playerObject==null){
+            throw new NullPointerException("playerObject is null");
+        }
 
         // get the folder of layers (each layer has a different interactable object)
         MapLayers objectSets = ((MapGroupLayer)map.getLayers().get("InteractableObjects")).getLayers();
@@ -52,12 +55,9 @@ public class Level implements Disposable{
             // gets the layer's name to determine what type of object it holds
             switch(mapLayer.getName()){
 
-                case "QuestionBlock"->{
-                    loadQuestionBlocks(mapLayer.getObjects());
-                }
-                case "Enemy"->{
-                    loadEnemies(mapLayer.getObjects());
-                }
+                case "QuestionBlock"-> loadQuestionBlocks(mapLayer.getObjects());
+                case "Enemy"-> loadEnemies(mapLayer.getObjects());
+                case "Brick"-> loadBricks(mapLayer.getObjects());
             }
         }
 
@@ -141,11 +141,9 @@ public class Level implements Disposable{
             }
         }
     }
-    private void getMapToLoad(int levelNumber){
-        if(levelNumber==-2){
-            map=new TmxMapLoader().load("Map/testLevel.tmx");
-        }else if(levelNumber>0){
-            map=new TmxMapLoader().load("Map/level"+levelNumber+".tmx");
+    private void loadBricks(MapObjects bricks){
+        for (MapObject brick : bricks) {
+            interactableObjects.add(new Brick((TiledMapTileMapObject)brick));
         }
     }
     public void dispose(){

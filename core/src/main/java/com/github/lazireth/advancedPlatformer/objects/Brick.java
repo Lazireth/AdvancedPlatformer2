@@ -16,10 +16,10 @@ import java.util.ArrayList;
 
 import static com.github.lazireth.advancedPlatformer.objects.timedMovement.CollisionFlag.NONE;
 
-public class QuestionBlock extends InteractableObject{
+public class Brick extends InteractableObject{
     final float WIDTH;
     final float HEIGHT;
-    TiledMapTileMapObject questionBlock;
+    TiledMapTileMapObject brick;
 
     int currentSprite=0;
     public ArrayList<TextureRegion> sprites;
@@ -27,19 +27,17 @@ public class QuestionBlock extends InteractableObject{
     String heldObject;
 
     TimedMovement timedMovement;
-    public QuestionBlock(TiledMapTileMapObject questionBlock){
-        this.questionBlock = questionBlock;
+    public Brick(TiledMapTileMapObject brick){
+        this.brick=brick;
         try{
-            heldObject=questionBlock.getProperties().get("Held Object",String.class);
+            heldObject=brick.getProperties().get("Held Object",String.class);
         } catch (Exception e) {
             heldObject=null;
         }
-
-        sprites=getSpritesFor("QuestionBlock");
+        sprites=getSpritesFor("Brick");
 
         WIDTH = pixelsToUnits(sprites.getFirst().getRegionWidth());
         HEIGHT= pixelsToUnits(sprites.getFirst().getRegionHeight());
-
 
         // create sensor
         makeSensor();
@@ -50,36 +48,36 @@ public class QuestionBlock extends InteractableObject{
         movementSteps.addLast(new MovementStep(0,-1,0.25f, NONE));
         movementSteps.addLast(new MovementStep(0,0,0.5f, NONE));
         timedMovement=new TimedMovement(movementSteps,body);
-        timedMovement.autoResetBodyPosition(true);
+        timedMovement.autoResetTimedMovement(true);
     }
-    public void levelReset(){}
-    private void dropItem(){
-        switch(heldObject){
-            case "Mushroom"->new Mushroom(getXPosition(),getYPosition());
-            case "OneUP"->new OneUP(getXPosition(),getYPosition());
-            case null, default -> {}
-        }
-        heldObject=null;
+
+    @Override
+    public void render(TextureMapObjectRenderer renderer){
+        renderer.renderObject(sprites.get(currentSprite), getXPosition(), getYPosition(),WIDTH,HEIGHT);
     }
+
     @Override
     public void update(float delta) {
         timedMovement.update(delta);
         if(timedMovement.currentMovementStep==1){
-            dropItem();
-            currentSprite=1;
+            //dropItem();
         }
     }
 
-    public void startInteractionWithPlayer(Player player){
-        if(player.getYPosition()+Player.HEIGHT/2<getYPosition()-HEIGHT/2&&!timedMovement.started){
+    @Override
+    public void startInteractionWithPlayer(Player player) {
+        if(player.getYPosition()+Player.HEIGHT/2<getYPosition()-HEIGHT/2&&!timedMovement.running){
             timedMovement.start();
         }
     }
+
+    @Override
+    public void levelReset() {}
     private void makeSensor() {
         float width=WIDTH+ 2*GameCore.metersPerPixel;//need to be slightly larger so they can be touched by the player
         float height=HEIGHT+ 2*GameCore.metersPerPixel;
-        float x=pixelsToUnits(questionBlock.getX());
-        float y=pixelsToUnits(questionBlock.getY());
+        float x=pixelsToUnits(brick.getX());
+        float y=pixelsToUnits(brick.getY());
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.KinematicBody;
@@ -98,9 +96,6 @@ public class QuestionBlock extends InteractableObject{
         body.createFixture(fixtureDefRect).setUserData(this);
 
         shape.dispose();
-    }
-    public void render(TextureMapObjectRenderer renderer){
-        renderer.renderObject(sprites.get(currentSprite), getXPosition(), getYPosition(),WIDTH,HEIGHT);
     }
     float getYPosition(){
         //body position got changed because detection box is slightly larger than sprite

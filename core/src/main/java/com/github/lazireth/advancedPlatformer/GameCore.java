@@ -13,11 +13,9 @@ import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class GameCore extends Game {
-    public static boolean isDebuggingEnabled=true;
-
     public static TextureMapObjectRenderer renderer;
     public static final float WIDTH=30;
-    public static final float HEIGHT=14;
+    public static final float HEIGHT=15;
     public static OrthographicCamera camera;
     public static final float metersPerPixel = 1/64f;
     public static final float pixelsPerMeter = 64f;
@@ -26,7 +24,7 @@ public class GameCore extends Game {
     public static FitViewport viewport;
 
 
-    public static final InputHandler inputHandler=new InputHandler();;
+    public static final InputHandler inputHandler=new InputHandler();
 
     public static GameScreen gameScreen;
     public static DeathScreen deathScreen;
