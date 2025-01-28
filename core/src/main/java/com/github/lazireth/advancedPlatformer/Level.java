@@ -116,6 +116,7 @@ public class Level implements Disposable{
             interactableObjects.addFirst(interactableObjectsAdd.removeFirst());
         }
         while(!interactableObjectsRemove.isEmpty()){
+            System.out.println("remove interactableObject");
             interactableObjects.remove(interactableObjectsRemove.removeFirst());
         }
     }

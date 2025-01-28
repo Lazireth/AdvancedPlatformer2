@@ -35,9 +35,11 @@ public class GameScreen extends ScreenAdapter {
         debugRenderer=new Box2DDebugRenderer();
 
 
-        player=new Player(level.playerObject,level.getTilesFor("Player"));
+        player=new Player(level.playerObject,level.getTilesFor("Player"),game);
     }
-
+    public int getPlayerLives(){
+        return player.lives;
+    }
 
     @Override
     public void render(float delta) {
@@ -58,34 +60,19 @@ public class GameScreen extends ScreenAdapter {
 
         level.render();
         debugRenderer.render(world,GameCore.camera.combined);
-        if(player.checkIfFallingOffMap()){
-            player.manageFallingOffMap();
-            game.loadDeathScreen();
-        }
+        player.deathCheck();
     }
     private void doPhysicsStep(float deltaTime){
-        //int physicsSteps=0;
         float frameTime=Math.min(deltaTime, 0.25f);
         accumulator += frameTime;
-//        while(accumulator >= TIME_STEP){
-//            System.out.println("accumulator "+accumulator+"\tTIME_STEP "+TIME_STEP);
-//            world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-//            accumulator -= TIME_STEP;
-//            physicsSteps++;
-//        }
         if(accumulator > -TIME_STEP){
-            //System.out.println("accumulator "+accumulator+"\tTIME_STEP "+TIME_STEP);
             world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
             accumulator -= TIME_STEP;
-            //physicsSteps++;
         }
         if(accumulator > TIME_STEP/2){
-            //System.out.println("accumulator "+accumulator+"\tTIME_STEP "+TIME_STEP);
             world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
             accumulator -= TIME_STEP;
-            //physicsSteps++;
         }
-        //System.out.println("physicsSteps "+physicsSteps+"\t accumulator "+accumulator+"\n");
     }
     private void input(float delta){
         player.input(delta);
@@ -104,17 +91,10 @@ public class GameScreen extends ScreenAdapter {
     }
 
     @Override
-    public void show() {
-        // is now handled by GameCore
-//        GameCore.viewport.apply();
-//        GameCore.camera.setToOrtho(false,GameCore.WIDTH,GameCore.HEIGHT);
-//        level.updateRenderer();
-    }
+    public void show() {}
 
     @Override
-    public void hide() {
-
-    }
+    public void hide() {}
 
     @Override
     public void dispose() {

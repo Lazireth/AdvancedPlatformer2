@@ -60,7 +60,7 @@ public class TimedMovement {
             Gdx.app.log("TimedMovement","body at "+body.getPosition().x+","+body.getPosition().y+" is set to Kinematic");
         }
         initialCollisionState=body.getFixtureList().get(0).isSensor();
-        collisionCurrentlyEnabled =initialCollisionState;
+        collisionCurrentlyEnabled=initialCollisionState;
         initialPosition=body.getPosition().cpy();
 
         timesRun++;

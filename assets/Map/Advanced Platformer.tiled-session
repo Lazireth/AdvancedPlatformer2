@@ -14,17 +14,17 @@
                 4
             ],
             "expandedObjectLayers": [
-                5,
-                2,
-                3,
                 6,
-                4
+                3,
+                4,
+                5,
+                2
             ],
             "scale": 0.75,
             "selectedLayer": 3,
             "viewCenter": {
-                "x": 670,
-                "y": 703.3333333333334
+                "x": 6144.666666666666,
+                "y": 479.33333333333337
             }
         },
         "Environment Sprites.tsx": {
@@ -112,17 +112,17 @@
                 6
             ],
             "expandedObjectLayers": [
-                3,
-                12,
+                15,
                 6,
+                3,
                 4,
-                15
+                12
             ],
             "scale": 5.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 1443,
-                "y": 391.72727272727275
+                "x": 6720.090909090909,
+                "y": 511.90909090909093
             }
         },
         "testTestLevel.tmx": {

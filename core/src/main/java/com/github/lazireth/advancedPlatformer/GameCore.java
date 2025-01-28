@@ -6,13 +6,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.github.lazireth.advancedPlatformer.Screens.DeathScreen;
+import com.github.lazireth.advancedPlatformer.Screens.GameOverScreen;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
-import com.github.lazireth.advancedPlatformer.Screens.StartScreen;
+import com.github.lazireth.advancedPlatformer.Screens.GameStartScreen;
+import com.github.lazireth.advancedPlatformer.Screens.LevelStartScreen;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class GameCore extends Game {
+    public static final boolean testing=true;
+
     public static TextureMapObjectRenderer renderer;
     public static final float WIDTH=30;
     public static final float HEIGHT=15;
@@ -27,8 +30,9 @@ public class GameCore extends Game {
     public static final InputHandler inputHandler=new InputHandler();
 
     public static GameScreen gameScreen;
-    public static DeathScreen deathScreen;
-    public static StartScreen startScreen;
+    public static GameStartScreen gameStartScreen;
+    public static LevelStartScreen levelStartScreen;
+    public static GameOverScreen gameOverScreen;
     @Override
     public void create() {
 
@@ -45,10 +49,11 @@ public class GameCore extends Game {
         cameraPos=new Vector3(GameScreen.player.getXPosition(),camera.position.y,camera.position.z);
         renderer.getBatch().setProjectionMatrix(viewport.getCamera().combined);
 
-        deathScreen=new DeathScreen(this);
-        startScreen=new StartScreen(this);
+        gameStartScreen =new GameStartScreen(this);
+        levelStartScreen=new LevelStartScreen(this);
+        gameOverScreen=new GameOverScreen(this);
 
-        loadStartScreen();
+        loadGameStartScreen();
     }
 
     @Override
@@ -57,7 +62,25 @@ public class GameCore extends Game {
         renderer.setView(GameCore.camera);
         Gdx.app.debug("GameCore.resize","New screen size"+viewport.getScreenWidth()+","+viewport.getScreenHeight());
     }
+    public void restartGame(){
+        Gdx.app.setLogLevel(Application.LOG_NONE);
 
+        camera=new OrthographicCamera();
+        camera.setToOrtho(false,WIDTH,HEIGHT);
+        viewport=new FitViewport(WIDTH,HEIGHT,camera);
+
+
+        Gdx.input.setInputProcessor(inputHandler);
+
+        gameScreen=new GameScreen(this);
+        cameraPos=new Vector3(GameScreen.player.getXPosition(),camera.position.y,camera.position.z);
+        renderer.getBatch().setProjectionMatrix(viewport.getCamera().combined);
+
+        gameStartScreen =new GameStartScreen(this);
+        levelStartScreen=new LevelStartScreen(this);
+
+        loadGameStartScreen();
+    }
     @Override
     public void render() {
         super.render();
@@ -68,13 +91,16 @@ public class GameCore extends Game {
     public void dispose() {
         // Destroy application's resources here.
     }
-    public void loadStartScreen(){
-        this.setScreen(startScreen);
-    }
     public void loadGameScreen(){
-        this.setScreen(gameScreen);
+        setScreen(gameScreen);
     }
-    public void loadDeathScreen(){
-        this.setScreen(deathScreen);
+    public void loadGameStartScreen(){
+        setScreen(gameStartScreen);
+    }
+    public void loadLevelStartScreen(){
+        setScreen(levelStartScreen);
+    }
+    public void loadGameOverScreen(){
+        setScreen(gameOverScreen);
     }
 }

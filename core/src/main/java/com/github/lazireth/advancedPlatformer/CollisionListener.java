@@ -1,133 +1,97 @@
 package com.github.lazireth.advancedPlatformer;
 
 import com.badlogic.gdx.physics.box2d.*;
-import com.github.lazireth.advancedPlatformer.objects.InteractableObject;
-import com.github.lazireth.advancedPlatformer.objects.Mushroom;
-import com.github.lazireth.advancedPlatformer.objects.ObjectSensor;
-import com.github.lazireth.advancedPlatformer.objects.OneUP;
+import com.github.lazireth.advancedPlatformer.objects.*;
 import com.github.lazireth.advancedPlatformer.objects.enemies.BasicEnemy;
 
 public class CollisionListener implements ContactListener {
     @Override
     /// Called when two fixtures begin to touch
     public void beginContact(Contact contact) {
+        Fixture fixtureA=contact.getFixtureA();
+        Fixture fixtureB=contact.getFixtureB();
 
-        Fixture fixtureA;
-        Fixture fixtureB;
-
-        Object userDataA;
-        Object userDataB;
-        fixtureA=contact.getFixtureA();
-        fixtureB=contact.getFixtureB();
-        userDataA=contact.getFixtureA().getUserData();
-        userDataB=contact.getFixtureB().getUserData();
-//        System.out.println();
-//        System.out.println(userDataA);
-//        System.out.println(userDataB);
-        if(userDataA!=null&&userDataB!=null){
-            //A and B not null
-            zeroNullsBegin(fixtureA, fixtureB, userDataA, userDataB,contact);
-        }
-
-        //handles cases where only one is null
-        if(userDataA!=null){
-            //A not null
-            oneNullBegin(fixtureA,fixtureB,contact);
+        if(fixtureA.getUserData()!=null&&fixtureB.getUserData()!=null){
+            zeroNullsBegin(fixtureA, fixtureB);
         }else{
-            //B not null
-            oneNullBegin(fixtureB,fixtureA,contact);
+            System.out.println("one or no nulls begin \t one or no nulls begin \t one or no nulls begin \t one or no nulls begin");
         }
-
     }
-    private void zeroNullsBegin(Fixture fixtureA, Fixture fixtureB, Object userDataA, Object userDataB, Contact contact){
-        if(playerCollisionBegin(userDataA, userDataB)){
-            return;
+    @Override
+    public void endContact(Contact contact) {
+        Fixture fixtureA=contact.getFixtureA();
+        Fixture fixtureB=contact.getFixtureB();
+
+        if(fixtureA.getUserData()!=null&&fixtureB.getUserData()!=null){
+            zeroNullsEnd(fixtureA, fixtureB);
+        }else{
+            System.out.println("one or no nulls end \t one or no nulls end \t one or no nulls end \t one or no nulls end");
         }
-        contact.setEnabled(false);
-        // add other cases where both fixtureA and B need to be not null here
     }
-    private void oneNullBegin(Fixture goodFixture, Fixture nullFixture, Contact contact){
-
-        switch (goodFixture.getUserData()){
-            case Mushroom mushroom -> mushroom.bounce((InteractableObject) goodFixture.getUserData(),contact);
-            case OneUP oneUP -> oneUP.bounce((InteractableObject) goodFixture.getUserData(),contact);
-            case BasicEnemy basicEnemy-> basicEnemy.bounce((InteractableObject) goodFixture.getUserData(),contact);
-            case Player player ->player.preserveVelocityWhenLanding=true;
+    private void zeroNullsBegin(Fixture fixtureA, Fixture fixtureB){
+        if(playerCollisionBegin(fixtureA.getUserData(), fixtureB.getUserData())){return;}
+        switch (fixtureA.getUserData()){
+            case Wall ignored->System.out.println("wall");
             case ObjectSensor objectSensor-> {
                 switch (objectSensor.sensorName){
-                    case "playerFootSensor"->{
-                        Player.numFootContacts++;
-                    }
+                    case "playerFootSensor"-> ((Player)objectSensor.relatedObject).numFootContacts++;
+                    case "enemyLeftSide"-> ((BasicEnemy)objectSensor.relatedObject).directionToBounceTo=Direction.R;
+                    case "enemyRightSide"-> ((BasicEnemy)objectSensor.relatedObject).directionToBounceTo=Direction.L;
+                    case "oneUPLeftSide"-> ((OneUP)objectSensor.relatedObject).directionToBounceTo=Direction.R;
+                    case "oneUPRightSide"-> ((OneUP)objectSensor.relatedObject).directionToBounceTo=Direction.L;
+                    case "mushroomLeftSide"-> ((Mushroom)objectSensor.relatedObject).directionToBounceTo=Direction.R;
+                    case "mushroomRightSide"-> ((Mushroom)objectSensor.relatedObject).directionToBounceTo=Direction.L;
+                }
+            }
+            case null, default -> {}
+        }
+        switch (fixtureB.getUserData()){
+            case ObjectSensor objectSensor-> {
+                switch (objectSensor.sensorName){
+                    case "playerFootSensor"-> ((Player)objectSensor.relatedObject).numFootContacts++;
+                    case "enemyLeftSide"-> ((BasicEnemy)objectSensor.relatedObject).directionToBounceTo=Direction.R;
+                    case "enemyRightSide"-> ((BasicEnemy)objectSensor.relatedObject).directionToBounceTo=Direction.L;
+                    case "oneUPLeftSide"-> ((OneUP)objectSensor.relatedObject).directionToBounceTo=Direction.R;
+                    case "oneUPRightSide"-> ((OneUP)objectSensor.relatedObject).directionToBounceTo=Direction.L;
+                    case "mushroomLeftSide"-> ((Mushroom)objectSensor.relatedObject).directionToBounceTo=Direction.R;
+                    case "mushroomRightSide"-> ((Mushroom)objectSensor.relatedObject).directionToBounceTo=Direction.L;
                 }
             }
             case null, default -> {}
         }
     }
-    // I know this method is big and has a lot of if statements, but I don't think it can get much better with the current approach
     private boolean playerCollisionBegin(Object objectA, Object objectB){
-        if(objectA.getClass().equals(Player.class)){//true if objectA is a player
-            if(objectB instanceof InteractableObject){
-                ((InteractableObject)objectB).startInteractionWithPlayer((Player)objectA);
+        Player player=null;
+        Object notPlayer=null;
+        if(objectA.getClass().equals(Player.class)){//if objectA is a player
+            player=((Player) objectA);
+            notPlayer=objectB;
+        }else if(objectB.getClass().equals(Player.class)){//if objectB is a player
+            player=((Player) objectB);
+            notPlayer=objectA;
+        }
+        switch (notPlayer){
+            case InteractableObject interactableObject->interactableObject.startInteractionWithPlayer(player);
+            case Wall ignored->player.preserveVelocityWhenLanding=true;
+            case null, default -> {
+                return false;
             }
-            return true;
-        }else
-        if(objectB.getClass().equals(Player.class)){//true if objectB is a player
-            if(objectA instanceof InteractableObject){
-                ((InteractableObject)objectA).startInteractionWithPlayer((Player)objectB);
-            }
-            return true;
         }
-        return false;
+        return true;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    @Override
-    /// Called when two fixtures cease to touch
-    public void endContact(Contact contact) {
-        Fixture fixtureA;
-        Fixture fixtureB;
-
-        Object userDataA;
-        Object userDataB;
-        fixtureA=contact.getFixtureA();
-        fixtureB=contact.getFixtureB();
-        userDataA=contact.getFixtureA().getUserData();
-        userDataB=contact.getFixtureB().getUserData();
-        if(userDataA==null&&userDataB==null){
-            //both null
-            return;
-        }
-
-        //handles cases where only one is null
-        if(userDataA!=null){
-            //A not null
-            oneNullEnd(fixtureA,fixtureB,contact);
-        }else{
-            //B not null
-            oneNullEnd(fixtureB,fixtureA,contact);
-        }
-    }
-    private void oneNullEnd(Fixture goodFixture, Fixture nullFixture, Contact contact){
-        switch (goodFixture.getUserData()){
+    private void zeroNullsEnd(Fixture fixtureA, Fixture fixtureB){
+        switch (fixtureA.getUserData()){
             case ObjectSensor objectSensor-> {
                 switch (objectSensor.sensorName){
-                    case "playerFootSensor"->{
-                        Player.numFootContacts--;
-                    }
+                    case "playerFootSensor"-> ((Player)objectSensor.relatedObject).numFootContacts--;
+                }
+            }
+            case null, default -> {}
+        }
+        switch (fixtureB.getUserData()){
+            case ObjectSensor objectSensor-> {
+                switch (objectSensor.sensorName){
+                    case "playerFootSensor"-> ((Player)objectSensor.relatedObject).numFootContacts--;
                 }
             }
             case null, default -> {}

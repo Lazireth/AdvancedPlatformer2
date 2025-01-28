@@ -36,18 +36,18 @@ public class Player{
     private static final float MAX_RUN_SPEED=9;
     private static final float DECELERATION_FACTOR=0.98f;
 
-    int state=0;
+    public final ArrayList<TiledMapTile> tiles;
+    public final ArrayList<TextureRegion> sprites;
+
+    Vector2 startingPosition;//relative to the bottom left of the player
+    private Body body;
+    GameCore game;
+
+
+    public int lives=5;
+    private int health=0;
     // 0 is normal
     // 1 is big (caused by mushroom)
-
-    private int health=1;
-    private int lives=5;
-
-    private Body body;
-
-    public ArrayList<TiledMapTile> tiles;
-    public ArrayList<TextureRegion> sprites;
-
 
     private Vector2 lastVelocity=new Vector2(0,0);
     public boolean preserveVelocityWhenLanding=false;
@@ -55,15 +55,17 @@ public class Player{
     int ticksJumping;
     boolean isJumping;
     float jumpTimeout=0;
-    Vector2 startingPosition;//relative to the bottom left of the player
 
     boolean isRunning;
 
     boolean hasDied =false;
-    public static int numFootContacts=0;
+    boolean updateBodySize=false;
+    public int numFootContacts=0;
 
     long canTakeDamageAfter=0;
-    public Player(TiledMapTileMapObject playerObject, ArrayList<TiledMapTile> playerTilesIn){
+
+    public Player(TiledMapTileMapObject playerObject, ArrayList<TiledMapTile> playerTilesIn, GameCore game){
+        this.game=game;
         tiles =playerTilesIn;
 
         sprites =new ArrayList<>();
@@ -74,14 +76,17 @@ public class Player{
         startingPosition=new Vector2(pixelsToUnits(playerObject.getX()) , pixelsToUnits(playerObject.getY()));
         addToWorld( pixelsToUnits(playerObject.getX()) , pixelsToUnits(playerObject.getY()) );
     }
-
+    public void bounceOffEnemy(){
+        body.setLinearVelocity(body.getLinearVelocity().x,0);
+        body.applyLinearImpulse(PLAYER_JUMP_IMPULSE,body.getPosition(),true);
+    }
 
     public void input(float delta){
         jumpTimeout-=delta;
         if(isJumping){
             if(keys[Input.Keys.W]){
                 if(ticksJumping<JUMP_TICKS){
-                    System.out.println("ticksJumping "+ticksJumping);
+                    System.out.println("ticksJumping "+ticksJumping+"\t numFootContacts "+numFootContacts);
                     body.applyLinearImpulse(PLAYER_JUMP_IMPULSE,body.getPosition(),true);
                     ticksJumping++;
                 }else{
@@ -138,63 +143,84 @@ public class Player{
         }
     }
     public void render(TextureMapObjectRenderer renderer){
-        switch (state){
-            case 0-> renderer.renderObject(sprites.get(state),getXPosition(),getYPosition(),1,1);//width and height are in gameUnits
-            case 1-> renderer.renderObject(sprites.get(state),getXPosition(),getYPosition(),1,2);
+        switch (health){
+            case 0-> renderer.renderObject(sprites.get(health),getXPosition(),getYPosition(),1,1);//width and height are in gameUnits
+            case 1-> renderer.renderObject(sprites.get(health),getXPosition(),getYPosition(),1,2);
         }
 
     }
-    public boolean checkIfFallingOffMap(){
-        return body.getPosition().y<-1;
-    }
-    public void manageFallingOffMap(){
-        System.out.println("death by falling off map");
-        death();
+    public void deathCheck(){
+        if(hasDied||body.getPosition().y<-1){
+            death();
+            numFootContacts=0;
+        }
     }
     // todo
     // implement GameOver
-    public void death(){
+    private void death(){
         System.out.println("death");
         lives--;
         if(lives<0){
             System.out.println("You ran out of lives");
-            //loadScreenGameOver();
-            //return;
+            game.loadGameOverScreen();
+            return;
         }
         GameCore.gameScreen.level.levelReset();
         resetPlayer();
-
+        game.loadLevelStartScreen();
     }
     public void takeDamage(int damageTaken){
         if(System.nanoTime()>=canTakeDamageAfter){
             health-=damageTaken;
-            if(health<=0){
+            if(health<0){
                 hasDied =true;
-            }else if(health==1){
-                state=0;
-                canTakeDamageAfter=System.nanoTime()+3L*1000000000;// number of seconds to nanoseconds
+            }else{
+                updateBodySize=true;
             }
+            canTakeDamageAfter=System.nanoTime()+3L*1000000000;// number of seconds to nanoseconds
         }
     }
+
     public void resetPlayer(){
-        resetPlayer(startingPosition);
-    }
-    public void resetPlayer(Vector2 locationToSpawnAt){
-        state=0;
-        health=1;
-        ticksJumping=0;
-        isJumping =false;
-        hasDied =false;
-        numFootContacts=0;
+        health=0;
         body.getWorld().destroyBody(body);
-        addToWorld(locationToSpawnAt.x,locationToSpawnAt.y);
-        GameCore.cameraPos=new Vector3(locationToSpawnAt.x,GameCore.camera.position.y,GameCore.camera.position.z);
+        addToWorld(startingPosition.x,startingPosition.y);
+        GameCore.cameraPos=new Vector3(startingPosition.x,GameCore.camera.position.y,GameCore.camera.position.z);
+
+
+
+        lastVelocity=new Vector2(0,0);
+        preserveVelocityWhenLanding=false;
+
+        ticksJumping=0;
+        isJumping=false;
+        jumpTimeout=0;
+
+        isRunning=false;
+
+        hasDied =false;
+        updateBodySize=false;
+        numFootContacts=0;
+
+        canTakeDamageAfter=0;
     }
 
     public void update(float delta){
-        if(hasDied){
-            death();
-            return;
+        if(updateBodySize){
+            Vector2 position=body.getPosition();
+            Vector2 velocity=body.getLinearVelocity();
+            body.getWorld().destroyBody(body);
+            addToWorld(position.x,position.y);
+            body.setLinearVelocity(velocity);
+            ticksJumping=0;
+            isJumping=false;
+            jumpTimeout=0;
+
+            isRunning=false;
+
+            hasDied =false;
+            updateBodySize=false;
+            numFootContacts=0;
         }
         if(preserveVelocityWhenLanding){
             System.out.println("numFootContacts "+numFootContacts);
@@ -206,21 +232,19 @@ public class Player{
             }
             preserveVelocityWhenLanding=false;
         }
-
         lastVelocity=body.getLinearVelocity().cpy();
     }
 
     public void collectItem(String item){
         switch (item){
             case "Mushroom"->{
-                if(health>1){
+                if(health>0){
                     //add score
                     return;
                 }
                 Vector2 position=body.getPosition();
                 body.getWorld().destroyBody(body);
-                state =1;
-                health=2;
+                health=1;
                 addToWorld(position.x,position.y);
             }
             case "OneUP"->{
@@ -230,10 +254,10 @@ public class Player{
         }
     }
     private void addToWorld(float x, float y) {
-        WIDTH = (tiles.get(state).getProperties().get("WIDTH",int.class)-2)  * GameCore.metersPerPixel;// the -2 is so the player appears to be touching objects when colliding
-        HEIGHT= (tiles.get(state).getProperties().get("HEIGHT",int.class)-2) * GameCore.metersPerPixel;
+        WIDTH = (tiles.get(health).getProperties().get("WIDTH",int.class)-2)  * GameCore.metersPerPixel;// the -2 is so the player appears to be touching objects when colliding
+        HEIGHT= (tiles.get(health).getProperties().get("HEIGHT",int.class)-2) * GameCore.metersPerPixel;
         float yOffset=0;
-        if(state==1){
+        if(health==1){
             yOffset+=0.25f;//add a quarter of a meter
         }
 

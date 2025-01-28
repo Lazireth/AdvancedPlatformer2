@@ -15,7 +15,7 @@ public enum FilterCategory {
     public final short categoryBits;//What the fixture is
     public final short maskBits;    //What the fixture collides With
 
-    private FilterCategory(int categoryBits, int maskBits){
+    FilterCategory(int categoryBits, int maskBits){
         this.categoryBits=(short)categoryBits;
         this.maskBits=(short)maskBits;
     }
@@ -27,6 +27,10 @@ public enum FilterCategory {
         filter.categoryBits=categoryBits;
         filter.maskBits=checkFor.categoryBits;
     }
+    public void makeSensorFilter(Filter filter, short checkFor){
+        filter.categoryBits=categoryBits;
+        filter.maskBits=checkFor;
+    }
     protected enum E{
         SENSOR  (0x0001),
         WALL    (0x0002),
@@ -35,7 +39,7 @@ public enum FilterCategory {
         ENEMY   (0x0010);
         public final short val;//What the fixture is
 
-        private E(int categoryBits){
+        E(int categoryBits){
             this.val=(short)categoryBits;
         }
     }

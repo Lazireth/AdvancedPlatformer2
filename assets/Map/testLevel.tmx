@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="210" height="16" tilewidth="64" tileheight="64" infinite="0" nextlayerid="19" nextobjectid="276">
+<map version="1.10" tiledversion="1.11.1" orientation="orthogonal" renderorder="right-down" width="210" height="16" tilewidth="64" tileheight="64" infinite="0" nextlayerid="19" nextobjectid="277">
  <tileset firstgid="1" source="Ground Tileset v1.tsx"/>
  <tileset firstgid="25" source="Environment Tileset.tsx"/>
  <tileset firstgid="41" source="NPC Tileset.tsx"/>
@@ -137,7 +137,7 @@
   <objectgroup id="15" name="Enemy">
    <object id="185" name="Test enemy" gid="41" x="2560" y="896" width="64" height="64">
     <properties>
-     <property name="startGoingRight" type="bool" value="false"/>
+     <property name="startGoingRight" type="bool" value="true"/>
     </properties>
    </object>
    <object id="186" name="Test enemy" gid="41" x="3264" y="896" width="64" height="64">
@@ -198,6 +198,11 @@
    <object id="212" name="Test enemy" gid="41" x="11176" y="896" width="64" height="64">
     <properties>
      <property name="startGoingRight" type="bool" value="false"/>
+    </properties>
+   </object>
+   <object id="276" name="Test enemy" gid="41" x="1536" y="896" width="64" height="64">
+    <properties>
+     <property name="startGoingRight" type="bool" value="true"/>
     </properties>
    </object>
   </objectgroup>

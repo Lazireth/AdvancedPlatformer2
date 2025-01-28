@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.github.lazireth.advancedPlatformer.Direction;
 import com.github.lazireth.advancedPlatformer.GameCore;
 import com.github.lazireth.advancedPlatformer.Player;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
@@ -25,6 +26,7 @@ public class OneUP extends InteractableObject {
 
     boolean toCollect=false;
     TimedMovement timedMovement;
+    public Direction directionToBounceTo=null;
     public OneUP(float inX, float inY){
         // todo
         // gets stuck on interactable blocks
@@ -66,9 +68,11 @@ public class OneUP extends InteractableObject {
             return;
         }
         timedMovement.update(delta);
-//        if(timedMovement.finished){
-//            body.setLinearVelocity(2,0);
-//        }
+        if(timedMovement.finished){
+            if(body.getLinearVelocity().x==0){
+                bounce();
+            }
+        }
     }
     //todo
     //actual make it do something
@@ -89,67 +93,31 @@ public class OneUP extends InteractableObject {
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(WIDTH/2, HEIGHT/2);
 
-        FixtureDef fixtureDefRect=new FixtureDef();
-        fixtureDefRect.shape=shape;
-        fixtureDefRect.friction=0;
-        fixtureDefRect.density=0.1f;
-        fixtureDefRect.isSensor= true;
+        FixtureDef fixtureDef=new FixtureDef();
+        fixtureDef.shape=shape;
+        fixtureDef.friction=0;
+        fixtureDef.density=0.1f;
+        fixtureDef.isSensor= true;
 
-        body.createFixture(fixtureDefRect).setUserData(this);
+        body.createFixture(fixtureDef).setUserData(this);
 
+        shape.setAsBox(0.1f,HEIGHT/2-0.05f,new Vector2(-WIDTH/2,0),0);
+        fixtureDef.isSensor=true;
+        FilterCategory.SENSOR.makeSensorFilter(fixtureDef.filter,(short)(FilterCategory.WALL.categoryBits | FilterCategory.ENEMY.categoryBits));
+        body.createFixture(fixtureDef).setUserData(new ObjectSensor("oneUPLeftSide",this));
+
+        shape.setAsBox(0.1f,HEIGHT/2-0.05f,new Vector2(WIDTH/2,0),0);
+        fixtureDef.isSensor=true;
+        FilterCategory.SENSOR.makeSensorFilter(fixtureDef.filter,(short)(FilterCategory.WALL.categoryBits | FilterCategory.ENEMY.categoryBits));
+        body.createFixture(fixtureDef).setUserData(new ObjectSensor("oneUPRightSide",this));
         shape.dispose();
     }
-    public void bounce(InteractableObject object, Contact contact){
-        System.out.println("bounce");
-        if(checksIfObjectShouldBounce(object,contact)){
-            if(body.getLinearVelocity().x<0){
-                body.setLinearVelocity(moveSpeed,0);
-            }else{
-                body.setLinearVelocity(-moveSpeed,0);
-            }
+    private void bounce(){
+        switch (directionToBounceTo){
+            case LEFT -> body.setLinearVelocity(-moveSpeed,0);
+            case RIGHT -> body.setLinearVelocity(moveSpeed,0);
+            case null, default -> {}
         }
-    }
-    boolean checksIfObjectShouldBounce(InteractableObject object, Contact contact){
-        Vector2 pos=object.body.getPosition();
-        Vector2[] corners={pos.cpy().add(0.5f,0.5f),pos.cpy().add(0.5f,-0.5f),pos.cpy().add(-0.5f,-0.5f),pos.cpy().add(-0.5f,0.5f)};
-
-        if(contact.getWorldManifold().getNumberOfContactPoints()==2){//one full side is colliding
-            if(object.body.getLinearVelocity().x>0){
-                //moving to the right
-                if(diffLessThan(corners[0].x,contact.getWorldManifold().getPoints()[0].x,0.1f)){
-                    //right side is colliding
-                    if(diffLessThan(corners[0],contact.getWorldManifold().getPoints()[0],0.1f)&&
-                        diffLessThan(corners[1],contact.getWorldManifold().getPoints()[1],0.1f)){
-                        //TR and point 0    BR and point 1
-                        return true;
-                    }else if(diffLessThan(corners[0],contact.getWorldManifold().getPoints()[1],0.1f)&&
-                        diffLessThan(corners[1],contact.getWorldManifold().getPoints()[0],0.1f)){
-                        //TR and point 1    BR and point 0
-                        return true;
-                    }
-                }
-            }else{
-                //moving to the left
-                if(diffLessThan(corners[3].x,contact.getWorldManifold().getPoints()[0].x,0.1f)){
-                    //left side is colliding
-                    if(diffLessThan(corners[3],contact.getWorldManifold().getPoints()[0],0.1f)&&
-                        diffLessThan(corners[2],contact.getWorldManifold().getPoints()[1],0.1f)){
-                        //TL and point 0    BL and point 1
-                        return true;
-                    }else if(diffLessThan(corners[3],contact.getWorldManifold().getPoints()[1],0.1f)&&
-                        diffLessThan(corners[2],contact.getWorldManifold().getPoints()[0],0.1f)){
-                        //TL and point 1    BL and point 0
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-    boolean diffLessThan(float a, float b, float threshold){
-        return Math.abs(a-b)<threshold;
-    }
-    boolean diffLessThan(Vector2 a, Vector2 b, float threshold){
-        return Math.abs(a.x-b.x)<threshold&&Math.abs(a.y-b.y)<threshold;
+        directionToBounceTo=null;
     }
 }

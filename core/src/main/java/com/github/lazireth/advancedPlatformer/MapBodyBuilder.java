@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.github.lazireth.advancedPlatformer.objects.FilterCategory;
+import com.github.lazireth.advancedPlatformer.objects.Wall;
 
 import java.util.ArrayList;
 
@@ -47,7 +48,7 @@ public class MapBodyBuilder {
             fixtureDefRect.shape=shape;
             FilterCategory.WALL.makeFilter(fixtureDefRect.filter);
 
-            body.createFixture(fixtureDefRect);
+            body.createFixture(fixtureDefRect).setUserData(new Wall());
 
             bodies.add(body);
             shape.dispose();
