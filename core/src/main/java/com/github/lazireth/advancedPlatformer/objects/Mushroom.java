@@ -58,7 +58,7 @@ public class Mushroom extends InteractableObject {
     }
 
     @Override
-    public void update(float delta) {
+    public boolean update(float delta) {
 
         if(toCollect){
 
@@ -66,7 +66,7 @@ public class Mushroom extends InteractableObject {
 
             body.getWorld().destroyBody(body);
             GameCore.gameScreen.level.interactableObjectsRemove.add(this);
-            return;
+            return false;
         }
         timedMovement.update(delta);
         if(timedMovement.finished&&body.getType().equals(BodyDef.BodyType.KinematicBody)){
@@ -79,6 +79,7 @@ public class Mushroom extends InteractableObject {
         if(timedMovement.finished&&body.getLinearVelocity().x==0){
             bounce();
         }
+        return false;
     }
 
     //todo

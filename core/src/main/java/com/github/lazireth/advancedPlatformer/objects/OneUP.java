@@ -58,14 +58,14 @@ public class OneUP extends InteractableObject {
     }
 
     @Override
-    public void update(float delta) {
+    public boolean update(float delta) {
         if(toCollect){
 
             GameScreen.player.collectItem("OneUP");
 
             body.getWorld().destroyBody(body);
             GameCore.gameScreen.level.interactableObjectsRemove.add(this);
-            return;
+            return false;
         }
         timedMovement.update(delta);
         if(timedMovement.finished){
@@ -73,6 +73,7 @@ public class OneUP extends InteractableObject {
                 bounce();
             }
         }
+        return false;
     }
     //todo
     //actual make it do something

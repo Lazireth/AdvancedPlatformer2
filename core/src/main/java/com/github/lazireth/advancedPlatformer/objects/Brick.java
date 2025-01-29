@@ -57,11 +57,12 @@ public class Brick extends InteractableObject{
     }
 
     @Override
-    public void update(float delta) {
+    public boolean update(float delta) {
         timedMovement.update(delta);
         if(timedMovement.currentMovementStep==1){
             //dropItem();
         }
+        return false;
     }
 
     @Override

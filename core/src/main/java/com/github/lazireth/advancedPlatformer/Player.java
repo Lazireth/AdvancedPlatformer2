@@ -26,28 +26,24 @@ public class Player{
     static final float FRICTION=0.8f;
     float MASS;
 
-    private Vector2 PLAYER_JUMP_IMPULSE;
-    private static final int JUMP_TICKS=6;
-    private Vector2 PLAYER_MOVE_LEFT_IMPULSE;
-    private Vector2 PLAYER_MOVE_RIGHT_IMPULSE;
+    public Vector2 PLAYER_JUMP_IMPULSE;
+    public static final int JUMP_TICKS=6;
+    public Vector2 PLAYER_MOVE_LEFT_IMPULSE;
+    public Vector2 PLAYER_MOVE_RIGHT_IMPULSE;
 
-    private static final float ACCELERATION=0.1f;
-    private static final float MAX_WALK_SPEED=5;
-    private static final float MAX_RUN_SPEED=9;
-    private static final float DECELERATION_FACTOR=0.98f;
+    public static final float ACCELERATION=0.1f;
+    public static final float MAX_WALK_SPEED=5;
+    public static final float MAX_RUN_SPEED=9;
+    public static final float DECELERATION_FACTOR=0.98f;
 
     public final ArrayList<TiledMapTile> tiles;
     public final ArrayList<TextureRegion> sprites;
 
     Vector2 startingPosition;//relative to the bottom left of the player
-    private Body body;
+    public Body body;
     GameCore game;
 
 
-    public int lives=5;
-    private int health=0;
-    // 0 is normal
-    // 1 is big (caused by mushroom)
 
     private Vector2 lastVelocity=new Vector2(0,0);
     public boolean preserveVelocityWhenLanding=false;
@@ -61,9 +57,10 @@ public class Player{
     boolean hasDied =false;
     boolean updateBodySize=false;
     public int numFootContacts=0;
+    public boolean disableKeyInput;
+    public boolean render=true;
 
     long canTakeDamageAfter=0;
-
     public Player(TiledMapTileMapObject playerObject, ArrayList<TiledMapTile> playerTilesIn, GameCore game){
         this.game=game;
         tiles =playerTilesIn;
@@ -82,6 +79,9 @@ public class Player{
     }
 
     public void input(float delta){
+        if(body.getType().equals(BodyType.KinematicBody)||disableKeyInput){
+            return;
+        }
         jumpTimeout-=delta;
         if(isJumping){
             if(keys[Input.Keys.W]){
@@ -143,11 +143,12 @@ public class Player{
         }
     }
     public void render(TextureMapObjectRenderer renderer){
-        switch (health){
-            case 0-> renderer.renderObject(sprites.get(health),getXPosition(),getYPosition(),1,1);//width and height are in gameUnits
-            case 1-> renderer.renderObject(sprites.get(health),getXPosition(),getYPosition(),1,2);
+        if(render){
+            switch (GameScreen.playerHealth){
+                case 0-> renderer.renderObject(sprites.get(GameScreen.playerHealth),getXPosition(),getYPosition(),1,1);//width and height are in gameUnits
+                case 1-> renderer.renderObject(sprites.get(GameScreen.playerHealth),getXPosition(),getYPosition(),1,2);
+            }
         }
-
     }
     public void deathCheck(){
         if(hasDied||body.getPosition().y<-1){
@@ -159,8 +160,8 @@ public class Player{
     // implement GameOver
     private void death(){
         System.out.println("death");
-        lives--;
-        if(lives<0){
+        GameScreen.playerLives--;
+        if(GameScreen.playerLives <0){
             System.out.println("You ran out of lives");
             game.loadGameOverScreen();
             return;
@@ -171,8 +172,8 @@ public class Player{
     }
     public void takeDamage(int damageTaken){
         if(System.nanoTime()>=canTakeDamageAfter){
-            health-=damageTaken;
-            if(health<0){
+            GameScreen.playerHealth -=damageTaken;
+            if(GameScreen.playerHealth <0){
                 hasDied =true;
             }else{
                 updateBodySize=true;
@@ -182,7 +183,7 @@ public class Player{
     }
 
     public void resetPlayer(){
-        health=0;
+        GameScreen.playerHealth =0;
         body.getWorld().destroyBody(body);
         addToWorld(startingPosition.x,startingPosition.y);
         GameCore.cameraPos=new Vector3(startingPosition.x,GameCore.camera.position.y,GameCore.camera.position.z);
@@ -206,6 +207,9 @@ public class Player{
     }
 
     public void update(float delta){
+        if(body.getType().equals(BodyType.KinematicBody)||disableKeyInput){
+            return;
+        }
         if(updateBodySize){
             Vector2 position=body.getPosition();
             Vector2 velocity=body.getLinearVelocity();
@@ -223,9 +227,9 @@ public class Player{
             numFootContacts=0;
         }
         if(preserveVelocityWhenLanding){
-            System.out.println("numFootContacts "+numFootContacts);
+            //System.out.println("numFootContacts "+numFootContacts);
             if(numFootContacts>0){
-                System.out.println("preserveVelocityWhenLanding");
+                //System.out.println("preserveVelocityWhenLanding");
                 if(lastVelocity.y<-1){// need Math.abs(...)<0.1 instead of ...==0 in case ... is an incredibly small value
                     body.setLinearVelocity(lastVelocity.x,body.getLinearVelocity().y);
                 }
@@ -238,26 +242,29 @@ public class Player{
     public void collectItem(String item){
         switch (item){
             case "Mushroom"->{
-                if(health>0){
+                if(GameScreen.playerHealth >0){
                     //add score
                     return;
                 }
                 Vector2 position=body.getPosition();
                 body.getWorld().destroyBody(body);
-                health=1;
+                GameScreen.playerHealth=1;
                 addToWorld(position.x,position.y);
             }
             case "OneUP"->{
                 System.out.println("You got a 1UP");
-                lives++;
+                GameScreen.playerLives++;
             }
         }
     }
+    public float bottomOfPlayer(){
+        return getYPosition()-HEIGHT/2;
+    }
     private void addToWorld(float x, float y) {
-        WIDTH = (tiles.get(health).getProperties().get("WIDTH",int.class)-2)  * GameCore.metersPerPixel;// the -2 is so the player appears to be touching objects when colliding
-        HEIGHT= (tiles.get(health).getProperties().get("HEIGHT",int.class)-2) * GameCore.metersPerPixel;
+        WIDTH = (tiles.get(GameScreen.playerHealth).getProperties().get("WIDTH",int.class)-2)  * GameCore.metersPerPixel;// the -2 is so the player appears to be touching objects when colliding
+        HEIGHT= (tiles.get(GameScreen.playerHealth).getProperties().get("HEIGHT",int.class)-2) * GameCore.metersPerPixel;
         float yOffset=0;
-        if(health==1){
+        if(GameScreen.playerHealth==1){
             yOffset+=0.25f;//add a quarter of a meter
         }
 
@@ -266,7 +273,7 @@ public class Player{
 
         MASS=WIDTH*HEIGHT*DENSITY;
 
-        PLAYER_JUMP_IMPULSE=new Vector2(0,20*MASS/JUMP_TICKS);
+        PLAYER_JUMP_IMPULSE=new Vector2(0,19*MASS/JUMP_TICKS);
         PLAYER_MOVE_LEFT_IMPULSE=new Vector2(-0.6f*MASS,0);
         PLAYER_MOVE_RIGHT_IMPULSE=new Vector2(0.6f*MASS,0);
 

@@ -21,24 +21,33 @@ public class GameScreen extends ScreenAdapter {
 
     public Level level;
     public static Player player;
+    public static int playerLives=5;
+    public static int playerHealth=0;
+    // 0 is normal
+    // 1 is big (caused by mushroom)
+
+
     GameCore game;
 
 
     public static World world;
 
     Box2DDebugRenderer debugRenderer;
+    String[] levels={"testLevel","1-2"};
+    int currentLevel=0;
+    public static boolean doLevelTransition=false;
     public GameScreen(final GameCore game){
         this.game=game;
         world=new World(new Vector2(0,-9.8f),true);
         world.setContactListener(new CollisionListener());
-        level=new Level("testLevel");
+        level=new Level(levels[currentLevel]);
         debugRenderer=new Box2DDebugRenderer();
 
 
         player=new Player(level.playerObject,level.getTilesFor("Player"),game);
     }
     public int getPlayerLives(){
-        return player.lives;
+        return playerLives;
     }
 
     @Override
@@ -51,6 +60,19 @@ public class GameScreen extends ScreenAdapter {
 
         //update game here
 
+        if(doLevelTransition){
+            System.out.println("doLevelTransition");
+            doLevelTransition=false;
+            currentLevel++;
+            game.loadLevelStartScreen();
+            world=new World(new Vector2(0,-9.8f),true);
+            world.setContactListener(new CollisionListener());
+            level=new Level(levels[currentLevel]);
+            debugRenderer=new Box2DDebugRenderer();
+
+
+            player=new Player(level.playerObject,level.getTilesFor("Player"),game);
+        }
         level.update(delta);
         player.update(delta);
 

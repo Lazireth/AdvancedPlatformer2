@@ -31,7 +31,7 @@ public class CollisionListener implements ContactListener {
     private void zeroNullsBegin(Fixture fixtureA, Fixture fixtureB){
         if(playerCollisionBegin(fixtureA.getUserData(), fixtureB.getUserData())){return;}
         switch (fixtureA.getUserData()){
-            case Wall ignored->System.out.println("wall");
+            //case Wall ignored->System.out.println("wall");
             case ObjectSensor objectSensor-> {
                 switch (objectSensor.sensorName){
                     case "playerFootSensor"-> ((Player)objectSensor.relatedObject).numFootContacts++;
@@ -73,6 +73,15 @@ public class CollisionListener implements ContactListener {
         switch (notPlayer){
             case InteractableObject interactableObject->interactableObject.startInteractionWithPlayer(player);
             case Wall ignored->player.preserveVelocityWhenLanding=true;
+            case ObjectSensor objectSensor->{
+                switch (objectSensor.sensorName){
+                    case "levelEndFlagFlagPole"-> ((LevelEndFlag)objectSensor.relatedObject).contactWithPlayer(player);
+                    case null, default -> {
+                        return false;
+                    }
+                }
+
+            }
             case null, default -> {
                 return false;
             }

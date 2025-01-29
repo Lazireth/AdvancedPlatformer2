@@ -37,7 +37,7 @@ public abstract class InteractableObject{
         return Math.round(units*GameCore.pixelsPerMeter);
     }
     public abstract void render(TextureMapObjectRenderer renderer);
-    public abstract void update(float delta);
+    public abstract boolean update(float delta);
     public abstract void startInteractionWithPlayer(Player player);
     public abstract void levelReset();
 }

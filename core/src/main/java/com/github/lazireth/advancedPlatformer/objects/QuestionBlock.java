@@ -62,12 +62,13 @@ public class QuestionBlock extends InteractableObject{
         heldObject=null;
     }
     @Override
-    public void update(float delta) {
+    public boolean update(float delta) {
         timedMovement.update(delta);
         if(timedMovement.currentMovementStep==1){
             dropItem();
             currentSprite=1;
         }
+        return false;
     }
 
     public void startInteractionWithPlayer(Player player){

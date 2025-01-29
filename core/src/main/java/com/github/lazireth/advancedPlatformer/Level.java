@@ -8,6 +8,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
 import com.github.lazireth.advancedPlatformer.objects.Brick;
 import com.github.lazireth.advancedPlatformer.objects.InteractableObject;
+import com.github.lazireth.advancedPlatformer.objects.LevelEndFlag;
 import com.github.lazireth.advancedPlatformer.objects.QuestionBlock;
 import com.github.lazireth.advancedPlatformer.objects.enemies.BasicEnemy;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
@@ -58,6 +59,7 @@ public class Level implements Disposable{
                 case "QuestionBlock"-> loadQuestionBlocks(mapLayer.getObjects());
                 case "Enemy"-> loadEnemies(mapLayer.getObjects());
                 case "Brick"-> loadBricks(mapLayer.getObjects());
+                case "LevelEndFlag"->loadLevelEndFlag(mapLayer.getObjects());
             }
         }
 
@@ -108,9 +110,11 @@ public class Level implements Disposable{
         }
     }
 
-    public void update(float delta){
+    public boolean update(float delta){
         for(InteractableObject object:interactableObjects){
-            object.update(delta);
+            if(object.update(delta)){
+                return true;
+            }
         }
         while(!interactableObjectsAdd.isEmpty()){
             interactableObjects.addFirst(interactableObjectsAdd.removeFirst());
@@ -119,6 +123,7 @@ public class Level implements Disposable{
             System.out.println("remove interactableObject");
             interactableObjects.remove(interactableObjectsRemove.removeFirst());
         }
+        return false;
     }
 
     public void render(){
@@ -146,6 +151,19 @@ public class Level implements Disposable{
         for (MapObject brick : bricks) {
             interactableObjects.add(new Brick((TiledMapTileMapObject)brick));
         }
+    }
+    private void loadLevelEndFlag(MapObjects flagParts){
+        TiledMapTileMapObject flag;
+        TiledMapTileMapObject flagPole;
+        if((flagParts.get(0)).getName().equals("Flag")){
+            flag=(TiledMapTileMapObject)flagParts.get(0);
+            flagPole=(TiledMapTileMapObject)flagParts.get(1);
+        }else{
+            flag=(TiledMapTileMapObject)flagParts.get(1);
+            flagPole=(TiledMapTileMapObject)flagParts.get(0);
+        }
+
+        interactableObjects.add(new LevelEndFlag(flag,flagPole));
     }
     public void dispose(){
         map.dispose();

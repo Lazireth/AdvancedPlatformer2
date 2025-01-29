@@ -102,7 +102,7 @@ public class BasicEnemy extends Enemy {
     }
 
     @Override
-    public void update(float delta) {
+    public boolean update(float delta) {
         if(dying){
             death();
             //timedMovement.start();
@@ -110,10 +110,10 @@ public class BasicEnemy extends Enemy {
         }
         if(timedMovement.finished){
             death();
-            return;
+            return false;
         }
         if(timedMovement.started){
-            return;
+            return false;
         }
         if(running){
             //start moving
@@ -137,6 +137,7 @@ public class BasicEnemy extends Enemy {
                 }
             }
         }
+        return false;
     }
 
     @Override

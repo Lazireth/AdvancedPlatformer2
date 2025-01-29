@@ -35,25 +35,7 @@ public class GameCore extends Game {
     public static GameOverScreen gameOverScreen;
     @Override
     public void create() {
-
-        Gdx.app.setLogLevel(Application.LOG_NONE);
-
-        camera=new OrthographicCamera();
-        camera.setToOrtho(false,WIDTH,HEIGHT);
-        viewport=new FitViewport(WIDTH,HEIGHT,camera);
-
-
-        Gdx.input.setInputProcessor(inputHandler);
-
-        gameScreen=new GameScreen(this);
-        cameraPos=new Vector3(GameScreen.player.getXPosition(),camera.position.y,camera.position.z);
-        renderer.getBatch().setProjectionMatrix(viewport.getCamera().combined);
-
-        gameStartScreen =new GameStartScreen(this);
-        levelStartScreen=new LevelStartScreen(this);
-        gameOverScreen=new GameOverScreen(this);
-
-        loadGameStartScreen();
+        restartGame();
     }
 
     @Override
