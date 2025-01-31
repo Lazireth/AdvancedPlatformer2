@@ -32,11 +32,7 @@ public class LevelStartScreen extends ScreenAdapter {
     }
     void input(){
         if(keys[Input.Keys.SPACE]){
-            if(GameCore.testing){
-                game.loadGameScreen();
-            }else{
-                countDown=true;
-            }
+            game.loadGameScreen();
             keys[Input.Keys.SPACE]=false;
         }
     }
@@ -51,7 +47,7 @@ public class LevelStartScreen extends ScreenAdapter {
     private void draw(){
         renderer.begin();
         ScreenUtils.clear(Color.BLACK);
-        renderer.drawText("Level 1",calibri128,WIDTH/2,HEIGHT/4*3);
+        renderer.drawText("Level "+GameScreen.levels[GameScreen.currentLevel],calibri128,WIDTH/2,HEIGHT/4*3);
         renderer.drawText("You have "+ gameScreen.getPlayerLives()+" lives",calibri64,WIDTH/2,HEIGHT/16*8);
         if(countDown){
             renderer.drawText((int)restartTimer+"",calibri64,WIDTH/2,HEIGHT/16*4);

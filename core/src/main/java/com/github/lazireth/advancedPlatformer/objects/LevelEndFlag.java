@@ -182,10 +182,10 @@ public class LevelEndFlag extends InteractableObject{
         flagBody.createFixture(fixtureDefRect);
 
         //build flagPole
-        bodyDef.position.set(pixelsToUnits(flagPole.getX())+flagPoleWidth/2.0f,pixelsToUnits(flagPole.getY())+flagPoleHeight/2.0f-(1/8.0f));
+        bodyDef.position.set(pixelsToUnits(flagPole.getX())+flagPoleWidth/2.0f,pixelsToUnits(flagPole.getY())+flagPoleHeight/2.0f+(2));
 
 
-        shape.setAsBox(flagPoleWidth/8.0f, flagPoleHeight/2.0f-(1/8.0f));
+        shape.setAsBox(flagPoleWidth/8.0f, flagPoleHeight/2.0f+2);
         fixtureDefRect.shape=shape;
         fixtureDefRect.isSensor=true;
         FilterCategory.SENSOR.makeSensorFilter(fixtureDefRect.filter,FilterCategory.PLAYER);
@@ -197,7 +197,7 @@ public class LevelEndFlag extends InteractableObject{
     }
     public void render(TextureMapObjectRenderer renderer){
         renderer.renderObject(sprites.get(0), flagBody.getPosition(),flagWidth,flagHeight);
-        renderer.renderObject(sprites.get(1), flagPoleBody.getPosition().x,flagPoleBody.getPosition().y+(1/8.0f),flagPoleWidth,flagPoleHeight);
+        renderer.renderObject(sprites.get(1), flagPoleBody.getPosition().x,flagPoleBody.getPosition().y-2,flagPoleWidth,flagPoleHeight);
     }
     float getYPosition(){
         //body position got changed because detection box is slightly larger than sprite

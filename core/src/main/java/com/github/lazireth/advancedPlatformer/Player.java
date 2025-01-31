@@ -17,6 +17,7 @@ import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 import java.util.ArrayList;
 
 import static com.github.lazireth.advancedPlatformer.InputHandler.keys;
+import static com.github.lazireth.advancedPlatformer.Player.PlayerPersistentData.*;
 
 public class Player{
     public static float WIDTH;
@@ -24,7 +25,6 @@ public class Player{
 
     static final float DENSITY=1;
     static final float FRICTION=0.8f;
-    float MASS;
 
     public Vector2 PLAYER_JUMP_IMPULSE;
     public static final int JUMP_TICKS=6;
@@ -61,6 +61,7 @@ public class Player{
     public boolean render=true;
 
     long canTakeDamageAfter=0;
+
     public Player(TiledMapTileMapObject playerObject, ArrayList<TiledMapTile> playerTilesIn, GameCore game){
         this.game=game;
         tiles =playerTilesIn;
@@ -79,6 +80,7 @@ public class Player{
     }
 
     public void input(float delta){
+
         if(body.getType().equals(BodyType.KinematicBody)||disableKeyInput){
             return;
         }
@@ -86,7 +88,6 @@ public class Player{
         if(isJumping){
             if(keys[Input.Keys.W]){
                 if(ticksJumping<JUMP_TICKS){
-                    System.out.println("ticksJumping "+ticksJumping+"\t numFootContacts "+numFootContacts);
                     body.applyLinearImpulse(PLAYER_JUMP_IMPULSE,body.getPosition(),true);
                     ticksJumping++;
                 }else{
@@ -133,7 +134,9 @@ public class Player{
                 }
             }
         }
-
+        if(!keys[Input.Keys.D]&&!keys[Input.Keys.A]){
+            body.setLinearVelocity(body.getLinearVelocity().x*DECELERATION_FACTOR,body.getLinearVelocity().y);
+        }
         if(Math.abs(getXVelocity())<MAX_RUN_SPEED){
             isRunning=false;
         }
@@ -144,9 +147,9 @@ public class Player{
     }
     public void render(TextureMapObjectRenderer renderer){
         if(render){
-            switch (GameScreen.playerHealth){
-                case 0-> renderer.renderObject(sprites.get(GameScreen.playerHealth),getXPosition(),getYPosition(),1,1);//width and height are in gameUnits
-                case 1-> renderer.renderObject(sprites.get(GameScreen.playerHealth),getXPosition(),getYPosition(),1,2);
+            switch (health){
+                case 0-> renderer.renderObject(sprites.get(health),getXPosition(),getYPosition(),1,1);//width and height are in gameUnits
+                case 1-> renderer.renderObject(sprites.get(health),getXPosition(),getYPosition(),1,2);
             }
         }
     }
@@ -160,20 +163,20 @@ public class Player{
     // implement GameOver
     private void death(){
         System.out.println("death");
-        GameScreen.playerLives--;
-        if(GameScreen.playerLives <0){
+        lives--;
+        if(lives <0){
             System.out.println("You ran out of lives");
             game.loadGameOverScreen();
             return;
         }
-        GameCore.gameScreen.level.levelReset();
+        GameScreen.level.levelReset();
         resetPlayer();
         game.loadLevelStartScreen();
     }
     public void takeDamage(int damageTaken){
         if(System.nanoTime()>=canTakeDamageAfter){
-            GameScreen.playerHealth -=damageTaken;
-            if(GameScreen.playerHealth <0){
+            health -=damageTaken;
+            if(health <0){
                 hasDied =true;
             }else{
                 updateBodySize=true;
@@ -183,7 +186,7 @@ public class Player{
     }
 
     public void resetPlayer(){
-        GameScreen.playerHealth =0;
+        health =0;
         body.getWorld().destroyBody(body);
         addToWorld(startingPosition.x,startingPosition.y);
         GameCore.cameraPos=new Vector3(startingPosition.x,GameCore.camera.position.y,GameCore.camera.position.z);
@@ -242,18 +245,18 @@ public class Player{
     public void collectItem(String item){
         switch (item){
             case "Mushroom"->{
-                if(GameScreen.playerHealth >0){
+                if(health >0){
                     //add score
                     return;
                 }
                 Vector2 position=body.getPosition();
                 body.getWorld().destroyBody(body);
-                GameScreen.playerHealth=1;
+                health=1;
                 addToWorld(position.x,position.y);
             }
             case "OneUP"->{
                 System.out.println("You got a 1UP");
-                GameScreen.playerLives++;
+                lives++;
             }
         }
     }
@@ -261,21 +264,17 @@ public class Player{
         return getYPosition()-HEIGHT/2;
     }
     private void addToWorld(float x, float y) {
-        WIDTH = (tiles.get(GameScreen.playerHealth).getProperties().get("WIDTH",int.class)-2)  * GameCore.metersPerPixel;// the -2 is so the player appears to be touching objects when colliding
-        HEIGHT= (tiles.get(GameScreen.playerHealth).getProperties().get("HEIGHT",int.class)-2) * GameCore.metersPerPixel;
+        WIDTH = (tiles.get(health).getProperties().get("WIDTH",int.class)-2)  * GameCore.metersPerPixel;// the -2 is so the player appears to be touching objects when colliding
+        HEIGHT= (tiles.get(health).getProperties().get("HEIGHT",int.class)-2) * GameCore.metersPerPixel;
         float yOffset=0;
-        if(GameScreen.playerHealth==1){
+        if(health==1){
             yOffset+=0.25f;//add a quarter of a meter
         }
 
         PolygonShape shape=new PolygonShape();
         shape.setAsBox(WIDTH/2,HEIGHT/2);
 
-        MASS=WIDTH*HEIGHT*DENSITY;
 
-        PLAYER_JUMP_IMPULSE=new Vector2(0,19*MASS/JUMP_TICKS);
-        PLAYER_MOVE_LEFT_IMPULSE=new Vector2(-0.6f*MASS,0);
-        PLAYER_MOVE_RIGHT_IMPULSE=new Vector2(0.6f*MASS,0);
 
         BodyDef bodyDef=new BodyDef();
         bodyDef.type=BodyType.DynamicBody;
@@ -294,11 +293,23 @@ public class Player{
         body.createFixture(fixtureDef).setUserData(this);
         body.setGravityScale(2.0f);
 
+        fixtureDef.density=0;
+        fixtureDef.friction=0;
         shape.setAsBox(WIDTH/2-0.05f,0.2f,new Vector2(0,-HEIGHT/2),0);
         fixtureDef.isSensor=true;
         FilterCategory.SENSOR.makeSensorFilter(fixtureDef.filter,  FilterCategory.WALL);
         body.createFixture(fixtureDef).setUserData(new ObjectSensor("playerFootSensor",this));
         shape.dispose();
+
+        PLAYER_JUMP_IMPULSE=new Vector2(0,15*body.getMass()/JUMP_TICKS);
+        PLAYER_MOVE_LEFT_IMPULSE=new Vector2(-0.6f*body.getMass(),0);
+        PLAYER_MOVE_RIGHT_IMPULSE=new Vector2(0.6f*body.getMass(),0);
+    }
+    public static class PlayerPersistentData {
+        public static int lives=5;
+        public static int health=0;
+        // 0 is normal
+        // 1 is big (caused by mushroom)
     }
     //ObjectSensor objectSensor=new ObjectSensor("playerFootSensor",this);
     public float getYVelocity(){return body.getLinearVelocity().y;}

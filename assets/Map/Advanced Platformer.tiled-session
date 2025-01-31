@@ -3,29 +3,56 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "testLevel.tmx",
+    "activeFile": "1-2.tmx",
     "automapping.whileDrawing": false,
     "expandedProjectPaths": [
         "."
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "1-1 0.tmx": {
+            "expandedGroupLayers": [
+                2
+            ],
+            "expandedObjectLayers": [
+                4,
+                2,
+                5
+            ],
+            "scale": 0.8510416666666667,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 772.5826193390453,
+                "y": 458.84944920440637
+            }
+        },
+        "1-1.tmx": {
+            "expandedGroupLayers": [
+                6
+            ],
+            "scale": 0.5,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 1027,
+                "y": 907
+            }
+        },
         "1-2.tmx": {
             "expandedGroupLayers": [
                 4
             ],
             "expandedObjectLayers": [
+                6,
                 4,
                 2,
-                3,
                 5,
-                6
+                3
             ],
-            "scale": 1,
-            "selectedLayer": 3,
+            "scale": 0.5,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 10365.5,
-                "y": 583.5
+                "x": 2389,
+                "y": 617
             }
         },
         "Environment Sprites.tsx": {
@@ -38,7 +65,14 @@
             "scaleInEditor": 1
         },
         "Flag Sprites.tsx": {
-            "dynamicWrapping": true
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Game over.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "Ground Tileset v1.1.tsx": {
             "scaleInDock": 1,
@@ -58,14 +92,17 @@
             "scaleInEditor": 1
         },
         "NPC Tileset.tsx": {
-            "scaleInDock": 1,
+            "dynamicWrapping": false,
+            "scaleInDock": 1.5,
             "scaleInEditor": 1
         },
         "Player Sprite 0.tsx": {
+            "dynamicWrapping": false,
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
         "Player Sprite 1.tsx": {
+            "dynamicWrapping": false,
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
@@ -74,6 +111,7 @@
             "scaleInEditor": 1
         },
         "Player Sprites.tsx": {
+            "dynamicWrapping": true,
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
@@ -117,18 +155,13 @@
                 6
             ],
             "expandedObjectLayers": [
-                4,
-                12,
-                3,
-                6,
-                19,
-                15
+                12
             ],
-            "scale": 0.5,
-            "selectedLayer": 6,
+            "scale": 0.75,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 11915,
-                "y": 745
+                "x": 6720.666666666666,
+                "y": 511.33333333333337
             }
         },
         "testTestLevel.tmx": {
@@ -146,37 +179,45 @@
     "frame.defaultDuration": 100,
     "last.externalTilesetPath": "C:/Users/4183372/JavaProjects/AdvancedPlatformer/assets/Map",
     "last.imagePath": "C:/Users/Henry/IdeaProjects/AdvancedPlatformer/assets/Tilesets",
+    "last.worldFilePath": "C:/Users/Henry/IdeaProjects/AdvancedPlatformer/assets/Map",
+    "loadedWorlds": [
+        "C:/Users/Henry/IdeaProjects/AdvancedPlatformer/assets/Map/World 1.world",
+        "C:/Users/Henry/IdeaProjects/AdvancedPlatformer/assets/Map/World 1.world"
+    ],
     "map.fixedSize": true,
     "map.height": 15,
     "map.lastUsedFormat": "tmx",
     "map.layerDataFormat": "1",
     "map.tileHeight": 64,
     "map.tileWidth": 64,
-    "map.width": 192,
+    "map.width": 17,
+    "mapScene.enableWorlds": true,
     "openFiles": [
-        "testLevel.tmx",
+        "1-1.tmx",
         "1-2.tmx",
         "Ground Tileset v1.tsx",
         "NPC Tileset.tsx",
-        "Player Sprite 0.tsx",
-        "Player Sprite 1.tsx",
-        "Environment Tileset.tsx"
+        "Player Sprites.tsx",
+        "Environment Tileset.tsx",
+        "Flag Sprites.tsx",
+        "Game over.tsx",
+        "1-1 0.tmx"
     ],
     "project": "Advanced Platformer.tiled-project",
-    "property.type": "bool",
+    "property.type": "string",
     "recentFiles": [
+        "1-1.tmx",
+        "1-1 0.tmx",
+        "Game over.tsx",
+        "Flag Sprites.tsx",
         "Environment Tileset.tsx",
-        "Player Sprite 1.tsx",
-        "Player Sprite 0.tsx",
+        "Player Sprites.tsx",
         "NPC Tileset.tsx",
         "Ground Tileset v1.tsx",
         "1-2.tmx",
         "testLevel.tmx",
-        "Player Tileset.tsx",
-        "Player Sprite 2.tsx",
-        "Special Tileset.tsx",
-        "Item Sprites.tsx",
-        "Special Tiles.tsx"
+        "Player Sprite 1.tsx",
+        "Player Sprite 0.tsx"
     ],
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
     "tileset.lastUsedFormat": "tsx",

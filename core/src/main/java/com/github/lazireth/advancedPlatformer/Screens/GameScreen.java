@@ -17,9 +17,9 @@ public class GameScreen extends ScreenAdapter {
     private static final float TIME_STEP=1/60f;
     private static final int VELOCITY_ITERATIONS=4;
     private static final int POSITION_ITERATIONS=6;
-    private float accumulator=0;
+    private static float accumulator=0;
 
-    public Level level;
+    public static Level level;
     public static Player player;
     public static int playerLives=5;
     public static int playerHealth=0;
@@ -27,14 +27,14 @@ public class GameScreen extends ScreenAdapter {
     // 1 is big (caused by mushroom)
 
 
-    GameCore game;
+    static GameCore game;
 
 
     public static World world;
 
     Box2DDebugRenderer debugRenderer;
-    String[] levels={"testLevel","1-2"};
-    int currentLevel=0;
+    public static String[] levels={"1-1","1-2"};
+    public static int currentLevel=0;
     public static boolean doLevelTransition=false;
     public GameScreen(final GameCore game){
         this.game=game;
@@ -47,7 +47,7 @@ public class GameScreen extends ScreenAdapter {
         player=new Player(level.playerObject,level.getTilesFor("Player"),game);
     }
     public int getPlayerLives(){
-        return playerLives;
+        return Player.PlayerPersistentData.lives;
     }
 
     @Override
@@ -61,10 +61,9 @@ public class GameScreen extends ScreenAdapter {
         //update game here
 
         if(doLevelTransition){
-            System.out.println("doLevelTransition");
+
             doLevelTransition=false;
             currentLevel++;
-            game.loadLevelStartScreen();
             world=new World(new Vector2(0,-9.8f),true);
             world.setContactListener(new CollisionListener());
             level=new Level(levels[currentLevel]);
@@ -72,6 +71,9 @@ public class GameScreen extends ScreenAdapter {
 
 
             player=new Player(level.playerObject,level.getTilesFor("Player"),game);
+            game.resetRenderingStuff();
+            game.loadLevelStartScreen();
+            return;
         }
         level.update(delta);
         player.update(delta);
@@ -81,7 +83,7 @@ public class GameScreen extends ScreenAdapter {
         GameCore.camera.update();
 
         level.render();
-        debugRenderer.render(world,GameCore.camera.combined);
+        //debugRenderer.render(world,GameCore.camera.combined);
         player.deathCheck();
     }
     private void doPhysicsStep(float deltaTime){

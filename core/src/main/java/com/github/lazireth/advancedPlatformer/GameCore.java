@@ -14,7 +14,7 @@ import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class GameCore extends Game {
-    public static final boolean testing=true;
+    public static final boolean testing=false;
 
     public static TextureMapObjectRenderer renderer;
     public static final float WIDTH=30;
@@ -62,6 +62,13 @@ public class GameCore extends Game {
         levelStartScreen=new LevelStartScreen(this);
 
         loadGameStartScreen();
+    }
+    public void resetRenderingStuff(){
+        camera=new OrthographicCamera();
+        camera.setToOrtho(false,WIDTH,HEIGHT);
+        viewport=new FitViewport(WIDTH,HEIGHT,camera);
+        cameraPos=new Vector3(GameScreen.player.getXPosition(),camera.position.y,camera.position.z);
+        renderer.getBatch().setProjectionMatrix(viewport.getCamera().combined);
     }
     @Override
     public void render() {

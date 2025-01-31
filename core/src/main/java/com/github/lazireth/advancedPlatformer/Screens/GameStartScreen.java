@@ -31,7 +31,7 @@ public class GameStartScreen extends ScreenAdapter {
     }
     void input(){
         if(keys[Input.Keys.SPACE]){
-            game.loadGameScreen();
+            game.loadLevelStartScreen();
             keys[Input.Keys.SPACE]=false;
         }
     }
@@ -39,8 +39,9 @@ public class GameStartScreen extends ScreenAdapter {
         renderer.begin();
         ScreenUtils.clear(Color.BLACK);
         renderer.drawText("Advanced Platformer",calibri128,WIDTH/2,HEIGHT/4*3);
-        renderer.drawText("Move with W A S D",calibri64,WIDTH/2,HEIGHT/16*8);
-        renderer.drawText("Run with K",calibri64,WIDTH/2,HEIGHT/32*13);
+        renderer.drawText("Move with W A S D",calibri64,WIDTH/2,HEIGHT/16*9.5f);
+        renderer.drawText("Run with K",calibri64,WIDTH/2,HEIGHT/16*8f);
+        renderer.drawText("Close game with Alt+F4",calibri64,WIDTH/2,HEIGHT/16*6.5f);
         renderer.drawText("Press SPACE To Start",calibri64,WIDTH/2,HEIGHT/16*4);
 
         if(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate>61){
