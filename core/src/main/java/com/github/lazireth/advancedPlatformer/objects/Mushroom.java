@@ -36,7 +36,7 @@ public class Mushroom extends InteractableObject {
         mySprite = getSpritesFor("Mushroom").getFirst();
         WIDTH = mySprite.getRegionWidth()  * GameCore.metersPerPixel;
         HEIGHT = mySprite.getRegionHeight()* GameCore.metersPerPixel;
-        GameCore.gameScreen.level.interactableObjectsAdd.add(this);
+        GameScreen.area.interactableObjectsAdd.add(this);
         addToWorld(BodyDef.BodyType.KinematicBody,true);
 
         ArrayList<MovementStep> movementSteps=new ArrayList<>();
@@ -46,7 +46,7 @@ public class Mushroom extends InteractableObject {
     }
     public void levelReset(){
         body.getWorld().destroyBody(body);
-        GameCore.gameScreen.level.interactableObjectsRemove.add(this);
+        GameScreen.area.interactableObjectsRemove.add(this);
     }
     @Override
     public void render(TextureMapObjectRenderer renderer) {
@@ -58,15 +58,14 @@ public class Mushroom extends InteractableObject {
     }
 
     @Override
-    public boolean update(float delta) {
+    public void update(float delta) {
 
         if(toCollect){
 
             GameScreen.player.collectItem("Mushroom");
 
             body.getWorld().destroyBody(body);
-            GameCore.gameScreen.level.interactableObjectsRemove.add(this);
-            return false;
+            GameScreen.area.interactableObjectsRemove.add(this);
         }
         timedMovement.update(delta);
         if(timedMovement.finished&&body.getType().equals(BodyDef.BodyType.KinematicBody)){
@@ -79,7 +78,6 @@ public class Mushroom extends InteractableObject {
         if(timedMovement.finished&&body.getLinearVelocity().x==0){
             bounce();
         }
-        return false;
     }
 
     //todo

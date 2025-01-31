@@ -33,7 +33,7 @@ public class LevelEndFlag extends InteractableObject{
     boolean flagNeedsToGoDown=true;
 
     float doLevelTransitionAfter;
-    public LevelEndFlag(TiledMapTileMapObject flag,TiledMapTileMapObject flagPole){
+    public LevelEndFlag(TiledMapTileMapObject flag, TiledMapTileMapObject flagPole){
         body=null;
         this.flag = flag;
         this.flagPole=flagPole;
@@ -50,7 +50,7 @@ public class LevelEndFlag extends InteractableObject{
     }
     public void levelReset(){}
     @Override
-    public boolean update(float delta) {
+    public void update(float delta) {
         float descentSpeed=-5;
         float playerBottomStopPosition=3.1f;
         float flagStopPosition=4.6f;
@@ -139,11 +139,9 @@ public class LevelEndFlag extends InteractableObject{
             case finished -> {
                 if(System.nanoTime()>doLevelTransitionAfter){
                     GameScreen.doLevelTransition=true;
-                    return true;
                 }
             }
         }
-        return false;
     }
     public void contactWithPlayer(Player playerIn){
         player=playerIn;
@@ -198,13 +196,5 @@ public class LevelEndFlag extends InteractableObject{
     public void render(TextureMapObjectRenderer renderer){
         renderer.renderObject(sprites.get(0), flagBody.getPosition(),flagWidth,flagHeight);
         renderer.renderObject(sprites.get(1), flagPoleBody.getPosition().x,flagPoleBody.getPosition().y-2,flagPoleWidth,flagPoleHeight);
-    }
-    float getYPosition(){
-        //body position got changed because detection box is slightly larger than sprite
-        return flagBody.getPosition().y;
-    }
-    float getXPosition(){
-        //body position got changed because detection box is slightly larger than sprite
-        return flagBody.getPosition().x;
     }
 }

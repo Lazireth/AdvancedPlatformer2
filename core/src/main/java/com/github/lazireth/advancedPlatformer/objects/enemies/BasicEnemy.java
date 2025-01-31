@@ -7,7 +7,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.github.lazireth.advancedPlatformer.Direction;
-import com.github.lazireth.advancedPlatformer.GameCore;
 import com.github.lazireth.advancedPlatformer.Player;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
 import com.github.lazireth.advancedPlatformer.objects.FilterCategory;
@@ -77,7 +76,7 @@ public class BasicEnemy extends Enemy {
     @Override
     public void death() {
         System.out.println("death");
-        GameCore.gameScreen.level.interactableObjectsRemove.add(this);
+        GameScreen.area.interactableObjectsRemove.add(this);
         body.getWorld().destroyBody(body);
     }
 
@@ -102,7 +101,7 @@ public class BasicEnemy extends Enemy {
     }
 
     @Override
-    public boolean update(float delta) {
+    public void update(float delta) {
         if(dying){
             death();
             //timedMovement.start();
@@ -110,10 +109,10 @@ public class BasicEnemy extends Enemy {
         }
         if(timedMovement.finished){
             death();
-            return false;
+            return;
         }
         if(timedMovement.started){
-            return false;
+            return;
         }
         if(running){
             //start moving
@@ -137,7 +136,6 @@ public class BasicEnemy extends Enemy {
                 }
             }
         }
-        return false;
     }
 
     @Override

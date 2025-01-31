@@ -36,7 +36,7 @@ public class OneUP extends InteractableObject {
         mySprite = getSpritesFor("OneUP").getFirst();
         WIDTH = mySprite.getRegionWidth()  * GameCore.metersPerPixel;
         HEIGHT = mySprite.getRegionHeight()* GameCore.metersPerPixel;
-        GameCore.gameScreen.level.interactableObjectsAdd.add(this);
+        GameScreen.area.interactableObjectsAdd.add(this);
         addToWorld();
 
         ArrayList<MovementStep> movementSteps=new ArrayList<>();
@@ -46,7 +46,7 @@ public class OneUP extends InteractableObject {
     }
     public void levelReset(){
         body.getWorld().destroyBody(body);
-        GameCore.gameScreen.level.interactableObjectsRemove.add(this);
+        GameScreen.area.interactableObjectsRemove.add(this);
     }
     @Override
     public void render(TextureMapObjectRenderer renderer) {
@@ -58,14 +58,13 @@ public class OneUP extends InteractableObject {
     }
 
     @Override
-    public boolean update(float delta) {
+    public void update(float delta) {
         if(toCollect){
 
             GameScreen.player.collectItem("OneUP");
 
             body.getWorld().destroyBody(body);
-            GameCore.gameScreen.level.interactableObjectsRemove.add(this);
-            return false;
+            GameScreen.area.interactableObjectsRemove.add(this);
         }
         timedMovement.update(delta);
         if(timedMovement.finished){
@@ -73,7 +72,6 @@ public class OneUP extends InteractableObject {
                 bounce();
             }
         }
-        return false;
     }
     //todo
     //actual make it do something

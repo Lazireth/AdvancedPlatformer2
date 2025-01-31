@@ -4,11 +4,13 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.maps.*;
 import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
+import com.github.lazireth.advancedPlatformer.objects.LevelEndFlag;
 import com.github.lazireth.advancedPlatformer.objects.Brick;
 import com.github.lazireth.advancedPlatformer.objects.InteractableObject;
-import com.github.lazireth.advancedPlatformer.objects.LevelEndFlag;
 import com.github.lazireth.advancedPlatformer.objects.QuestionBlock;
 import com.github.lazireth.advancedPlatformer.objects.enemies.BasicEnemy;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
@@ -16,9 +18,9 @@ import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 import java.util.*;
 import java.util.Map;
 
-public class Level implements Disposable{
+public class Area implements Disposable{
     public AssetManager assetManager=new AssetManager();
-    public TiledMap map;
+    public TiledMap tiledMap;
     public int[] firstRenderLayer;
 
     private final ArrayList<InteractableObject> interactableObjects=new ArrayList<>();
@@ -29,26 +31,35 @@ public class Level implements Disposable{
 
     public TiledMapTileMapObject playerObject;
 
-    public Level(String level){
-        map=new TmxMapLoader().load("Map/"+level+".tmx");
-        TiledMapTileSets tileSets = map.getTileSets();// load all tilesets
+    private static final float TIME_STEP=1/60f;
+    private static final int VELOCITY_ITERATIONS=4;
+    private static final int POSITION_ITERATIONS=6;
+    private static float accumulator=0;
+    public static World world;
+    Box2DDebugRenderer debugRenderer;
+
+    public static Player player;
+
+    public Area(String map){
+        tiledMap =new TmxMapLoader().load("Map/"+map+".tmx");
+        TiledMapTileSets tileSets = tiledMap.getTileSets();// load all tilesets
         loadTilesets(tileSets);
-        InteractableObject.currentLevel=this;
+        InteractableObject.currentArea =this;
 
-        GameCore.renderer=new TextureMapObjectRenderer(map,GameCore.metersPerPixel);
+        GameCore.renderer=new TextureMapObjectRenderer(tiledMap,GameCore.metersPerPixel);
         GameCore.renderer.setView(GameCore.camera);
-        firstRenderLayer=new int[]{map.getLayers().getIndex("Tile Layer 1")};// make array of Tile Layers to render
+        firstRenderLayer=new int[]{tiledMap.getLayers().getIndex("Tile Layer 1")};// make array of Tile Layers to render
 
-        MapBodyBuilder.buildShapes(map, GameScreen.world,"Primary Level Collision");// build primary level collision
+        MapBodyBuilder.buildShapes(tiledMap, GameScreen.world,"Primary Level Collision");// build primary level collision
 
 
-        playerObject=(TiledMapTileMapObject)(map.getLayers().get("Player Layer").getObjects().get("Player"));
+        playerObject=(TiledMapTileMapObject)(tiledMap.getLayers().get("Player Layer").getObjects().get("Player"));
         if(playerObject==null){
             throw new NullPointerException("playerObject is null");
         }
 
         // get the folder of layers (each layer has a different interactable object)
-        MapLayers objectSets = ((MapGroupLayer)map.getLayers().get("InteractableObjects")).getLayers();
+        MapLayers objectSets = ((MapGroupLayer) tiledMap.getLayers().get("InteractableObjects")).getLayers();
 
         // for each type of interactable tile in the folder "Interactive Objects"
         for(MapLayer mapLayer:objectSets){
@@ -64,7 +75,11 @@ public class Level implements Disposable{
         }
 
     }
-    public void levelReset(){
+    public void doUpdateTick(float delta){
+
+    }
+
+    public void reset(){
         for(InteractableObject object:interactableObjects){
             object.levelReset();
         }
@@ -72,32 +87,10 @@ public class Level implements Disposable{
     public ArrayList<TiledMapTile> getTilesFor(String relatedObject){
         return tilesByRelatedObject.get(relatedObject);
     }
-    public void loadTilesets(TiledMapTileSets tileSetsToLoad){
-        for(TiledMapTileSet tileSet:tileSetsToLoad){
-            loadTileset(tileSet);
-        }
-        for(String key : tilesByRelatedObject.keySet()){
-            orderArrayListByTileState(tilesByRelatedObject.get(key));
-        }
-    }
-    public void loadTileset(TiledMapTileSet tileSet){
-        for(TiledMapTile tile:tileSet){
-            try{
-                String relatedObject=tile.getProperties().get("relatedObject",String.class);
-                if(relatedObject==null){
-                    continue;
-                }
-                if(tilesByRelatedObject.get(relatedObject)==null){
-                    tilesByRelatedObject.put(relatedObject,new ArrayList<>());
-                }
-                tilesByRelatedObject.get(relatedObject).add(tile);
-            } catch (Exception ignore) {}
-        }
-    }
-    public void orderArrayListByTileState(ArrayList<TiledMapTile> arrayList){
-        if(arrayList.size()==1){
-            return;
-        }
+
+    private void orderArrayListByTileState(ArrayList<TiledMapTile> arrayList){
+        if(arrayList.size()==1){return;}
+
         for(int i=1;i<arrayList.size();i++){
             TiledMapTile key=arrayList.get(i);
             int j=i-1;
@@ -110,20 +103,12 @@ public class Level implements Disposable{
         }
     }
 
-    public boolean update(float delta){
+    public void update(float delta){
         for(InteractableObject object:interactableObjects){
-            if(object.update(delta)){
-                return true;
-            }
+            object.update(delta);
         }
-        while(!interactableObjectsAdd.isEmpty()){
-            interactableObjects.addFirst(interactableObjectsAdd.removeFirst());
-        }
-        while(!interactableObjectsRemove.isEmpty()){
-            System.out.println("remove interactableObject");
-            interactableObjects.remove(interactableObjectsRemove.removeFirst());
-        }
-        return false;
+        while(!interactableObjectsAdd.isEmpty()){interactableObjects.addFirst(interactableObjectsAdd.removeFirst());}
+        while(!interactableObjectsRemove.isEmpty()){interactableObjects.remove(interactableObjectsRemove.removeFirst());}
     }
 
     public void render(){
@@ -165,8 +150,30 @@ public class Level implements Disposable{
 
         interactableObjects.add(new LevelEndFlag(flag,flagPole));
     }
+    private void loadTilesets(TiledMapTileSets tileSetsToLoad){
+        for(TiledMapTileSet tileSet:tileSetsToLoad){
+            loadTileset(tileSet);
+        }
+        for(String key : tilesByRelatedObject.keySet()){
+            orderArrayListByTileState(tilesByRelatedObject.get(key));
+        }
+    }
+    private void loadTileset(TiledMapTileSet tileSet){
+        for(TiledMapTile tile:tileSet){
+            try{
+                String relatedObject=tile.getProperties().get("relatedObject",String.class);
+                if(relatedObject==null){
+                    continue;
+                }
+                if(tilesByRelatedObject.get(relatedObject)==null){
+                    tilesByRelatedObject.put(relatedObject,new ArrayList<>());
+                }
+                tilesByRelatedObject.get(relatedObject).add(tile);
+            } catch (Exception ignore) {}
+        }
+    }
     public void dispose(){
-        map.dispose();
+        tiledMap.dispose();
         assetManager.dispose();
         GameCore.renderer.dispose();
     }

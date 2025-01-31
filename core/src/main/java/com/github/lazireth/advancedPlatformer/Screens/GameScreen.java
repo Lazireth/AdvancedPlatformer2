@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.lazireth.advancedPlatformer.CollisionListener;
 import com.github.lazireth.advancedPlatformer.GameCore;
-import com.github.lazireth.advancedPlatformer.Level;
+import com.github.lazireth.advancedPlatformer.Area;
 import com.github.lazireth.advancedPlatformer.Player;
 
 
@@ -19,12 +19,8 @@ public class GameScreen extends ScreenAdapter {
     private static final int POSITION_ITERATIONS=6;
     private static float accumulator=0;
 
-    public static Level level;
+    public static Area area;
     public static Player player;
-    public static int playerLives=5;
-    public static int playerHealth=0;
-    // 0 is normal
-    // 1 is big (caused by mushroom)
 
 
     static GameCore game;
@@ -37,14 +33,14 @@ public class GameScreen extends ScreenAdapter {
     public static int currentLevel=0;
     public static boolean doLevelTransition=false;
     public GameScreen(final GameCore game){
-        this.game=game;
+        GameScreen.game =game;
         world=new World(new Vector2(0,-9.8f),true);
         world.setContactListener(new CollisionListener());
-        level=new Level(levels[currentLevel]);
+        area =new Area(levels[currentLevel]);
         debugRenderer=new Box2DDebugRenderer();
 
 
-        player=new Player(level.playerObject,level.getTilesFor("Player"),game);
+        player=new Player(area.playerObject, area.getTilesFor("Player"),game);
     }
     public int getPlayerLives(){
         return Player.PlayerPersistentData.lives;
@@ -66,23 +62,23 @@ public class GameScreen extends ScreenAdapter {
             currentLevel++;
             world=new World(new Vector2(0,-9.8f),true);
             world.setContactListener(new CollisionListener());
-            level=new Level(levels[currentLevel]);
+            area =new Area(levels[currentLevel]);
             debugRenderer=new Box2DDebugRenderer();
 
 
-            player=new Player(level.playerObject,level.getTilesFor("Player"),game);
+            player=new Player(area.playerObject, area.getTilesFor("Player"),game);
             game.resetRenderingStuff();
             game.loadLevelStartScreen();
             return;
         }
-        level.update(delta);
+        area.update(delta);
         player.update(delta);
 
 
         ScreenUtils.clear(Color.BLACK);
         GameCore.camera.update();
 
-        level.render();
+        area.render();
         //debugRenderer.render(world,GameCore.camera.combined);
         player.deathCheck();
     }
@@ -122,7 +118,7 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void dispose() {
-        level.dispose();
+        area.dispose();
         world.dispose();
     }
 }

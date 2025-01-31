@@ -169,7 +169,7 @@ public class Player{
             game.loadGameOverScreen();
             return;
         }
-        GameScreen.level.levelReset();
+        GameScreen.area.reset();
         resetPlayer();
         game.loadLevelStartScreen();
     }
