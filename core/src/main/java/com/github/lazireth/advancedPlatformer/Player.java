@@ -20,8 +20,8 @@ import static com.github.lazireth.advancedPlatformer.InputHandler.keys;
 import static com.github.lazireth.advancedPlatformer.Player.PlayerPersistentData.*;
 
 public class Player{
-    public static float WIDTH;
-    public static float HEIGHT;
+    public float WIDTH;
+    public float HEIGHT;
 
     static final float DENSITY=1;
     static final float FRICTION=0.8f;
@@ -41,7 +41,8 @@ public class Player{
 
     Vector2 startingPosition;//relative to the bottom left of the player
     public Body body;
-    GameCore game;
+    public static GameCore game;
+    Area area;
 
 
 
@@ -62,17 +63,17 @@ public class Player{
 
     long canTakeDamageAfter=0;
 
-    public Player(TiledMapTileMapObject playerObject, ArrayList<TiledMapTile> playerTilesIn, GameCore game){
-        this.game=game;
-        tiles =playerTilesIn;
+    public Player(TiledMapTileMapObject playerObject, ArrayList<TiledMapTile> playerTilesIn, Area area){
+        this.area=area;
+        tiles=playerTilesIn;
 
         sprites =new ArrayList<>();
 
         for(TiledMapTile tile: tiles){
             sprites.add(tile.getTextureRegion());
         }
-        startingPosition=new Vector2(pixelsToUnits(playerObject.getX()) , pixelsToUnits(playerObject.getY()));
-        addToWorld( pixelsToUnits(playerObject.getX()) , pixelsToUnits(playerObject.getY()) );
+        startingPosition=new Vector2(pixelsToUnits(playerObject.getX()), pixelsToUnits(playerObject.getY()));
+        addToWorld( pixelsToUnits(playerObject.getX()) , pixelsToUnits(playerObject.getY()));
     }
     public void bounceOffEnemy(){
         body.setLinearVelocity(body.getLinearVelocity().x,0);
@@ -169,7 +170,7 @@ public class Player{
             game.loadGameOverScreen();
             return;
         }
-        GameScreen.area.reset();
+        area.reset();
         resetPlayer();
         game.loadLevelStartScreen();
     }
@@ -189,7 +190,7 @@ public class Player{
         health =0;
         body.getWorld().destroyBody(body);
         addToWorld(startingPosition.x,startingPosition.y);
-        GameCore.cameraPos=new Vector3(startingPosition.x,GameCore.camera.position.y,GameCore.camera.position.z);
+        area.cameraPos=new Vector3(startingPosition.x,area.camera.position.y,area.camera.position.z);
 
 
 
@@ -281,7 +282,7 @@ public class Player{
         bodyDef.fixedRotation=true;
         bodyDef.position.set(x,y+yOffset);
 
-        body= GameScreen.world.createBody(bodyDef);
+        body=area.world.createBody(bodyDef);
 
 
         FixtureDef fixtureDef =new FixtureDef();

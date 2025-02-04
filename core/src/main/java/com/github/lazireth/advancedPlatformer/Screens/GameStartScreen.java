@@ -19,8 +19,10 @@ public class GameStartScreen extends ScreenAdapter {
 
     BitmapFont calibri64;
     BitmapFont calibri128;
+    int refreshRate;
     public GameStartScreen(final GameCore game){
         this.game=game;
+        refreshRate=Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate;
         calibri64= FontManager.getFont("Calibri",64);
         calibri128= FontManager.getFont("Calibri",128);
     }
@@ -28,6 +30,7 @@ public class GameStartScreen extends ScreenAdapter {
     public void render(float delta) {
         input();
         draw();
+        System.out.println("delta "+delta);
     }
     void input(){
         if(keys[Input.Keys.SPACE]){
@@ -44,7 +47,7 @@ public class GameStartScreen extends ScreenAdapter {
         renderer.drawText("Close game with Alt+F4",calibri64,WIDTH/2,HEIGHT/16*6.5f);
         renderer.drawText("Press SPACE To Start",calibri64,WIDTH/2,HEIGHT/16*4);
 
-        if(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate>61){
+        if(refreshRate>61){
             renderer.drawText("Playing with a display refresh rate higher than 60",calibri64,WIDTH/2,HEIGHT/16*2f);
             renderer.drawText("can lead to unintended behavior",calibri64,WIDTH/2,HEIGHT/16*0.6f);
         }

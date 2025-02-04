@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "1-2.tmx",
+    "activeFile": "1-1 0.tmx",
     "automapping.whileDrawing": false,
     "expandedProjectPaths": [
         "."
@@ -12,18 +12,36 @@
     "fileStates": {
         "1-1 0.tmx": {
             "expandedGroupLayers": [
+                2,
+                6
+            ],
+            "expandedObjectLayers": [
+                4,
+                3,
+                6,
+                12
+            ],
+            "scale": 0.33,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 2468.181818181818,
+                "y": 862.1212121212122
+            }
+        },
+        "1-1 1.tmx": {
+            "expandedGroupLayers": [
                 2
             ],
             "expandedObjectLayers": [
                 5,
-                4,
-                2
+                2,
+                3
             ],
-            "scale": 0.8510416666666667,
-            "selectedLayer": 1,
+            "scale": 1,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 772.5826193390453,
-                "y": 458.84944920440637
+                "x": 555.5,
+                "y": 515.5
             }
         },
         "1-1.tmx": {
@@ -33,8 +51,16 @@
             "scale": 0.5,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 6720,
-                "y": 511
+                "x": 1027,
+                "y": 661
+            }
+        },
+        "1-2 0.tmx": {
+            "scale": 0.13792317708333332,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 6144.725041302809,
+                "y": 482.1524663677128
             }
         },
         "1-2.tmx": {
@@ -42,17 +68,17 @@
                 4
             ],
             "expandedObjectLayers": [
-                5,
-                3,
-                4,
                 6,
+                4,
+                3,
+                5,
                 2
             ],
             "scale": 0.5,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 2389,
-                "y": 617
+                "x": 6144,
+                "y": 479
             }
         },
         "Environment Sprites.tsx": {
@@ -193,31 +219,30 @@
     "map.width": 17,
     "mapScene.enableWorlds": true,
     "openFiles": [
-        "1-1.tmx",
-        "1-2.tmx",
+        "1-1 0.tmx",
+        "1-1 1.tmx",
         "Ground Tileset v1.tsx",
         "NPC Tileset.tsx",
         "Player Sprites.tsx",
         "Environment Tileset.tsx",
         "Flag Sprites.tsx",
-        "Game over.tsx",
-        "1-1 0.tmx"
+        "Game over.tsx"
     ],
     "project": "Advanced Platformer.tiled-project",
-    "property.type": "string",
+    "property.type": "int",
     "recentFiles": [
-        "1-1.tmx",
-        "1-1 0.tmx",
         "Game over.tsx",
         "Flag Sprites.tsx",
         "Environment Tileset.tsx",
         "Player Sprites.tsx",
         "NPC Tileset.tsx",
         "Ground Tileset v1.tsx",
+        "1-1 1.tmx",
+        "1-1 0.tmx",
         "1-2.tmx",
+        "1-1.tmx",
         "testLevel.tmx",
-        "Player Sprite 1.tsx",
-        "Player Sprite 0.tsx"
+        "Player Sprite 1.tsx"
     ],
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
     "tileset.lastUsedFormat": "tsx",

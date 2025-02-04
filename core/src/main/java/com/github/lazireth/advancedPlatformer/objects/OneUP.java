@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.github.lazireth.advancedPlatformer.Area;
 import com.github.lazireth.advancedPlatformer.Direction;
 import com.github.lazireth.advancedPlatformer.GameCore;
 import com.github.lazireth.advancedPlatformer.Player;
@@ -27,16 +28,16 @@ public class OneUP extends InteractableObject {
     boolean toCollect=false;
     TimedMovement timedMovement;
     public Direction directionToBounceTo=null;
-    public OneUP(float inX, float inY){
-        // todo
-        // gets stuck on interactable blocks
+    Area area;
+    public OneUP(float inX, float inY, Area area){
+        this.area=area;
         x=inX;
         y=inY;
         initialY=y;
         mySprite = getSpritesFor("OneUP").getFirst();
         WIDTH = mySprite.getRegionWidth()  * GameCore.metersPerPixel;
         HEIGHT = mySprite.getRegionHeight()* GameCore.metersPerPixel;
-        GameScreen.area.interactableObjectsAdd.add(this);
+        area.interactableObjectsAdd.add(this);
         addToWorld();
 
         ArrayList<MovementStep> movementSteps=new ArrayList<>();
@@ -46,7 +47,7 @@ public class OneUP extends InteractableObject {
     }
     public void levelReset(){
         body.getWorld().destroyBody(body);
-        GameScreen.area.interactableObjectsRemove.add(this);
+        area.interactableObjectsRemove.add(this);
     }
     @Override
     public void render(TextureMapObjectRenderer renderer) {
@@ -61,10 +62,10 @@ public class OneUP extends InteractableObject {
     public void update(float delta) {
         if(toCollect){
 
-            GameScreen.player.collectItem("OneUP");
+            area.player.collectItem("OneUP");
 
             body.getWorld().destroyBody(body);
-            GameScreen.area.interactableObjectsRemove.add(this);
+            area.interactableObjectsRemove.add(this);
         }
         timedMovement.update(delta);
         if(timedMovement.finished){
@@ -88,7 +89,7 @@ public class OneUP extends InteractableObject {
         bodyDef.fixedRotation=true;
         bodyDef.position.set(rectangle.x,rectangle.y);
 
-        body = GameScreen.world.createBody(bodyDef);
+        body = area.world.createBody(bodyDef);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(WIDTH/2, HEIGHT/2);
 

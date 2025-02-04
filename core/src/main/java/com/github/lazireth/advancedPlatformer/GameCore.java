@@ -16,23 +16,23 @@ import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 public class GameCore extends Game {
     public static final boolean testing=false;
 
-    public static TextureMapObjectRenderer renderer;
     public static final float WIDTH=30;
     public static final float HEIGHT=15;
-    public static OrthographicCamera camera;
     public static final float metersPerPixel = 1/64f;
     public static final float pixelsPerMeter = 64f;
-    public static Vector3 cameraPos;
 
+    public static TextureMapObjectRenderer renderer;
+    public static OrthographicCamera camera;
+    public static Vector3 cameraPos;
     public static FitViewport viewport;
 
 
     public static final InputHandler inputHandler=new InputHandler();
 
-    public static GameScreen gameScreen;
-    public static GameStartScreen gameStartScreen;
-    public static LevelStartScreen levelStartScreen;
-    public static GameOverScreen gameOverScreen;
+    private static GameScreen gameScreen;
+    private static GameStartScreen gameStartScreen;
+    private static LevelStartScreen levelStartScreen;
+    private static GameOverScreen gameOverScreen;
     @Override
     public void create() {
         restartGame();
@@ -46,20 +46,20 @@ public class GameCore extends Game {
     }
     public void restartGame(){
         Gdx.app.setLogLevel(Application.LOG_NONE);
+        Gdx.input.setInputProcessor(inputHandler);
 
         camera=new OrthographicCamera();
         camera.setToOrtho(false,WIDTH,HEIGHT);
         viewport=new FitViewport(WIDTH,HEIGHT,camera);
 
 
-        Gdx.input.setInputProcessor(inputHandler);
-
-        gameScreen=new GameScreen(this);
-        cameraPos=new Vector3(GameScreen.player.getXPosition(),camera.position.y,camera.position.z);
+        gameScreen=new GameScreen();GameScreen.gameCore=this;Player.game=this;
+        cameraPos=new Vector3(5,camera.position.y,camera.position.z);
         renderer.getBatch().setProjectionMatrix(viewport.getCamera().combined);
 
         gameStartScreen =new GameStartScreen(this);
         levelStartScreen=new LevelStartScreen(this);
+        gameOverScreen=new GameOverScreen(this);
 
         loadGameStartScreen();
     }
@@ -67,7 +67,7 @@ public class GameCore extends Game {
         camera=new OrthographicCamera();
         camera.setToOrtho(false,WIDTH,HEIGHT);
         viewport=new FitViewport(WIDTH,HEIGHT,camera);
-        cameraPos=new Vector3(GameScreen.player.getXPosition(),camera.position.y,camera.position.z);
+        cameraPos=new Vector3(gameScreen.getCurrentLevel().getCurrentArea().player.getXPosition(),camera.position.y,camera.position.z);
         renderer.getBatch().setProjectionMatrix(viewport.getCamera().combined);
     }
     @Override

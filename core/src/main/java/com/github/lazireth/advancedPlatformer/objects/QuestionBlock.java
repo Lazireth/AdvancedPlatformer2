@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.github.lazireth.advancedPlatformer.Area;
 import com.github.lazireth.advancedPlatformer.GameCore;
 import com.github.lazireth.advancedPlatformer.Player;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
@@ -27,8 +28,10 @@ public class QuestionBlock extends InteractableObject{
     String heldObject;
 
     TimedMovement timedMovement;
-    public QuestionBlock(TiledMapTileMapObject questionBlock){
+    Area area;
+    public QuestionBlock(TiledMapTileMapObject questionBlock, Area area){
         this.questionBlock = questionBlock;
+        this.area=area;
         try{
             heldObject=questionBlock.getProperties().get("Held Object",String.class);
         } catch (Exception e) {
@@ -55,8 +58,8 @@ public class QuestionBlock extends InteractableObject{
     public void levelReset(){}
     private void dropItem(){
         switch(heldObject){
-            case "Mushroom"->new Mushroom(getXPosition(),getYPosition());
-            case "OneUP"->new OneUP(getXPosition(),getYPosition());
+            case "Mushroom"->new Mushroom(getXPosition(),getYPosition(),area);
+            case "OneUP"->new OneUP(getXPosition(),getYPosition(),area);
             case null, default -> {}
         }
         heldObject=null;
@@ -71,7 +74,7 @@ public class QuestionBlock extends InteractableObject{
     }
 
     public void startInteractionWithPlayer(Player player){
-        if(player.getYPosition()+Player.HEIGHT/2<getYPosition()-HEIGHT/2&&!timedMovement.started){
+        if(player.getYPosition()+player.HEIGHT/2<getYPosition()-HEIGHT/2&&!timedMovement.started){
             timedMovement.start();
         }
     }
@@ -86,7 +89,7 @@ public class QuestionBlock extends InteractableObject{
         bodyDef.position.set(x+WIDTH/2.0f,y+HEIGHT/2.0f);
 
 
-        body = GameScreen.world.createBody(bodyDef);
+        body = area.world.createBody(bodyDef);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(width/2.0f, height/2.0f);
 

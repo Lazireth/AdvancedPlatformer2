@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.github.lazireth.advancedPlatformer.Area;
 import com.github.lazireth.advancedPlatformer.Player;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
@@ -33,10 +34,13 @@ public class LevelEndFlag extends InteractableObject{
     boolean flagNeedsToGoDown=true;
 
     float doLevelTransitionAfter;
-    public LevelEndFlag(TiledMapTileMapObject flag, TiledMapTileMapObject flagPole){
+    Area area;
+    public LevelEndFlag(TiledMapTileMapObject flag, TiledMapTileMapObject flagPole, Area area){
+
         body=null;
         this.flag = flag;
         this.flagPole=flagPole;
+        this.area=area;
 
         sprites=getSpritesFor("LevelEndFlag");
 
@@ -47,6 +51,7 @@ public class LevelEndFlag extends InteractableObject{
 
         // create sensor
         buildBody();
+
     }
     public void levelReset(){}
     @Override
@@ -176,7 +181,7 @@ public class LevelEndFlag extends InteractableObject{
         fixtureDefRect.isSensor=true;
         FilterCategory.SENSOR.makeSensorFilter(fixtureDefRect.filter,(short)0);
 
-        flagBody = GameScreen.world.createBody(bodyDef);
+        flagBody = area.world.createBody(bodyDef);
         flagBody.createFixture(fixtureDefRect);
 
         //build flagPole
@@ -188,7 +193,7 @@ public class LevelEndFlag extends InteractableObject{
         fixtureDefRect.isSensor=true;
         FilterCategory.SENSOR.makeSensorFilter(fixtureDefRect.filter,FilterCategory.PLAYER);
 
-        flagPoleBody = GameScreen.world.createBody(bodyDef);
+        flagPoleBody = area.world.createBody(bodyDef);
         flagPoleBody.createFixture(fixtureDefRect).setUserData(new ObjectSensor("levelEndFlagFlagPole",this));
 
         shape.dispose();

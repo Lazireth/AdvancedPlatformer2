@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.github.lazireth.advancedPlatformer.Area;
 import com.github.lazireth.advancedPlatformer.GameCore;
 import com.github.lazireth.advancedPlatformer.Player;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
@@ -27,8 +28,10 @@ public class Brick extends InteractableObject{
     String heldObject;
 
     TimedMovement timedMovement;
-    public Brick(TiledMapTileMapObject brick){
+    Area area;
+    public Brick(TiledMapTileMapObject brick, Area area){
         this.brick=brick;
+        this.area=area;
         try{
             heldObject=brick.getProperties().get("Held Object",String.class);
         } catch (Exception e) {
@@ -66,7 +69,7 @@ public class Brick extends InteractableObject{
 
     @Override
     public void startInteractionWithPlayer(Player player) {
-        if(player.getYPosition()+Player.HEIGHT/2<getYPosition()-HEIGHT/2&&!timedMovement.running){
+        if(player.getYPosition()+player.HEIGHT/2<getYPosition()-HEIGHT/2&&!timedMovement.running){
             timedMovement.start();
         }
     }
@@ -84,7 +87,7 @@ public class Brick extends InteractableObject{
         bodyDef.position.set(x+WIDTH/2.0f,y+HEIGHT/2.0f);
 
 
-        body = GameScreen.world.createBody(bodyDef);
+        body = area.world.createBody(bodyDef);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(width/2.0f, height/2.0f);
 
