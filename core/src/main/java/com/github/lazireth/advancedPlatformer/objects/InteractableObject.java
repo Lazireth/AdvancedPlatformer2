@@ -7,7 +7,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.github.lazireth.advancedPlatformer.GameCore;
-import com.github.lazireth.advancedPlatformer.Area;
 import com.github.lazireth.advancedPlatformer.Player;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
@@ -75,7 +74,6 @@ public abstract class InteractableObject{
             } catch (Exception ignore) {}
         }
     }
-
     public abstract void render(TextureMapObjectRenderer renderer);
     public abstract void update(float delta);
     public abstract void startInteractionWithPlayer(Player player);

@@ -11,6 +11,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
 import com.github.lazireth.advancedPlatformer.objects.FilterCategory;
 import com.github.lazireth.advancedPlatformer.objects.ObjectSensor;
+import com.github.lazireth.advancedPlatformer.objects.Pipe;
+import com.github.lazireth.advancedPlatformer.objects.timedMovement.MovementStep;
+import com.github.lazireth.advancedPlatformer.objects.timedMovement.TimedMovement;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
 
@@ -18,6 +21,7 @@ import java.util.ArrayList;
 
 import static com.github.lazireth.advancedPlatformer.InputHandler.keys;
 import static com.github.lazireth.advancedPlatformer.Player.PlayerPersistentData.*;
+import static com.github.lazireth.advancedPlatformer.objects.timedMovement.CollisionFlag.NONE;
 
 public class Player{
     public float WIDTH;
@@ -44,8 +48,6 @@ public class Player{
     public static GameCore game;
     Area area;
 
-
-
     private Vector2 lastVelocity=new Vector2(0,0);
     public boolean preserveVelocityWhenLanding=false;
 
@@ -58,11 +60,15 @@ public class Player{
     boolean hasDied =false;
     boolean updateBodySize=false;
     public int numFootContacts=0;
-    public boolean disableKeyInput;
+    public boolean disable;
     public boolean render=true;
 
     long canTakeDamageAfter=0;
 
+    boolean canEnterPipe=false;
+    Pipe pipePlayerCanEnter=null;
+    boolean pipeIsHorizontal=true;
+    TimedMovement timedMovement;
     public Player(TiledMapTileMapObject playerObject, ArrayList<TiledMapTile> playerTilesIn, Area area){
         this.area=area;
         tiles=playerTilesIn;
@@ -73,16 +79,37 @@ public class Player{
             sprites.add(tile.getTextureRegion());
         }
         startingPosition=new Vector2(pixelsToUnits(playerObject.getX()), pixelsToUnits(playerObject.getY()));
-        addToWorld( pixelsToUnits(playerObject.getX()) , pixelsToUnits(playerObject.getY()));
+        addToWorld(startingPosition.x,startingPosition.y);
     }
-    public void bounceOffEnemy(){
-        body.setLinearVelocity(body.getLinearVelocity().x,0);
-        body.applyLinearImpulse(PLAYER_JUMP_IMPULSE,body.getPosition(),true);
+    public Player(TiledMapTileMapObject playerObject, ArrayList<TiledMapTile> playerTilesIn, Area area,Vector2 startingPositionIn){
+        this.area=area;
+        tiles=playerTilesIn;
+
+        sprites =new ArrayList<>();
+
+        for(TiledMapTile tile: tiles){
+            sprites.add(tile.getTextureRegion());
+        }
+        startingPosition=startingPositionIn;
+        addToWorld(startingPosition.x,startingPosition.y);
+        ArrayList<MovementStep> movementSteps=new ArrayList<>();
+        if(health==0){
+            movementSteps.addLast(new MovementStep(0,2,0, NONE));
+            movementSteps.addLast(new MovementStep(0,0,0.6f, NONE));
+        }else{
+            movementSteps.addLast(new MovementStep(0,2,0, NONE));
+            movementSteps.addLast(new MovementStep(0,0,0.9f, NONE));
+        }
+
+        timedMovement=new TimedMovement(movementSteps,body);
+        timedMovement.start();
+        disable=true;
     }
 
     public void input(float delta){
-
-        if(body.getType().equals(BodyType.KinematicBody)||disableKeyInput){
+        System.out.println("numFootContacts "+numFootContacts);
+        if(body.getType().equals(BodyType.KinematicBody)||disable){
+            System.out.println("disabled");
             return;
         }
         jumpTimeout-=delta;
@@ -141,6 +168,15 @@ public class Player{
         if(Math.abs(getXVelocity())<MAX_RUN_SPEED){
             isRunning=false;
         }
+        if(keys[Input.Keys.S]&&body.getLinearVelocity().y==0&&Math.abs(body.getLinearVelocity().x)<0.2&&canEnterPipe&&!pipeIsHorizontal){
+            body.setLinearVelocity(0,0);
+            pipePlayerCanEnter.playerEnterPipe(this);
+        }
+        if(keys[Input.Keys.D]&&body.getLinearVelocity().y==0&&body.getLinearVelocity().x>0&&body.getLinearVelocity().x<1&&canEnterPipe&&pipeIsHorizontal){
+            System.out.println("horizontal pipe");
+            body.setLinearVelocity(0,0);
+            pipePlayerCanEnter.playerEnterPipe(this);
+        }
         if(keys[Input.Keys.L]){
             keys[Input.Keys.L]=false;
             ScreenshotFactory.saveScreenshot();
@@ -170,8 +206,16 @@ public class Player{
             game.loadGameOverScreen();
             return;
         }
-        area.reset();
-        resetPlayer();
+        System.out.println("end");
+        try{
+            body.getWorld().destroyBody(body);
+        }catch (Exception e){
+            throw new RuntimeException();
+        }
+        health=0;
+        numFootContacts=0;
+        area.level.reset();
+        //resetPlayer();
         game.loadLevelStartScreen();
     }
     public void takeDamage(int damageTaken){
@@ -192,8 +236,6 @@ public class Player{
         addToWorld(startingPosition.x,startingPosition.y);
         area.cameraPos=new Vector3(startingPosition.x,area.camera.position.y,area.camera.position.z);
 
-
-
         lastVelocity=new Vector2(0,0);
         preserveVelocityWhenLanding=false;
 
@@ -211,7 +253,18 @@ public class Player{
     }
 
     public void update(float delta){
-        if(body.getType().equals(BodyType.KinematicBody)||disableKeyInput){
+        if(timedMovement!=null){
+            timedMovement.update(delta);
+            if(timedMovement.finished){
+                timedMovement=null;
+                disable=false;
+                Vector2 pos=body.getPosition();
+                System.out.println("pos "+pos);
+                body.getWorld().destroyBody(body);
+                addToWorld(pos.x,pos.y);
+            }
+        }
+        if(body.getType().equals(BodyType.KinematicBody)||disable){
             return;
         }
         if(updateBodySize){
@@ -231,9 +284,7 @@ public class Player{
             numFootContacts=0;
         }
         if(preserveVelocityWhenLanding){
-            //System.out.println("numFootContacts "+numFootContacts);
             if(numFootContacts>0){
-                //System.out.println("preserveVelocityWhenLanding");
                 if(lastVelocity.y<-1){// need Math.abs(...)<0.1 instead of ...==0 in case ... is an incredibly small value
                     body.setLinearVelocity(lastVelocity.x,body.getLinearVelocity().y);
                 }
@@ -242,7 +293,16 @@ public class Player{
         }
         lastVelocity=body.getLinearVelocity().cpy();
     }
-
+    public void pipeContactBegin(Pipe pipe){
+        System.out.println("pipeContactBegin");
+        pipePlayerCanEnter=pipe;
+        canEnterPipe=true;
+        pipeIsHorizontal=pipe.isHorizontal;
+    }
+    public void pipeContactEnd(){
+        pipePlayerCanEnter=null;
+        canEnterPipe=false;
+    }
     public void collectItem(String item){
         switch (item){
             case "Mushroom"->{
@@ -261,9 +321,11 @@ public class Player{
             }
         }
     }
-    public float bottomOfPlayer(){
-        return getYPosition()-HEIGHT/2;
+    public void bounceOffEnemy() {
+        body.setLinearVelocity(body.getLinearVelocity().x,0);
+        body.applyLinearImpulse(PLAYER_JUMP_IMPULSE,body.getPosition(),true);
     }
+
     private void addToWorld(float x, float y) {
         WIDTH = (tiles.get(health).getProperties().get("WIDTH",int.class)-2)  * GameCore.metersPerPixel;// the -2 is so the player appears to be touching objects when colliding
         HEIGHT= (tiles.get(health).getProperties().get("HEIGHT",int.class)-2) * GameCore.metersPerPixel;
@@ -312,7 +374,7 @@ public class Player{
         // 0 is normal
         // 1 is big (caused by mushroom)
     }
-    //ObjectSensor objectSensor=new ObjectSensor("playerFootSensor",this);
+    public float bottomOfPlayer(){return getYPosition()-HEIGHT/2;}
     public float getYVelocity(){return body.getLinearVelocity().y;}
     public float getXVelocity(){return body.getLinearVelocity().x;}
     public Vector2 getVelocity(){return body.getLinearVelocity().cpy();}

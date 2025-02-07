@@ -43,10 +43,10 @@ public class OneUP extends InteractableObject {
         ArrayList<MovementStep> movementSteps=new ArrayList<>();
         movementSteps.addLast(new MovementStep(0,1,0, OFF));
         movementSteps.addLast(new MovementStep(2,0,0.75f, ON));
-        timedMovement=new TimedMovement(movementSteps,body,true, BodyDef.BodyType.DynamicBody);
+        timedMovement=new TimedMovement(movementSteps,body, BodyDef.BodyType.DynamicBody);
+        timedMovement.start();
     }
     public void levelReset(){
-        body.getWorld().destroyBody(body);
         area.interactableObjectsRemove.add(this);
     }
     @Override

@@ -42,23 +42,30 @@ public class Area{
 
     public Player player;
 
-    Level level;
-    public Area(TiledMap tiledMap, Level level){
+    public final Map<Integer, Pipe> pipes=new HashMap<>();
+    private final ArrayList<InteractableObject> pipesList=new ArrayList<>();
+
+    public Level level;
+    public int areaNumber;
+    TiledMap tiledMap;
+    public Area(TiledMap tiledMapIn, Level level, int areaNumber){
+        this.tiledMap=tiledMapIn;
         this.level=level;
+        this.areaNumber=areaNumber;
         world=new World(new Vector2(0,-9.8f),true);
         world.setContactListener(new CollisionListener());
 
-        setUpRenderingStuff(tiledMap);
+        setUpRenderingStuff();
 
         firstRenderLayer=new int[]{tiledMap.getLayers().getIndex("Tile Layer 1")};// make array of Tile Layers to render
 
         MapBodyBuilder.buildShapes(tiledMap, world,"Primary Level Collision");// build primary level collision
 
-        loadMapObjects(tiledMap);
+        loadMapObjects();
 
 
     }
-    private void setUpRenderingStuff(TiledMap tiledMap){
+    private void setUpRenderingStuff(){
         camera=new OrthographicCamera();
         camera.setToOrtho(false,GameCore.WIDTH,GameCore.HEIGHT);
         viewport=new FitViewport(GameCore.WIDTH,GameCore.HEIGHT,camera);
@@ -69,12 +76,11 @@ public class Area{
         renderer.getBatch().setProjectionMatrix(viewport.getCamera().combined);
 
     }
-    private void loadMapObjects(TiledMap tiledMap){
+    private void loadMapObjects(){
         playerObject=(TiledMapTileMapObject)(tiledMap.getLayers().get("Player Layer").getObjects().get("Player"));
         if(playerObject==null){
             throw new NullPointerException("playerObject is null");
         }
-
         // get the folder of layers (each layer has a different interactable object)
         MapLayers objectSets = ((MapGroupLayer) tiledMap.getLayers().get("InteractableObjects")).getLayers();
 
@@ -88,12 +94,22 @@ public class Area{
                 case "Enemy"-> loadEnemies(mapLayer.getObjects());
                 case "Brick"-> loadBricks(mapLayer.getObjects());
                 case "LevelEndFlag"->loadLevelEndFlag(mapLayer.getObjects());
+                case "Pipe"->loadPipes(mapLayer.getObjects());
             }
         }
     }
     public void show(){
 //        cameraPos=new Vector3(player.getXPosition(),camera.position.y,camera.position.z);
         player=new Player(playerObject,InteractableObject.getTilesFor("Player"),this);
+    }
+    public void show(int pipeID){
+//        cameraPos=new Vector3(player.getXPosition(),camera.position.y,camera.position.z);
+        player=new Player(playerObject,InteractableObject.getTilesFor("Player"),this,pipes.get(pipeID).getPlayerExitPoint());
+    }
+    public void hide(){
+//        cameraPos=new Vector3(player.getXPosition(),camera.position.y,camera.position.z);
+        world.destroyBody(player.body);
+        player=null;
     }
     public Vector2 getPlayerPosition(){
         if(player!=null){
@@ -105,17 +121,18 @@ public class Area{
 
 
     public void render(float delta){
-        System.out.println("Area render start "+GameScreen.timeSinceLastCheck());
         player.input(delta);
         Vector2 playerPositionInitial=player.getPosition();
 
         doPhysicsStep(delta);
-        System.out.println("Area after physics "+GameScreen.timeSinceLastCheck());
         updateCamera(playerPositionInitial);
 
         //update interactable objects holder
         for(InteractableObject object:interactableObjects){
             object.update(delta);
+        }
+        for(InteractableObject pipe:pipesList){
+            pipe.update(delta);
         }
         while(!interactableObjectsAdd.isEmpty()){
             interactableObjects.addFirst(interactableObjectsAdd.removeFirst());
@@ -123,28 +140,40 @@ public class Area{
         while(!interactableObjectsRemove.isEmpty()){
             interactableObjects.remove(interactableObjectsRemove.removeFirst());
         }
-        System.out.println("Area after interactableObjects "+GameScreen.timeSinceLastCheck());
         player.update(delta);
-        System.out.println("Area after player update  "+GameScreen.timeSinceLastCheck());
 
         //prepare for rendering
         ScreenUtils.clear(Color.BLACK);
         camera.update();
-        System.out.println("Area after render prep  "+GameScreen.timeSinceLastCheck());
         //render level
         renderer.render(firstRenderLayer);//render tiles
         renderer.begin();
         renderer.renderInteractableObjects(interactableObjects);
         player.render(renderer);
+        renderer.renderInteractableObjects(pipesList);
         renderer.end();
-        System.out.println("Area after render "+GameScreen.timeSinceLastCheck());
-
+        debugRenderer.render(world,camera.combined);
         player.deathCheck();
     }
     public float pixelsToUnits(float pixels){return pixels*GameCore.metersPerPixel;}
-    public void reset(){for(InteractableObject object:interactableObjects){object.levelReset();}}
+    public void reset(){
+        world.dispose();
+        world=new World(new Vector2(0,-9.8f),true);
+        MapBodyBuilder.buildShapes(tiledMap, world,"Primary Level Collision");// build primary level collision
+        for(InteractableObject object:interactableObjects){
+            object.levelReset();
+        }
+        for(InteractableObject pipe:pipesList){
+            pipe.levelReset();
+        }
+    }
+    private void loadPipes(MapObjects pipes){
+        for(MapObject pipe : pipes) {
+            pipesList.add(new Pipe((TiledMapTileMapObject)pipe,this));
+        }
+    }
     private void loadQuestionBlocks(MapObjects questionBlocks){
-        for (MapObject questionBlock : questionBlocks) {
+        for(MapObject questionBlock : questionBlocks) {
             interactableObjects.add(new QuestionBlock((TiledMapTileMapObject)questionBlock,this));
         }
     }

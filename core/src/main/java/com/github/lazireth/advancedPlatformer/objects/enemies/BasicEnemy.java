@@ -59,8 +59,6 @@ public class BasicEnemy extends Enemy {
         timedMovement=new TimedMovement(movementSteps,body);
     }
     public void levelReset(){
-        body.getWorld().destroyBody(body);
-
         enemyType= myMapObject.getTile().getProperties().get("enemyType",String.class);
         state= myMapObject.getTile().getProperties().get("state",int.class);
 
@@ -69,6 +67,11 @@ public class BasicEnemy extends Enemy {
         WIDTH = pixelsToUnits(sprites.getFirst().getRegionWidth());
         HEIGHT= pixelsToUnits(sprites.getFirst().getRegionHeight());
         addToWorld();
+        ArrayList<MovementStep> movementSteps=new ArrayList<>();
+        movementSteps.addLast(new MovementStep(null,0, NONE));
+        movementSteps.addLast(new MovementStep(null,0.25f, NONE));
+        movementSteps.addLast(new MovementStep(null,0.5f, NONE));
+        timedMovement=new TimedMovement(movementSteps,body);
         if( myMapObject.getProperties().get("startGoingRight",boolean.class)){
             body.setLinearVelocity(moveSpeed,0);
         }else{

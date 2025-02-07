@@ -4,8 +4,6 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.github.lazireth.advancedPlatformer.GameCore;
 import com.github.lazireth.advancedPlatformer.objects.Level;
 
-import java.util.concurrent.TimeUnit;
-
 
 public class GameScreen extends ScreenAdapter {
     static public GameCore gameCore;
@@ -23,17 +21,17 @@ public class GameScreen extends ScreenAdapter {
     }
     public GameScreen(){
         levels[0]=new Level(0);
-        //levels[1]=new Level(1);
+        levels[1]=new Level(1);
     }
     public Level getCurrentLevel(){
         return levels[currentLevel];
     }
     @Override
     public void render(float delta) {
-        System.out.println("GameScreen render start "+GameScreen.timeSinceLastCheck());
         if(doLevelTransition){
+            System.out.println("doLevelTransition "+currentLevel);
             currentLevel++;
-            if(!(currentLevel<levels.length)){
+            if((currentLevel==levels.length)){
                 //if the new current level is out of range
                 gameCore.loadGameOverScreen();
                 return;
@@ -41,6 +39,8 @@ public class GameScreen extends ScreenAdapter {
             if(levels[currentLevel]==null){
                 levels[currentLevel]=new Level(currentLevel);
             }
+            levels[currentLevel].show();
+            doLevelTransition=false;
         }
         levels[currentLevel].render(delta);
     }

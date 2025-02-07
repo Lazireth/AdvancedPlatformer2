@@ -75,7 +75,18 @@ public class Brick extends InteractableObject{
     }
 
     @Override
-    public void levelReset() {}
+    public void levelReset() {
+        // create sensor
+        makeSensor();
+
+        // set up timedMovement
+        ArrayList<MovementStep> movementSteps=new ArrayList<>();
+        movementSteps.addLast(new MovementStep(0,1,0, NONE));
+        movementSteps.addLast(new MovementStep(0,-1,0.25f, NONE));
+        movementSteps.addLast(new MovementStep(0,0,0.5f, NONE));
+        timedMovement=new TimedMovement(movementSteps,body);
+        timedMovement.autoResetTimedMovement(true);
+    }
     private void makeSensor() {
         float width=WIDTH+ 2*GameCore.metersPerPixel;//need to be slightly larger so they can be touched by the player
         float height=HEIGHT+ 2*GameCore.metersPerPixel;

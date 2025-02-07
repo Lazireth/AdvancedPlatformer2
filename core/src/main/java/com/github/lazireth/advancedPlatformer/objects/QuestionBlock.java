@@ -55,7 +55,9 @@ public class QuestionBlock extends InteractableObject{
         timedMovement=new TimedMovement(movementSteps,body);
         timedMovement.autoResetBodyPosition(true);
     }
-    public void levelReset(){}
+    public void levelReset(){
+        makeSensor();
+    }
     private void dropItem(){
         switch(heldObject){
             case "Mushroom"->new Mushroom(getXPosition(),getYPosition(),area);

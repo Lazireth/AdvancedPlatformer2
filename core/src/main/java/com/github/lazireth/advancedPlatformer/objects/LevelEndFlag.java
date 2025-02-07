@@ -51,9 +51,18 @@ public class LevelEndFlag extends InteractableObject{
 
         // create sensor
         buildBody();
-
     }
-    public void levelReset(){}
+    public void levelReset(){
+        sprites=getSpritesFor("LevelEndFlag");
+
+        flagWidth = pixelsToUnits(sprites.get(0).getRegionWidth());
+        flagHeight= pixelsToUnits(sprites.get(0).getRegionHeight());
+        flagPoleWidth = pixelsToUnits(sprites.get(1).getRegionWidth());
+        flagPoleHeight= pixelsToUnits(sprites.get(1).getRegionHeight());
+
+        // create sensor
+        buildBody();
+    }
     @Override
     public void update(float delta) {
         float descentSpeed=-5;
@@ -62,11 +71,12 @@ public class LevelEndFlag extends InteractableObject{
         float alignFlagLeftPos=197.0f;
         float alignFlagRightPos=198.0f;
         float walkToEndSpeed=3;
-          switch (flagPoleSequenceState){
+        System.out.println("flagPoleSequenceState "+flagPoleSequenceState);
+        switch (flagPoleSequenceState){
             case starting -> {
                 player.body.setType(BodyDef.BodyType.KinematicBody);
                 player.body.setLinearVelocity(0,0);
-                player.disableKeyInput=true;
+                player.disable=true;
                 flagPoleSequenceState=alignFlagPoleLeft;
             }
             case alignFlagPoleLeft -> {
@@ -149,8 +159,10 @@ public class LevelEndFlag extends InteractableObject{
         }
     }
     public void contactWithPlayer(Player playerIn){
-        player=playerIn;
-        flagPoleSequenceState=starting;
+        if(flagPoleSequenceState==notStarted){
+            player=playerIn;
+            flagPoleSequenceState=starting;
+        }
     }
     public void startInteractionWithPlayer(Player player){
 

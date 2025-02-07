@@ -4,6 +4,7 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.github.lazireth.advancedPlatformer.Screens.GameOverScreen;
@@ -52,7 +53,7 @@ public class GameCore extends Game {
         camera.setToOrtho(false,WIDTH,HEIGHT);
         viewport=new FitViewport(WIDTH,HEIGHT,camera);
 
-
+        renderer=new TextureMapObjectRenderer(new TmxMapLoader().load("Map/1-1 0.tmx"),GameCore.metersPerPixel);
         gameScreen=new GameScreen();GameScreen.gameCore=this;Player.game=this;
         cameraPos=new Vector3(5,camera.position.y,camera.position.z);
         renderer.getBatch().setProjectionMatrix(viewport.getCamera().combined);

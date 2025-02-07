@@ -56,6 +56,7 @@ public class TextureMapObjectRenderer extends OrthogonalTiledMapRenderer {
     }
     @Override
     public void renderObject(MapObject object) {
+
         if(object instanceof TextureMapObject textureObj) {
             batch.draw(textureObj.getTextureRegion(), textureObj.getX(), textureObj.getY(),
                 textureObj.getOriginX(), textureObj.getOriginY(), textureObj.getTextureRegion().getRegionWidth(), textureObj.getTextureRegion().getRegionHeight(),
@@ -97,6 +98,7 @@ public class TextureMapObjectRenderer extends OrthogonalTiledMapRenderer {
 
     public void renderObject(TextureRegion textureRegion, float x, float y, float width, float height){
         batch.draw(textureRegion,x-width/2, y-height/2,width,height);
+
     }
     public void renderObject(TextureRegion textureRegion, Vector2 pos, float width, float height){
         batch.draw(textureRegion,pos.x-width/2, pos.y-height/2,width,height);

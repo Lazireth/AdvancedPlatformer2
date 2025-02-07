@@ -76,6 +76,7 @@ public class CollisionListener implements ContactListener {
             case ObjectSensor objectSensor->{
                 switch (objectSensor.sensorName){
                     case "levelEndFlagFlagPole"-> ((LevelEndFlag)objectSensor.relatedObject).contactWithPlayer(player);
+                    case "pipeSensor"-> ((Pipe)objectSensor.relatedObject).contactBegin(player);
                     case null, default -> {
                         return false;
                     }
@@ -89,6 +90,7 @@ public class CollisionListener implements ContactListener {
         return true;
     }
     private void zeroNullsEnd(Fixture fixtureA, Fixture fixtureB){
+        if(playerCollisionEnd(fixtureA.getUserData(), fixtureB.getUserData())){return;}
         switch (fixtureA.getUserData()){
             case ObjectSensor objectSensor-> {
                 switch (objectSensor.sensorName){
@@ -105,6 +107,32 @@ public class CollisionListener implements ContactListener {
             }
             case null, default -> {}
         }
+    }
+    private boolean playerCollisionEnd(Object objectA, Object objectB){
+        Player player=null;
+        Object notPlayer=null;
+        if(objectA.getClass().equals(Player.class)){//if objectA is a player
+            player=((Player) objectA);
+            notPlayer=objectB;
+        }else if(objectB.getClass().equals(Player.class)){//if objectB is a player
+            player=((Player) objectB);
+            notPlayer=objectA;
+        }
+        switch (notPlayer){
+            case ObjectSensor objectSensor->{
+                switch (objectSensor.sensorName){
+                    case "pipeSensor"-> ((Pipe)objectSensor.relatedObject).contactEnd(player);
+                    case null, default -> {
+                        return false;
+                    }
+                }
+
+            }
+            case null, default -> {
+                return false;
+            }
+        }
+        return true;
     }
     @Override
     /// This is called after a contact is updated. This allows you to inspect a contact before it goes to the solver. If you are
