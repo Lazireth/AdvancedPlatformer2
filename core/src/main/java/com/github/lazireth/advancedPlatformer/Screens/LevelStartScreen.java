@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.github.lazireth.advancedPlatformer.FontManager;
 import com.github.lazireth.advancedPlatformer.GameCore;
+import com.github.lazireth.advancedPlatformer.Player;
 
 import static com.github.lazireth.advancedPlatformer.GameCore.*;
 import static com.github.lazireth.advancedPlatformer.InputHandler.keys;
@@ -48,7 +49,7 @@ public class LevelStartScreen extends ScreenAdapter {
         renderer.begin();
         ScreenUtils.clear(Color.BLACK);
         renderer.drawText("Level "+GameScreen.levels[GameScreen.currentLevel],calibri128,WIDTH/2,HEIGHT/4*3);
-        renderer.drawText("You have "+ gameScreen.getPlayerLives()+" lives",calibri64,WIDTH/2,HEIGHT/16*8);
+        renderer.drawText("You have "+ Player.PlayerPersistentData.lives+" lives",calibri64,WIDTH/2,HEIGHT/16*8);
         if(countDown){
             renderer.drawText((int)restartTimer+"",calibri64,WIDTH/2,HEIGHT/16*4);
         }else{

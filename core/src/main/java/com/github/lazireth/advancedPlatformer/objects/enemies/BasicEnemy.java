@@ -6,9 +6,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.github.lazireth.advancedPlatformer.Area;
 import com.github.lazireth.advancedPlatformer.Direction;
 import com.github.lazireth.advancedPlatformer.Player;
-import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
 import com.github.lazireth.advancedPlatformer.objects.FilterCategory;
 import com.github.lazireth.advancedPlatformer.objects.ObjectSensor;
 import com.github.lazireth.advancedPlatformer.objects.timedMovement.MovementStep;
@@ -38,8 +38,10 @@ public class BasicEnemy extends Enemy {
     TimedMovement timedMovement;
     boolean dying=false;
     public Direction directionToBounceTo=null;
-    public BasicEnemy (TiledMapTileMapObject enemy) {
+    Area area;
+    public BasicEnemy (TiledMapTileMapObject enemy, Area area) {
         myMapObject=enemy;
+        this.area=area;
 
         enemyType= myMapObject.getTile().getProperties().get("enemyType",String.class);
         state= myMapObject.getTile().getProperties().get("state",int.class);
@@ -57,8 +59,6 @@ public class BasicEnemy extends Enemy {
         timedMovement=new TimedMovement(movementSteps,body);
     }
     public void levelReset(){
-        body.getWorld().destroyBody(body);
-
         enemyType= myMapObject.getTile().getProperties().get("enemyType",String.class);
         state= myMapObject.getTile().getProperties().get("state",int.class);
 
@@ -67,6 +67,11 @@ public class BasicEnemy extends Enemy {
         WIDTH = pixelsToUnits(sprites.getFirst().getRegionWidth());
         HEIGHT= pixelsToUnits(sprites.getFirst().getRegionHeight());
         addToWorld();
+        ArrayList<MovementStep> movementSteps=new ArrayList<>();
+        movementSteps.addLast(new MovementStep(null,0, NONE));
+        movementSteps.addLast(new MovementStep(null,0.25f, NONE));
+        movementSteps.addLast(new MovementStep(null,0.5f, NONE));
+        timedMovement=new TimedMovement(movementSteps,body);
         if( myMapObject.getProperties().get("startGoingRight",boolean.class)){
             body.setLinearVelocity(moveSpeed,0);
         }else{
@@ -76,7 +81,7 @@ public class BasicEnemy extends Enemy {
     @Override
     public void death() {
         System.out.println("death");
-        GameScreen.area.interactableObjectsRemove.add(this);
+        area.interactableObjectsRemove.add(this);
         body.getWorld().destroyBody(body);
     }
 
@@ -127,7 +132,7 @@ public class BasicEnemy extends Enemy {
                 body.setLinearVelocity(-moveSpeed,0);
             }
         }else{
-            if(Math.abs(GameScreen.player.getXPosition()-body.getPosition().x)<18){
+            if(Math.abs(area.player.getXPosition()-body.getPosition().x)<18){
                 running=true;
                 if( myMapObject.getProperties().get("startGoingRight",boolean.class)){
                     body.setLinearVelocity(moveSpeed,0);
@@ -140,7 +145,7 @@ public class BasicEnemy extends Enemy {
 
     @Override
     public void startInteractionWithPlayer(Player player) {
-        if(player.getYPosition()-Player.HEIGHT/2>=body.getPosition().y+HEIGHT/2-0.25){
+        if(player.getYPosition()-player.HEIGHT/2>=body.getPosition().y+HEIGHT/2-0.25){
             //If the top of the player is higher than some distance below the top of this object
             takeDamage(1);
             if(dying){
@@ -156,7 +161,7 @@ public class BasicEnemy extends Enemy {
         bodyDef.fixedRotation=true;
         bodyDef.position.set(pixelsToUnits(myMapObject.getX()),pixelsToUnits(myMapObject.getY()));
 
-        body = GameScreen.world.createBody(bodyDef);
+        body = area.world.createBody(bodyDef);
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(WIDTH/2, HEIGHT/2);
 

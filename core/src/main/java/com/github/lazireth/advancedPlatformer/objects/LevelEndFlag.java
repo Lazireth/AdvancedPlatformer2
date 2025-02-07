@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.github.lazireth.advancedPlatformer.Area;
 import com.github.lazireth.advancedPlatformer.Player;
 import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
@@ -33,10 +34,13 @@ public class LevelEndFlag extends InteractableObject{
     boolean flagNeedsToGoDown=true;
 
     float doLevelTransitionAfter;
-    public LevelEndFlag(TiledMapTileMapObject flag, TiledMapTileMapObject flagPole){
+    Area area;
+    public LevelEndFlag(TiledMapTileMapObject flag, TiledMapTileMapObject flagPole, Area area){
+
         body=null;
         this.flag = flag;
         this.flagPole=flagPole;
+        this.area=area;
 
         sprites=getSpritesFor("LevelEndFlag");
 
@@ -48,7 +52,17 @@ public class LevelEndFlag extends InteractableObject{
         // create sensor
         buildBody();
     }
-    public void levelReset(){}
+    public void levelReset(){
+        sprites=getSpritesFor("LevelEndFlag");
+
+        flagWidth = pixelsToUnits(sprites.get(0).getRegionWidth());
+        flagHeight= pixelsToUnits(sprites.get(0).getRegionHeight());
+        flagPoleWidth = pixelsToUnits(sprites.get(1).getRegionWidth());
+        flagPoleHeight= pixelsToUnits(sprites.get(1).getRegionHeight());
+
+        // create sensor
+        buildBody();
+    }
     @Override
     public void update(float delta) {
         float descentSpeed=-5;
@@ -57,11 +71,12 @@ public class LevelEndFlag extends InteractableObject{
         float alignFlagLeftPos=197.0f;
         float alignFlagRightPos=198.0f;
         float walkToEndSpeed=3;
-          switch (flagPoleSequenceState){
+        System.out.println("flagPoleSequenceState "+flagPoleSequenceState);
+        switch (flagPoleSequenceState){
             case starting -> {
                 player.body.setType(BodyDef.BodyType.KinematicBody);
                 player.body.setLinearVelocity(0,0);
-                player.disableKeyInput=true;
+                player.disable=true;
                 flagPoleSequenceState=alignFlagPoleLeft;
             }
             case alignFlagPoleLeft -> {
@@ -144,8 +159,10 @@ public class LevelEndFlag extends InteractableObject{
         }
     }
     public void contactWithPlayer(Player playerIn){
-        player=playerIn;
-        flagPoleSequenceState=starting;
+        if(flagPoleSequenceState==notStarted){
+            player=playerIn;
+            flagPoleSequenceState=starting;
+        }
     }
     public void startInteractionWithPlayer(Player player){
 
@@ -176,7 +193,7 @@ public class LevelEndFlag extends InteractableObject{
         fixtureDefRect.isSensor=true;
         FilterCategory.SENSOR.makeSensorFilter(fixtureDefRect.filter,(short)0);
 
-        flagBody = GameScreen.world.createBody(bodyDef);
+        flagBody = area.world.createBody(bodyDef);
         flagBody.createFixture(fixtureDefRect);
 
         //build flagPole
@@ -188,7 +205,7 @@ public class LevelEndFlag extends InteractableObject{
         fixtureDefRect.isSensor=true;
         FilterCategory.SENSOR.makeSensorFilter(fixtureDefRect.filter,FilterCategory.PLAYER);
 
-        flagPoleBody = GameScreen.world.createBody(bodyDef);
+        flagPoleBody = area.world.createBody(bodyDef);
         flagPoleBody.createFixture(fixtureDefRect).setUserData(new ObjectSensor("levelEndFlagFlagPole",this));
 
         shape.dispose();

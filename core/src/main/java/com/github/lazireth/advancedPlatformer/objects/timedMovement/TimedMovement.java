@@ -33,25 +33,10 @@ public class TimedMovement {
         movementSteps=movementStepsInput;
         body=bodyIn;
     }
-    public TimedMovement(ArrayList<MovementStep> movementStepsInput,Body bodyIn,boolean autoStart){
-        movementSteps=movementStepsInput;
-        body=bodyIn;
-        if(autoStart){
-            start();
-        }
-    }
     public TimedMovement(ArrayList<MovementStep> movementStepsInput,Body bodyIn, BodyDef.BodyType finalBodyTypeIn){
         movementSteps=movementStepsInput;
         finalBodyType=finalBodyTypeIn;
         body=bodyIn;
-    }
-    public TimedMovement(ArrayList<MovementStep> movementStepsInput,Body bodyIn,boolean autoStart, BodyDef.BodyType finalBodyTypeIn){
-        movementSteps=movementStepsInput;
-        finalBodyType=finalBodyTypeIn;
-        body=bodyIn;
-        if(autoStart){
-            start();
-        }
     }
     public void start(){//start the timed movement
         //System.out.println("start");
