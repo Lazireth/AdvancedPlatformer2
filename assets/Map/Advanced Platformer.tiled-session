@@ -16,18 +16,20 @@
                 6
             ],
             "expandedObjectLayers": [
-                20,
+                18,
                 4,
-                12,
-                3,
+                6,
+                19,
                 15,
-                6
+                12,
+                20,
+                3
             ],
-            "scale": 0.75,
+            "scale": 0.5,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 12950,
-                "y": 728.6666666666665
+                "x": 921,
+                "y": 441
             }
         },
         "1-1 1.tmx": {
@@ -38,11 +40,11 @@
                 4,
                 2,
                 5,
-                3,
-                6
+                6,
+                3
             ],
             "scale": 0.75,
-            "selectedLayer": 1,
+            "selectedLayer": 0,
             "viewCenter": {
                 "x": 1034,
                 "y": 440.6666666666667
@@ -60,25 +62,73 @@
             }
         },
         "1-2 0.tmx": {
-            "expandedObjectLayers": [
-                2
+            "expandedGroupLayers": [
+                4
             ],
-            "scale": 0.015625,
-            "selectedLayer": 1,
+            "expandedObjectLayers": [
+                4,
+                2,
+                5,
+                3
+            ],
+            "scale": 0.75,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 42976,
-                "y": 1376
+                "x": 658,
+                "y": 490
             }
         },
         "1-2 1.tmx": {
             "expandedGroupLayers": [
                 4
             ],
+            "expandedObjectLayers": [
+                8,
+                4,
+                2,
+                7,
+                3
+            ],
             "scale": 0.33,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 11522.727272727272,
-                "y": 398.4848484848485
+                "x": 8495.454545454546,
+                "y": 243.93939393939377
+            }
+        },
+        "1-2 2.tmx": {
+            "expandedGroupLayers": [
+                3
+            ],
+            "expandedObjectLayers": [
+                4,
+                2,
+                5,
+                6,
+                3
+            ],
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 672.6666666666667,
+                "y": 547.3333333333334
+            }
+        },
+        "1-2 3.tmx": {
+            "expandedGroupLayers": [
+                4
+            ],
+            "expandedObjectLayers": [
+                4,
+                2,
+                6,
+                3
+            ],
+            "scale": 0.5,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1601,
+                "y": 479
             }
         },
         "1-2.tmx": {
@@ -239,35 +289,37 @@
     "map.layerDataFormat": "1",
     "map.tileHeight": 64,
     "map.tileWidth": 64,
-    "map.width": 24,
+    "map.width": 42,
     "mapScene.enableWorlds": true,
     "openFiles": [
         "1-1 0.tmx",
         "1-1 1.tmx",
+        "1-2 0.tmx",
+        "1-2 1.tmx",
+        "1-2 2.tmx",
+        "1-2 3.tmx",
         "Ground Tileset v1.tsx",
         "NPC Tileset.tsx",
         "Player Sprites.tsx",
         "Environment Tileset.tsx",
         "Flag Sprites.tsx",
-        "Game over.tsx",
-        "Pipes.tsx",
-        "1-2 0.tmx"
+        "Pipes.tsx"
     ],
     "project": "Advanced Platformer.tiled-project",
     "property.type": "bool",
     "recentFiles": [
-        "1-2 0.tmx",
         "Pipes.tsx",
-        "Game over.tsx",
         "Flag Sprites.tsx",
         "Environment Tileset.tsx",
         "Player Sprites.tsx",
         "NPC Tileset.tsx",
         "Ground Tileset v1.tsx",
+        "1-2 3.tmx",
+        "1-2 2.tmx",
+        "1-2 1.tmx",
+        "1-2 0.tmx",
         "1-1 1.tmx",
-        "1-1 0.tmx",
-        "1-2.tmx",
-        "1-1.tmx"
+        "1-1 0.tmx"
     ],
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
     "tileset.lastUsedFormat": "tsx",

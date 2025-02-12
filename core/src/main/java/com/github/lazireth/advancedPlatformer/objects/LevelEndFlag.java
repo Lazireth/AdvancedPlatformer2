@@ -68,10 +68,10 @@ public class LevelEndFlag extends InteractableObject{
         float descentSpeed=-5;
         float playerBottomStopPosition=3.1f;
         float flagStopPosition=4.6f;
-        float alignFlagLeftPos=197.0f;
-        float alignFlagRightPos=198.0f;
-        float walkToEndSpeed=3;
-        System.out.println("flagPoleSequenceState "+flagPoleSequenceState);
+        float alignFlagLeftPos=pixelsToUnits(flagPole.getX());
+        float alignFlagRightPos=pixelsToUnits(flagPole.getX())+1;
+        float stopWalkingToEndAt=pixelsToUnits(flagPole.getX())+6.5f;
+        float walkToEndSpeed=4;
         switch (flagPoleSequenceState){
             case starting -> {
                 player.body.setType(BodyDef.BodyType.KinematicBody);
@@ -144,7 +144,7 @@ public class LevelEndFlag extends InteractableObject{
                 }
             }
             case walkToLevelEnd -> {
-                if(player.body.getPosition().x>203.62566f){
+                if(player.body.getPosition().x>stopWalkingToEndAt){
                     flagPoleSequenceState=finished;
                     player.body.setLinearVelocity(0,0);
                     player.render=false;

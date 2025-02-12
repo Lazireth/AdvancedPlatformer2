@@ -33,7 +33,7 @@ public class GameScreen extends ScreenAdapter {
             currentLevel++;
             if((currentLevel==levels.length)){
                 //if the new current level is out of range
-                gameCore.loadGameOverScreen();
+                gameCore.loadVictoryScreen();
                 return;
             }
             if(levels[currentLevel]==null){

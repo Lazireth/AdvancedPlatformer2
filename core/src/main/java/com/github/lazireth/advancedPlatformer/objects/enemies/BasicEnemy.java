@@ -149,7 +149,7 @@ public class BasicEnemy extends Enemy {
             //If the top of the player is higher than some distance below the top of this object
             takeDamage(1);
             if(dying){
-                player.bounceOffEnemy();
+                //player.bounceOffEnemy();
             }
         }else{
             damagePlayer(player);

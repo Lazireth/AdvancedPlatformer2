@@ -108,9 +108,9 @@ public class Pipe extends InteractableObject{
         FilterCategory.SENSOR.makeSensorFilter(fixtureDefRect.filter,FilterCategory.PLAYER);
 
         if(!isHorizontal){
-            shape.setAsBox(width*0.4f,0.1f,new Vector2(0,height/2),0);
+            shape.setAsBox((width/2)*0.3f,0.1f,new Vector2(0,height/2),0);
         }else{
-            shape.setAsBox(0.1f,height/2*0.4f,new Vector2(-width/2,0),0);
+            shape.setAsBox(0.1f,(height/2)*0.4f,new Vector2(-width/2,0),0);
         }
 
 

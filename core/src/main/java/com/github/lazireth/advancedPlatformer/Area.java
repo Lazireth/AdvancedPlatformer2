@@ -6,12 +6,10 @@ import com.badlogic.gdx.maps.*;
 import com.badlogic.gdx.maps.tiled.*;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
 import com.github.lazireth.advancedPlatformer.objects.*;
 import com.github.lazireth.advancedPlatformer.objects.enemies.BasicEnemy;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
@@ -37,7 +35,6 @@ public class Area{
     public TextureMapObjectRenderer renderer;
     public Box2DDebugRenderer debugRenderer=new Box2DDebugRenderer();
     public OrthographicCamera camera;
-    public Vector3 cameraPos;
     public FitViewport viewport;
 
     public Player player;
@@ -48,8 +45,10 @@ public class Area{
     public Level level;
     public int areaNumber;
     TiledMap tiledMap;
-    public Area(TiledMap tiledMapIn, Level level, int areaNumber){
-        this.tiledMap=tiledMapIn;
+    String[] underGroundAreas={"1-1 1","1-2 1","1-2 2"};
+    boolean underGround=false;
+    public Area(String levelArea, Level level, int areaNumber){
+        this.tiledMap=new TmxMapLoader().load("Map/"+levelArea+".tmx");
         this.level=level;
         this.areaNumber=areaNumber;
         world=new World(new Vector2(0,-9.8f),true);
@@ -62,6 +61,13 @@ public class Area{
         MapBodyBuilder.buildShapes(tiledMap, world,"Primary Level Collision");// build primary level collision
 
         loadMapObjects();
+        System.out.println("levelArea "+levelArea);
+        for(String underGroundArea : underGroundAreas){
+            if(underGroundArea.equals(levelArea)){
+                underGround = true;
+                break;
+            }
+        }
 
 
     }
@@ -79,7 +85,7 @@ public class Area{
     private void loadMapObjects(){
         playerObject=(TiledMapTileMapObject)(tiledMap.getLayers().get("Player Layer").getObjects().get("Player"));
         if(playerObject==null){
-            throw new NullPointerException("playerObject is null");
+            throw new NullPointerException("playerObject is null at "+level.toString()+" "+areaNumber);
         }
         // get the folder of layers (each layer has a different interactable object)
         MapLayers objectSets = ((MapGroupLayer) tiledMap.getLayers().get("InteractableObjects")).getLayers();
@@ -125,7 +131,7 @@ public class Area{
         Vector2 playerPositionInitial=player.getPosition();
 
         doPhysicsStep(delta);
-        updateCamera(playerPositionInitial);
+        updateCamera();
 
         //update interactable objects holder
         for(InteractableObject object:interactableObjects){
@@ -143,7 +149,12 @@ public class Area{
         player.update(delta);
 
         //prepare for rendering
-        ScreenUtils.clear(Color.BLACK);
+        if(underGround){
+            ScreenUtils.clear(Color.BLACK);
+        }else{
+            ScreenUtils.clear(new Color(92/255f,148/255f,252/255f,1));
+        }
+
         camera.update();
         //render level
         renderer.render(firstRenderLayer);//render tiles
@@ -152,7 +163,7 @@ public class Area{
         player.render(renderer);
         renderer.renderInteractableObjects(pipesList);
         renderer.end();
-        debugRenderer.render(world,camera.combined);
+        //debugRenderer.render(world,camera.combined);
         player.deathCheck();
     }
     public float pixelsToUnits(float pixels){return pixels*GameCore.metersPerPixel;}
@@ -215,12 +226,12 @@ public class Area{
             accumulator -= TIME_STEP;
         }
     }
-    private void updateCamera(Vector2 playerPositionInitial){
+    private void updateCamera(){
 //        Vector2 playerChange=player.getPosition().sub(playerPositionInitial);
 //        Vector3 playerChangeCleaned=new Vector3(playerChange.x,0,0);
 //        cameraPos.add(playerChangeCleaned);
 //        camera.position.set(cameraPos);
-        camera.position.set(player.getXPosition(),camera.position.y,camera.position.z);
+        camera.position.set(player.getXPosition(),7.5f,camera.position.z);
         camera.update();
         renderer.setView(camera);
     }

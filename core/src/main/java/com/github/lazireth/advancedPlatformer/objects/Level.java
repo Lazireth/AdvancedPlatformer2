@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Level {
     public static String[] levelNames={"1-1","1-2"};
-    public static String[][] levelAreas={{"1-1 0","1-1 1"},{"1-2 0"}};//levelAreas[level][area]
+    public static String[][] levelAreas={{"1-1 0","1-1 1"},{"1-2 0","1-2 1","1-2 2","1-2 3"}};//levelAreas[level][area]
     public final int levelNumber;
 
     public ArrayList<Area> areas=new ArrayList<>();
@@ -26,8 +26,8 @@ public class Level {
 
         this.levelNumber=levelNumber;
         for(int areaNumber=0;areaNumber<levelAreas[levelNumber].length;areaNumber++){
-            TiledMap tiledMap=new TmxMapLoader().load("Map/"+levelAreas[levelNumber][areaNumber]+".tmx");
-            areas.add(new Area(tiledMap,this,areaNumber));
+
+            areas.add(new Area(levelAreas[levelNumber][areaNumber],this,areaNumber));
             GameCore.renderer=areas.getLast().renderer;
         }
         System.out.println("Level "+levelNames[levelNumber]+" loaded \t Has "+areas.size()+" areas");
@@ -48,8 +48,7 @@ public class Level {
         doAreaTransition=false;
 
         for(int areaNumber=0;areaNumber<levelAreas[levelNumber].length;areaNumber++){
-            TiledMap tiledMap=new TmxMapLoader().load("Map/"+levelAreas[levelNumber][areaNumber]+".tmx");
-            areas.add(new Area(tiledMap,this,areaNumber));
+            areas.add(new Area(levelAreas[levelNumber][areaNumber],this,areaNumber));
             GameCore.renderer=areas.getLast().renderer;
         }
         System.out.println("Level "+levelNames[levelNumber]+" loaded \t Has "+areas.size()+" areas");
@@ -68,17 +67,18 @@ public class Level {
             if(targetLoadArea==-1){
                 currentArea++;
             }else{
-                currentArea=targetLoadArea;
+                System.out.println("targetLoadArea "+targetLoadArea);
                 if(targetLoadResetArea){
                     reset();
                 }
+                currentArea=targetLoadArea;
                 targetLoadArea=-1;
                 targetLoadResetArea=false;
             }
             if(targetLoadPipeID==-1){
                 areas.get(currentArea).show();
             }else{
-                System.out.println("diffload");
+                System.out.println("diffload currentArea   "+currentArea);
                 areas.get(currentArea).show(targetLoadPipeID);
                 targetLoadPipeID=-1;
             }

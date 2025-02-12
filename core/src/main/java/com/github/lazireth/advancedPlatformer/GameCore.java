@@ -7,18 +7,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.github.lazireth.advancedPlatformer.Screens.GameOverScreen;
-import com.github.lazireth.advancedPlatformer.Screens.GameScreen;
-import com.github.lazireth.advancedPlatformer.Screens.GameStartScreen;
-import com.github.lazireth.advancedPlatformer.Screens.LevelStartScreen;
+import com.github.lazireth.advancedPlatformer.Screens.*;
 import com.github.lazireth.advancedPlatformer.render.TextureMapObjectRenderer;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class GameCore extends Game {
     public static final boolean testing=false;
 
-    public static final float WIDTH=30;
-    public static final float HEIGHT=15;
+    public static final float WIDTH=32;
+    public static final float HEIGHT=20;
     public static final float metersPerPixel = 1/64f;
     public static final float pixelsPerMeter = 64f;
 
@@ -34,11 +31,9 @@ public class GameCore extends Game {
     private static GameStartScreen gameStartScreen;
     private static LevelStartScreen levelStartScreen;
     private static GameOverScreen gameOverScreen;
+    private static VictoryScreen victoryScreen;
     @Override
-    public void create() {
-        restartGame();
-    }
-
+    public void create() {restartGame();}
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height, true);
@@ -61,36 +56,15 @@ public class GameCore extends Game {
         gameStartScreen =new GameStartScreen(this);
         levelStartScreen=new LevelStartScreen(this);
         gameOverScreen=new GameOverScreen(this);
+        victoryScreen=new VictoryScreen(this);
 
         loadGameStartScreen();
     }
-    public void resetRenderingStuff(){
-        camera=new OrthographicCamera();
-        camera.setToOrtho(false,WIDTH,HEIGHT);
-        viewport=new FitViewport(WIDTH,HEIGHT,camera);
-        cameraPos=new Vector3(gameScreen.getCurrentLevel().getCurrentArea().player.getXPosition(),camera.position.y,camera.position.z);
-        renderer.getBatch().setProjectionMatrix(viewport.getCamera().combined);
-    }
-    @Override
-    public void render() {
-        super.render();
-        // Draw your application here.
-    }
-
-    @Override
-    public void dispose() {
-        // Destroy application's resources here.
-    }
-    public void loadGameScreen(){
-        setScreen(gameScreen);
-    }
-    public void loadGameStartScreen(){
-        setScreen(gameStartScreen);
-    }
-    public void loadLevelStartScreen(){
-        setScreen(levelStartScreen);
-    }
-    public void loadGameOverScreen(){
-        setScreen(gameOverScreen);
-    }
+    public void render(){super.render();}
+    public void dispose(){}
+    public void loadGameScreen(){setScreen(gameScreen);}
+    public void loadGameStartScreen(){setScreen(gameStartScreen);}
+    public void loadLevelStartScreen(){setScreen(levelStartScreen);}
+    public void loadGameOverScreen(){setScreen(gameOverScreen);}
+    public void loadVictoryScreen(){setScreen(victoryScreen);}
 }

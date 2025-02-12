@@ -79,7 +79,7 @@ public class Player{
             sprites.add(tile.getTextureRegion());
         }
         startingPosition=new Vector2(pixelsToUnits(playerObject.getX()), pixelsToUnits(playerObject.getY()));
-        addToWorld(startingPosition.x,startingPosition.y);
+        addToWorld(startingPosition.x,startingPosition.y,true);
     }
     public Player(TiledMapTileMapObject playerObject, ArrayList<TiledMapTile> playerTilesIn, Area area,Vector2 startingPositionIn){
         this.area=area;
@@ -91,7 +91,7 @@ public class Player{
             sprites.add(tile.getTextureRegion());
         }
         startingPosition=startingPositionIn;
-        addToWorld(startingPosition.x,startingPosition.y);
+        addToWorld(startingPosition.x,startingPosition.y,false);
         ArrayList<MovementStep> movementSteps=new ArrayList<>();
         if(health==0){
             movementSteps.addLast(new MovementStep(0,2,0, NONE));
@@ -107,7 +107,6 @@ public class Player{
     }
 
     public void input(float delta){
-        System.out.println("numFootContacts "+numFootContacts);
         if(body.getType().equals(BodyType.KinematicBody)||disable){
             System.out.println("disabled");
             return;
@@ -233,8 +232,7 @@ public class Player{
     public void resetPlayer(){
         health =0;
         body.getWorld().destroyBody(body);
-        addToWorld(startingPosition.x,startingPosition.y);
-        area.cameraPos=new Vector3(startingPosition.x,area.camera.position.y,area.camera.position.z);
+        addToWorld(startingPosition.x,startingPosition.y,false);
 
         lastVelocity=new Vector2(0,0);
         preserveVelocityWhenLanding=false;
@@ -261,7 +259,7 @@ public class Player{
                 Vector2 pos=body.getPosition();
                 System.out.println("pos "+pos);
                 body.getWorld().destroyBody(body);
-                addToWorld(pos.x,pos.y);
+                addToWorld(pos.x,pos.y,false);
             }
         }
         if(body.getType().equals(BodyType.KinematicBody)||disable){
@@ -271,7 +269,7 @@ public class Player{
             Vector2 position=body.getPosition();
             Vector2 velocity=body.getLinearVelocity();
             body.getWorld().destroyBody(body);
-            addToWorld(position.x,position.y);
+            addToWorld(position.x,position.y,false);
             body.setLinearVelocity(velocity);
             ticksJumping=0;
             isJumping=false;
@@ -313,7 +311,7 @@ public class Player{
                 Vector2 position=body.getPosition();
                 body.getWorld().destroyBody(body);
                 health=1;
-                addToWorld(position.x,position.y);
+                addToWorld(position.x,position.y,false);
             }
             case "OneUP"->{
                 System.out.println("You got a 1UP");
@@ -326,9 +324,14 @@ public class Player{
         body.applyLinearImpulse(PLAYER_JUMP_IMPULSE,body.getPosition(),true);
     }
 
-    private void addToWorld(float x, float y) {
+    private void addToWorld(float x, float y, boolean addHalfSize) {
         WIDTH = (tiles.get(health).getProperties().get("WIDTH",int.class)-2)  * GameCore.metersPerPixel;// the -2 is so the player appears to be touching objects when colliding
         HEIGHT= (tiles.get(health).getProperties().get("HEIGHT",int.class)-2) * GameCore.metersPerPixel;
+        if(addHalfSize){
+            x+=WIDTH/2;
+            y+=HEIGHT/2;
+        }
+
         float yOffset=0;
         if(health==1){
             yOffset+=0.25f;//add a quarter of a meter
