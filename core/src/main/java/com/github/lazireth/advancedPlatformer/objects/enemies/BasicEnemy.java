@@ -134,8 +134,12 @@ public class BasicEnemy extends Enemy {
         }else{
             if(Math.abs(area.player.getXPosition()-body.getPosition().x)<18){
                 running=true;
-                if( myMapObject.getProperties().get("startGoingRight",boolean.class)){
-                    body.setLinearVelocity(moveSpeed,0);
+                if(myMapObject.getProperties().containsKey("startGoingRight")){
+                    if( myMapObject.getProperties().get("startGoingRight",boolean.class)){
+                        body.setLinearVelocity(moveSpeed,0);
+                    }else{
+                        body.setLinearVelocity(-moveSpeed,0);
+                    }
                 }else{
                     body.setLinearVelocity(-moveSpeed,0);
                 }
@@ -148,9 +152,9 @@ public class BasicEnemy extends Enemy {
         if(player.getYPosition()-player.HEIGHT/2>=body.getPosition().y+HEIGHT/2-0.25){
             //If the top of the player is higher than some distance below the top of this object
             takeDamage(1);
-            if(dying){
-                //player.bounceOffEnemy();
-            }
+//            if(dying){
+//                //player.bounceOffEnemy();
+//            }
         }else{
             damagePlayer(player);
         }

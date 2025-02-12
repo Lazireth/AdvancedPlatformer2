@@ -49,9 +49,9 @@ public class VictoryScreen extends ScreenAdapter {
         ScreenUtils.clear(Color.BLACK);
         renderer.drawText("Victory",calibri128,WIDTH/2,HEIGHT/16*12);
         renderer.drawText("You win!",calibri64,WIDTH/2,HEIGHT/16*10);
-        renderer.drawText("More content may be added",calibri64,WIDTH/2,HEIGHT/16*6);
-        renderer.drawText("at a later date",calibri64,WIDTH/2,HEIGHT/16*4);
-        renderer.drawText("Close the game with Alt+F4",calibri64,WIDTH/2,HEIGHT/16*0.6f);
+        renderer.drawText("More content may be added",calibri64,WIDTH/2,HEIGHT/16*8);
+        renderer.drawText("at a later date",calibri64,WIDTH/2,HEIGHT/16*5);
+        renderer.drawText("Close the game with Alt+F4",calibri64,WIDTH/2,HEIGHT/16*2f);
         renderer.end();
     }
 

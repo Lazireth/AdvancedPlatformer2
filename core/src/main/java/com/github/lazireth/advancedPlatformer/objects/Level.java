@@ -1,6 +1,5 @@
 package com.github.lazireth.advancedPlatformer.objects;
 
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.github.lazireth.advancedPlatformer.Area;
 import com.github.lazireth.advancedPlatformer.GameCore;
@@ -8,8 +7,8 @@ import com.github.lazireth.advancedPlatformer.GameCore;
 import java.util.ArrayList;
 
 public class Level {
-    public static String[] levelNames={"1-1","1-2"};
-    public static String[][] levelAreas={{"1-1 0","1-1 1"},{"1-2 0","1-2 1","1-2 2","1-2 3"}};//levelAreas[level][area]
+    public static String[] levelNames={"1-1","1-2","1-3"};
+    public static String[][] levelAreas={{"1-1 0","1-1 1"},{"1-2 0","1-2 1","1-2 2","1-2 3"},{"1-3"}};//levelAreas[level][area]
     public final int levelNumber;
 
     public ArrayList<Area> areas=new ArrayList<>();
@@ -86,9 +85,6 @@ public class Level {
 
         }
         areas.get(currentArea).render(delta);
-    }
-    public Area getCurrentArea(){
-        return areas.get(currentArea);
     }
     public String toString(){
         return levelNames[levelNumber];

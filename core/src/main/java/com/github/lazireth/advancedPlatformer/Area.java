@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.Map;
 
 public class Area{
-    public int[] firstRenderLayer;
+    public int[] renderLayer;
 
     private final ArrayList<InteractableObject> interactableObjects=new ArrayList<>();
     public final ArrayList<InteractableObject> interactableObjectsAdd=new ArrayList<>();
@@ -45,8 +45,6 @@ public class Area{
     public Level level;
     public int areaNumber;
     TiledMap tiledMap;
-    String[] underGroundAreas={"1-1 1","1-2 1","1-2 2"};
-    boolean underGround=false;
     public Area(String levelArea, Level level, int areaNumber){
         this.tiledMap=new TmxMapLoader().load("Map/"+levelArea+".tmx");
         this.level=level;
@@ -55,21 +53,17 @@ public class Area{
         world.setContactListener(new CollisionListener());
 
         setUpRenderingStuff();
-
-        firstRenderLayer=new int[]{tiledMap.getLayers().getIndex("Tile Layer 1")};// make array of Tile Layers to render
+        if(tiledMap.getLayers().getIndex("Background")==-1){
+            renderLayer=new int[]{tiledMap.getLayers().getIndex("Foreground")};// make array of Tile Layers to render
+        }else{
+            renderLayer=new int[]{
+                tiledMap.getLayers().getIndex("Background"),
+                tiledMap.getLayers().getIndex("Foreground")};// make array of Tile Layers to render
+        }
 
         MapBodyBuilder.buildShapes(tiledMap, world,"Primary Level Collision");// build primary level collision
 
         loadMapObjects();
-        System.out.println("levelArea "+levelArea);
-        for(String underGroundArea : underGroundAreas){
-            if(underGroundArea.equals(levelArea)){
-                underGround = true;
-                break;
-            }
-        }
-
-
     }
     private void setUpRenderingStuff(){
         camera=new OrthographicCamera();
@@ -128,7 +122,6 @@ public class Area{
 
     public void render(float delta){
         player.input(delta);
-        Vector2 playerPositionInitial=player.getPosition();
 
         doPhysicsStep(delta);
         updateCamera();
@@ -149,15 +142,11 @@ public class Area{
         player.update(delta);
 
         //prepare for rendering
-        if(underGround){
-            ScreenUtils.clear(Color.BLACK);
-        }else{
-            ScreenUtils.clear(new Color(92/255f,148/255f,252/255f,1));
-        }
+        ScreenUtils.clear(Color.BLACK);
 
         camera.update();
         //render level
-        renderer.render(firstRenderLayer);//render tiles
+        renderer.render(renderLayer);//render tiles
         renderer.begin();
         renderer.renderInteractableObjects(interactableObjects);
         player.render(renderer);

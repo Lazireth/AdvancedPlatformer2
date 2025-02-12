@@ -8,23 +8,16 @@ import com.github.lazireth.advancedPlatformer.objects.Level;
 public class GameScreen extends ScreenAdapter {
     static public GameCore gameCore;
 
-    public static Level[] levels=new Level[2];//Must be changed when more levels are added
+    public static Level[] levels=new Level[Level.levelNames.length];//Must be changed when more levels are added
 
     public static int currentLevel=0;
     public static boolean doLevelTransition=false;
 
     private static long lastTimeUpdate;
-    public static long timeSinceLastCheck(){
-        long hold=(System.nanoTime()-lastTimeUpdate);
-        lastTimeUpdate=System.nanoTime();
-        return hold;
-    }
     public GameScreen(){
-        levels[0]=new Level(0);
-        levels[1]=new Level(1);
-    }
-    public Level getCurrentLevel(){
-        return levels[currentLevel];
+        for(int i=0;i<levels.length;i++){
+            levels[i]=new Level(i);
+        }
     }
     @Override
     public void render(float delta) {
