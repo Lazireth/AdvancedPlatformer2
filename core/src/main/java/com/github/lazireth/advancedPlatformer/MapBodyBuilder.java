@@ -13,7 +13,7 @@ import com.github.lazireth.advancedPlatformer.objects.FilterCategory;
 import com.github.lazireth.advancedPlatformer.objects.Wall;
 
 import java.util.ArrayList;
-
+/// code from [...](https://stackoverflow.com/questions/45805732/libgdx-tiled-map-box2d-collision-with-polygon-map-object)
 public class MapBodyBuilder {
 
     // The pixels per tile. If your tiles are 16x16, this is set to 16f
@@ -29,7 +29,6 @@ public class MapBodyBuilder {
             }
 
             Shape shape;
-
             switch (object) {
                 case RectangleMapObject rectangleMapObject -> shape = getRectangle(rectangleMapObject);
                 case PolygonMapObject polygonMapObject -> shape = getPolygon(polygonMapObject);
@@ -88,14 +87,15 @@ public class MapBodyBuilder {
         circleShape.setPosition(new Vector2(circle.x / pixelsPerUnit, circle.y / pixelsPerUnit));
         return circleShape;
     }
-    /// don't use is kinda broken
     private static PolygonShape getPolygon(PolygonMapObject polygonObject) {
-
         PolygonShape polygon = new PolygonShape();
         float[] vertices = polygonObject.getPolygon().getTransformedVertices();
 
         float[] worldVertices = new float[vertices.length];
-
+        for (int i = 0; i < vertices.length; ++i) {
+            System.out.println(vertices[i]);
+            worldVertices[i] = vertices[i] / pixelsPerUnit;
+        }
         polygon.set(worldVertices);
         return polygon;
     }

@@ -82,6 +82,9 @@ public class Area{
             throw new NullPointerException("playerObject is null at "+level.toString()+" "+areaNumber);
         }
         // get the folder of layers (each layer has a different interactable object)
+        if(tiledMap.getLayers().get("InteractableObjects")==null){
+            return;
+        }
         MapLayers objectSets = ((MapGroupLayer) tiledMap.getLayers().get("InteractableObjects")).getLayers();
 
         // for each type of interactable tile in the folder "Interactive Objects"
@@ -152,7 +155,9 @@ public class Area{
         player.render(renderer);
         renderer.renderInteractableObjects(pipesList);
         renderer.end();
-        //debugRenderer.render(world,camera.combined);
+        if(GameCore.testing){
+            debugRenderer.render(world,camera.combined);
+        }
         player.deathCheck();
     }
     public float pixelsToUnits(float pixels){return pixels*GameCore.metersPerPixel;}

@@ -1,7 +1,9 @@
 package com.github.lazireth.advancedPlatformer.Screens;
 
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.github.lazireth.advancedPlatformer.GameCore;
+import com.github.lazireth.advancedPlatformer.objects.InteractableObject;
 import com.github.lazireth.advancedPlatformer.objects.Level;
 
 
@@ -15,6 +17,7 @@ public class GameScreen extends ScreenAdapter {
 
     private static long lastTimeUpdate;
     public GameScreen(){
+        InteractableObject.loadTiles(new TmxMapLoader().load("Map/1-1 0.tmx"));
         for(int i=0;i<levels.length;i++){
             levels[i]=new Level(i);
         }

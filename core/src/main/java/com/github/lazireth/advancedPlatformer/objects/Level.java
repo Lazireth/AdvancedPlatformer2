@@ -1,6 +1,5 @@
 package com.github.lazireth.advancedPlatformer.objects;
 
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.github.lazireth.advancedPlatformer.Area;
 import com.github.lazireth.advancedPlatformer.GameCore;
 
@@ -19,10 +18,6 @@ public class Level {
     public int targetLoadPipeID=-1;
     public boolean targetLoadResetArea=false;
     public Level(int levelNumber){
-        if(levelNumber==0){
-            InteractableObject.loadTiles(new TmxMapLoader().load("Map/"+levelAreas[0][0]+".tmx"));
-        }
-
         this.levelNumber=levelNumber;
         for(int areaNumber=0;areaNumber<levelAreas[levelNumber].length;areaNumber++){
 

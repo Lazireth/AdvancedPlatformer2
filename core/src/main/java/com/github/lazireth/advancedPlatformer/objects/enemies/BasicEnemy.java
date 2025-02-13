@@ -167,7 +167,7 @@ public class BasicEnemy extends Enemy {
 
         body = area.world.createBody(bodyDef);
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(WIDTH/2, HEIGHT/2);
+        shape.setAsBox((WIDTH-2/64f)/2, (HEIGHT-2/64f)/2);
 
         FixtureDef fixtureDef=new FixtureDef();
         fixtureDef.shape=shape;

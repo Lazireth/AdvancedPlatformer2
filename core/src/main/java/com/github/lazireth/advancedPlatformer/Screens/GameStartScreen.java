@@ -41,14 +41,17 @@ public class GameStartScreen extends ScreenAdapter {
         renderer.begin();
         ScreenUtils.clear(Color.BLACK);
         renderer.drawText("Advanced Platformer",calibri128,WIDTH/2,HEIGHT/4*3);
-        renderer.drawText("Move with W A S D",calibri64,WIDTH/2,HEIGHT/16*9.5f);
-        renderer.drawText("Run with K",calibri64,WIDTH/2,HEIGHT/16*8f);
-        renderer.drawText("Close game with Alt+F4",calibri64,WIDTH/2,HEIGHT/16*6.5f);
-        renderer.drawText("Press SPACE To Start",calibri64,WIDTH/2,HEIGHT/16*4);
+        renderer.drawText("Move with A&D",calibri64,WIDTH*0.4f,HEIGHT/16*10f);
+        renderer.drawText("Run with K",calibri64,WIDTH*0.6f,HEIGHT/16*10f);
+        renderer.drawText("Jump with W (hold longer for higher jump)",calibri64,WIDTH/2,HEIGHT/16*8.75f);
+        renderer.drawText("Close game with Alt+F4",calibri64,WIDTH/2,HEIGHT/16*7.5f);
+        renderer.drawText("Press SPACE To Start",calibri64,WIDTH/2,HEIGHT/16*5.5f);
+        renderer.drawText("NOTE: Gameplay is being recorded for development purposes",calibri64,WIDTH/2,HEIGHT/16*3.5f);
 
         if(refreshRate>61){
-            renderer.drawText("Playing with a display refresh rate higher than 60",calibri64,WIDTH/2,HEIGHT/16*2f);
-            renderer.drawText("can lead to unintended behavior",calibri64,WIDTH/2,HEIGHT/16*0.6f);
+            renderer.drawText("If you see this message the update rate has not been updated",calibri64,WIDTH/2,HEIGHT/16*3f);
+            renderer.drawText("this can cause significant bugs, inform the developer",calibri64,WIDTH/2,HEIGHT/16*2f);
+            renderer.drawText("and it will be very quickly fixed",calibri64,WIDTH/2,HEIGHT/16f);
         }
         renderer.end();
     }
