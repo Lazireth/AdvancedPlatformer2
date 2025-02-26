@@ -1,0 +1,571 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "Worlds/Overworlds/World 1.tmx",
+    "automapping.whileDrawing": false,
+    "expandedProjectPaths": [
+        "Worlds/World 1",
+        "World 1",
+        "Worlds",
+        "Tilesets/Level Tilesets",
+        ".",
+        "Sprites/Level Sprites",
+        "Worlds/Overworld",
+        "Worlds/Overworlds",
+        "Worlds/Levels",
+        "Tilesets",
+        "Tilesets/World Tilesets",
+        "Level Sprites",
+        "Sprites",
+        "Worlds/Worlds"
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 1
+        },
+        "1-1 0.tmx": {
+            "expandedGroupLayers": [
+                6,
+                2
+            ],
+            "expandedObjectLayers": [
+                6,
+                12,
+                19,
+                20,
+                15,
+                3,
+                18,
+                4
+            ],
+            "scale": 0.5,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 6152,
+                "y": 1101
+            }
+        },
+        "1-1 1.tmx": {
+            "expandedGroupLayers": [
+                2
+            ],
+            "expandedObjectLayers": [
+                6,
+                5,
+                3,
+                4,
+                2
+            ],
+            "scale": 0.33,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 542.424242424242,
+                "y": 1374.2424242424242
+            }
+        },
+        "1-1.tmx": {
+            "expandedObjectLayers": [
+                4,
+                3
+            ],
+            "scale": 0.25,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 3048,
+                "y": 862
+            }
+        },
+        "1-2 0.tmx": {
+            "expandedGroupLayers": [
+                4
+            ],
+            "expandedObjectLayers": [
+                4,
+                3,
+                5,
+                2
+            ],
+            "scale": 3,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 1024,
+                "y": 480.16666666666663
+            }
+        },
+        "1-2 1.tmx": {
+            "expandedGroupLayers": [
+                4
+            ],
+            "expandedObjectLayers": [
+                4,
+                8,
+                7,
+                3,
+                2
+            ],
+            "scale": 0.25,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 6148,
+                "y": 478
+            }
+        },
+        "1-2 2.tmx": {
+            "expandedGroupLayers": [
+                3
+            ],
+            "expandedObjectLayers": [
+                4,
+                6,
+                3,
+                5,
+                2
+            ],
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 544.6666666666666,
+                "y": 479.33333333333337
+            }
+        },
+        "1-2 3.tmx": {
+            "expandedGroupLayers": [
+                4
+            ],
+            "expandedObjectLayers": [
+                4,
+                6,
+                3,
+                2
+            ],
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1600.5,
+                "y": 480.25
+            }
+        },
+        "1-2.tmx": {
+            "expandedGroupLayers": [
+                4
+            ],
+            "expandedObjectLayers": [
+                6,
+                4,
+                3,
+                5,
+                2
+            ],
+            "scale": 0.5,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 6144,
+                "y": 479
+            }
+        },
+        "1-3.tmx": {
+            "expandedGroupLayers": [
+                4
+            ],
+            "expandedObjectLayers": [
+                4,
+                6,
+                7,
+                3,
+                5,
+                2
+            ],
+            "scale": 0.25,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 5636,
+                "y": 478
+            }
+        },
+        "Backgrounds.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Environment Sprites.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Environment Tileset.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Flag Sprites.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Game over.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Ground Tileset v1.1.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Ground Tileset v1.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 0.9,
+            "scaleInEditor": 1
+        },
+        "Item Sprites.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Item Tiles.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "NPC Tileset.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1.5,
+            "scaleInEditor": 1
+        },
+        "New folder/untitled.tmx": {
+            "scale": 0.14835316051136363,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 5635.201819215463,
+                "y": 428.0326740672033
+            }
+        },
+        "Pipes.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Player Sprite 0.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Player Sprite 1.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Player Sprite 2.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Player Sprites.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Player Tiles.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Player Tileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Player.tsx": {
+            "scaleInDock": 1
+        },
+        "Simple Ground.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Special Tiles.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Special Tileset.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Sprites/Backgrounds.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Sprites/Environment Tileset.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Sprites/Flag Sprites.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Sprites/Game over.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Sprites/Ground Tileset v1.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Sprites/Level Sprites/Environment Tileset.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Sprites/Level Sprites/Ground Tileset v1.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Sprites/Level Sprites/NPC Tileset.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Sprites/Level Sprites/Pipes.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Sprites/Level Sprites/Player Sprites.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Sprites/NPC Tileset.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Sprites/Pipes.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Sprites/Player Sprites.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Sprites/World Sprites/World Sprites.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Test level.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 0.0625,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 2992,
+                "y": 1752
+            }
+        },
+        "Tilesets/Level Tilesets/Backgrounds.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Level Tilesets/Environment Tileset.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Level Tilesets/NPC Tileset.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Level Tilesets/Pipes.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Level Tilesets/Player Sprites.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/World Tilesets/General Tilesets.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/World Tilesets/General World Tileset.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/World Tilesets/World 1 Tileset.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/World Tilesets/World Tilesets.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "World 1/1-1.tmx": {
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 0.5,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 1646,
+                "y": 1635
+            }
+        },
+        "World 1/Environment Tileset.tsx": {
+            "scaleInDock": 1
+        },
+        "World 1/Ground Tileset v1.tsx": {
+            "scaleInDock": 1
+        },
+        "World 1/Player Sprites.tsx": {
+            "scaleInDock": 1
+        },
+        "Worlds/Levels/1-1.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 5504.666666666666,
+                "y": 1311.3333333333333
+            }
+        },
+        "Worlds/Overworld/World 1.tmx": {
+            "scale": 1.0638020833333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 512.3133414932681,
+                "y": 384
+            }
+        },
+        "Worlds/Overworlds/World 1.tmx": {
+            "expandedObjectLayers": [
+                3
+            ],
+            "scale": 2,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 521.75,
+                "y": 449.75
+            }
+        },
+        "Worlds/Sprites/Environment Tileset.tsx": {
+            "scaleInDock": 1
+        },
+        "Worlds/Sprites/Player Sprites.tsx": {
+            "scaleInDock": 1
+        },
+        "Worlds/World 1/1-1.tmx": {
+            "scale": 0.25,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 3092,
+                "y": 1378
+            }
+        },
+        "Worlds/World 1/Overworld.tmx": {
+            "scale": 1.0638020833333333,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 748.2594859241126,
+                "y": 340.7588739290086
+            }
+        },
+        "Worlds/World 1/Overworld.tmx#World 1 Tileset": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Worlds/World 1/World 1.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 790.6666666666666,
+                "y": 379.33333333333337
+            }
+        },
+        "Worlds/Worlds/World 1.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 817,
+                "y": 311.5
+            }
+        },
+        "testLevel.tmx": {
+            "expandedObjectLayers": [
+                3,
+                2
+            ],
+            "scale": 0.75,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 1006.6666666666666,
+                "y": 539.3333333333333
+            }
+        },
+        "testTestLevel.tmx": {
+            "expandedObjectLayers": [
+                2
+            ],
+            "scale": 0.75,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 733.3333333333333,
+                "y": 505.99999999999994
+            }
+        }
+    },
+    "frame.defaultDuration": 100,
+    "last.externalTilesetPath": "C:/Users/Henry/IdeaProjects/AdvancedPlatformer2/assets/Map/Tilesets/Level Tilesets",
+    "last.imagePath": "C:/Users/Henry/IdeaProjects/AdvancedPlatformer2/assets/Sprites/Level Sprites/Player",
+    "last.worldFilePath": "C:/Users/Henry/IdeaProjects/AdvancedPlatformer/assets/Map",
+    "loadedWorlds": [
+    ],
+    "map.fixedSize": true,
+    "map.height": 41,
+    "map.lastUsedFormat": "tmx",
+    "map.layerDataFormat": "1",
+    "map.tileHeight": 64,
+    "map.tileWidth": 64,
+    "map.width": 176,
+    "mapScene.enableWorlds": true,
+    "openFiles": [
+        "Worlds/Levels/1-1.tmx",
+        "Worlds/Overworlds/World 1.tmx",
+        "Tilesets/Level Tilesets/Player Sprites.tsx"
+    ],
+    "project": "Advanced Platformer2.tiled-project",
+    "property.type": "string",
+    "recentFiles": [
+        "Worlds/Levels/1-1.tmx",
+        "Tilesets/Level Tilesets/Player Sprites.tsx",
+        "Worlds/Overworlds/World 1.tmx",
+        "Tilesets/World Tilesets/General World Tileset.tsx",
+        "Tilesets/Level Tilesets/Pipes.tsx",
+        "Tilesets/Level Tilesets/Environment Tileset.tsx",
+        "Tilesets/Level Tilesets/NPC Tileset.tsx",
+        "Tilesets/World Tilesets/World 1 Tileset.tsx",
+        "Tilesets/Level Tilesets/Backgrounds.tsx",
+        "Worlds/Overworld/World 1.tmx",
+        "Worlds/Worlds/World 1.tmx",
+        "Worlds/World 1/World 1.tmx"
+    ],
+    "tileset.embedInMap": false,
+    "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 64,
+        "width": 64
+    },
+    "tileset.type": 1
+}
