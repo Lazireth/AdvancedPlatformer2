@@ -3,23 +3,57 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "Worlds/Overworlds/World 1.tmx",
+    "activeFile": "Tilesets/Level Objects/Items and Power-ups/Items.tsx",
     "automapping.whileDrawing": false,
     "expandedProjectPaths": [
-        "Worlds/World 1",
-        "World 1",
-        "Worlds",
-        "Tilesets/Level Tilesets",
-        ".",
-        "Sprites/Level Sprites",
+        "Tilesets/Tiles",
+        "Tilesets/Levels/Backgrounds",
         "Worlds/Overworld",
-        "Worlds/Overworlds",
-        "Worlds/Levels",
-        "Tilesets",
-        "Tilesets/World Tilesets",
+        "Tilesets/Worlds/World 1",
+        "Tilesets/Items and objects/Objects/Blocks and containers",
+        "Tilesets/Levels/Legacy",
+        "Tilesets/Level Objects/Items and Power-ups",
+        "Tilesets/Background",
+        "Worlds/Worlds",
+        "Tilesets/Levels/Main",
+        "Tilesets/Items and objects/Pipes",
+        "Tilesets/Levels/Player",
         "Level Sprites",
+        "Tilesets/Level Objects",
+        "Tilesets/World Tilesets",
+        "Tilesets/Tiles/Backgrounds",
+        "Tilesets/Foreground",
+        "Worlds/Levels",
+        ".",
+        "Tilesets/Items and objects/Objects",
+        "Tilesets/Level Objects/Environment/Pipes",
+        "Worlds/World 1",
+        "Tilesets/Worlds",
+        "Sprites/Level Sprites",
+        "Tilesets/Level Objects/Blocks and containers",
+        "Tilesets/Level Objects/Environment",
+        "Tilesets/Items and objects",
+        "Tilesets/Foreground/Pipe Entrances",
+        "Tilesets/Level Objects/Characters/Player",
+        "Tilesets/Level Objects/Enemies",
+        "Worlds",
+        "Tilesets/Shadows",
+        "World 1",
         "Sprites",
-        "Worlds/Worlds"
+        "Tilesets",
+        "Tilesets/Tiles/Environment",
+        "Tilesets/Levels",
+        "Tilesets/Characters",
+        "Tilesets/Overlays",
+        "Tilesets/Level Objects/Characters",
+        "Worlds/Overworlds",
+        "Tilesets/Level Tilesets",
+        "Tilesets/Levels/Pipes",
+        "Tilesets/Middleground",
+        "Tilesets/Level Objects/Enemies/Goombas",
+        "Tilesets/Worlds/General",
+        "Tilesets/Level Objects/Enemies/Koopas",
+        "Tilesets/Middleground/Miscellaneous Tiles"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
@@ -187,6 +221,11 @@
         },
         "Backgrounds.tsx": {
             "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Henry/IdeaProjects/AdvancedPlatformer/assets/Map/Pipes.tsx": {
+            "dynamicWrapping": true,
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
@@ -367,7 +406,115 @@
                 "y": 1752
             }
         },
+        "Tilesets/Background/Backgrounds.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "Tilesets/Characters/Player Sprites.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Foreground/Pipe Entrances/Pipe Entrances.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Items and objects/Objects/Blocks and containers/Pipes.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Items and objects/Objects/Pipes.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Items and objects/Pipes/Pipe Bonus Horizontal.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 0.12
+        },
+        "Tilesets/Items and objects/Pipes/Pipe Bonus Vertical.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 0.12
+        },
+        "Tilesets/Items and objects/Pipes/Pipe Entrances.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Items and objects/Pipes/Pipe Horizontal Bonus.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Items and objects/Pipes/Pipe Horizontal.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 0.12
+        },
+        "Tilesets/Items and objects/Pipes/Pipe Vertical Bonus.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Items and objects/Pipes/Pipe Vertical.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 0.12
+        },
+        "Tilesets/Items and objects/Pipes/Pipes.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 3
+        },
+        "Tilesets/Level Objects/Blocks and containers/Blocks.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Level Objects/Characters/Player/Player Sprites.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Level Objects/Enemies/Goombas/Goombas.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Level Objects/Enemies/Koopas/Koopas.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 3
+        },
+        "Tilesets/Level Objects/Environment/Environment.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "Tilesets/Level Objects/Environment/Pipes/Pipe Enterence Sides.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Level Objects/Environment/Pipes/Pipe Enterence Top.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Level Objects/Environment/Pipes/Pipe Enterences.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Level Objects/Items and Power-ups/Items.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 4
+        },
         "Tilesets/Level Tilesets/Backgrounds.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Level Tilesets/Concrete.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 1,
             "scaleInEditor": 1
@@ -376,6 +523,11 @@
             "dynamicWrapping": false,
             "scaleInDock": 1,
             "scaleInEditor": 1
+        },
+        "Tilesets/Level Tilesets/General Tileset 1.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 3
         },
         "Tilesets/Level Tilesets/NPC Tileset.tsx": {
             "dynamicWrapping": false,
@@ -388,6 +540,91 @@
             "scaleInEditor": 1
         },
         "Tilesets/Level Tilesets/Player Sprites.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Levels/Backgrounds.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Levels/Backgrounds/Backgrounds.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Levels/Legacy/Environment Tileset.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Levels/Legacy/NPC Tileset.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Middleground/Bonus Area.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Middleground/Grass and Dirt.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "Tilesets/Middleground/Hills.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Middleground/Miscellaneous Tiles/Miscellaneous Tiles.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Middleground/Pipes.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "Tilesets/Middleground/Platforms.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Middleground/Semisolid Platforms.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Overlays/Shadows.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "Tilesets/Shadows/Shadows.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Tiles/Backgrounds/Backgrounds.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Tiles/Environment.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Tiles/Environment/Environment.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Tiles/Ground/Grass and Dirt.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 4
+        },
+        "Tilesets/Tiles/Platforms.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 1,
             "scaleInEditor": 1
@@ -411,6 +648,16 @@
             "scaleInDock": 1,
             "scaleInEditor": 1
         },
+        "Tilesets/Worlds/General World Tileset.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Worlds/World 1 Tileset.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "World 1/1-1.tmx": {
             "expandedObjectLayers": [
                 3
@@ -431,13 +678,50 @@
         "World 1/Player Sprites.tsx": {
             "scaleInDock": 1
         },
+        "Worlds/Levels/1-1 big.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "Worlds/Levels/1-1.tmx": {
-            "scale": 0.75,
-            "selectedLayer": 2,
+            "expandedObjectLayers": [
+                3,
+                4
+            ],
+            "scale": 0.5,
+            "selectedLayer": 3,
             "viewCenter": {
-                "x": 5504.666666666666,
-                "y": 1311.3333333333333
+                "x": 5632,
+                "y": 1311
             }
+        },
+        "Worlds/Levels/1-2.tmx": {
+            "expandedObjectLayers": [
+                6,
+                4
+            ],
+            "scale": 0.25,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 5566,
+                "y": 1790
+            }
+        },
+        "Worlds/Levels/1-3.tmx": {
+            "expandedObjectLayers": [
+                4,
+                6
+            ],
+            "scale": 0.5,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 832,
+                "y": 1568
+            }
+        },
+        "Worlds/Levels/Pipe Enterence Sides.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "Worlds/Overworld/World 1.tmx": {
             "scale": 1.0638020833333333,
@@ -451,11 +735,11 @@
             "expandedObjectLayers": [
                 3
             ],
-            "scale": 2,
-            "selectedLayer": 2,
+            "scale": 0.75,
+            "selectedLayer": 4,
             "viewCenter": {
-                "x": 521.75,
-                "y": 449.75
+                "x": 493.33333333333326,
+                "y": 364
             }
         },
         "Worlds/Sprites/Environment Tileset.tsx": {
@@ -526,46 +810,53 @@
         }
     },
     "frame.defaultDuration": 100,
-    "last.externalTilesetPath": "C:/Users/Henry/IdeaProjects/AdvancedPlatformer2/assets/Map/Tilesets/Level Tilesets",
-    "last.imagePath": "C:/Users/Henry/IdeaProjects/AdvancedPlatformer2/assets/Sprites/Level Sprites/Player",
+    "last.externalTilesetPath": "C:/Users/Henry/IdeaProjects/AdvancedPlatformer2/assets/Map/Tilesets/Overlays",
+    "last.imagePath": "C:/Users/Henry/IdeaProjects/AdvancedPlatformer2/assets/Map/Tilesets/Level Objects/Items and Power-ups",
     "last.worldFilePath": "C:/Users/Henry/IdeaProjects/AdvancedPlatformer/assets/Map",
     "loadedWorlds": [
     ],
     "map.fixedSize": true,
-    "map.height": 41,
+    "map.height": 54,
     "map.lastUsedFormat": "tmx",
     "map.layerDataFormat": "1",
     "map.tileHeight": 64,
     "map.tileWidth": 64,
-    "map.width": 176,
+    "map.width": 160,
     "mapScene.enableWorlds": true,
     "openFiles": [
         "Worlds/Levels/1-1.tmx",
-        "Worlds/Overworlds/World 1.tmx",
-        "Tilesets/Level Tilesets/Player Sprites.tsx"
+        "Worlds/Levels/1-2.tmx",
+        "Worlds/Levels/1-3.tmx",
+        "Tilesets/Middleground/Hills.tsx",
+        "Tilesets/Level Objects/Environment/Pipes/Pipe Enterences.tsx",
+        "Tilesets/Level Objects/Blocks and containers/Blocks.tsx",
+        "Tilesets/Middleground/Miscellaneous Tiles/Miscellaneous Tiles.tsx",
+        "Tilesets/Level Objects/Enemies/Goombas/Goombas.tsx",
+        "Tilesets/Level Objects/Enemies/Koopas/Koopas.tsx",
+        "Tilesets/Level Objects/Items and Power-ups/Items.tsx"
     ],
     "project": "Advanced Platformer2.tiled-project",
     "property.type": "string",
     "recentFiles": [
         "Worlds/Levels/1-1.tmx",
-        "Tilesets/Level Tilesets/Player Sprites.tsx",
-        "Worlds/Overworlds/World 1.tmx",
-        "Tilesets/World Tilesets/General World Tileset.tsx",
-        "Tilesets/Level Tilesets/Pipes.tsx",
-        "Tilesets/Level Tilesets/Environment Tileset.tsx",
-        "Tilesets/Level Tilesets/NPC Tileset.tsx",
-        "Tilesets/World Tilesets/World 1 Tileset.tsx",
-        "Tilesets/Level Tilesets/Backgrounds.tsx",
-        "Worlds/Overworld/World 1.tmx",
-        "Worlds/Worlds/World 1.tmx",
-        "Worlds/World 1/World 1.tmx"
+        "Worlds/Levels/1-2.tmx",
+        "Worlds/Levels/1-3.tmx",
+        "Tilesets/Middleground/Hills.tsx",
+        "Tilesets/Level Objects/Environment/Pipes/Pipe Enterences.tsx",
+        "Tilesets/Level Objects/Blocks and containers/Blocks.tsx",
+        "Tilesets/Middleground/Miscellaneous Tiles/Miscellaneous Tiles.tsx",
+        "Tilesets/Level Objects/Enemies/Goombas/Goombas.tsx",
+        "Tilesets/Level Objects/Enemies/Koopas/Koopas.tsx",
+        "Tilesets/Level Objects/Items and Power-ups/Items.tsx",
+        "Tilesets/Level Objects/Environment/Pipes/Pipe Enterence Top.tsx",
+        "Tilesets/Level Objects/Environment/Pipes/Pipe Enterence Sides.tsx"
     ],
     "tileset.embedInMap": false,
     "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
         "height": 64,
-        "width": 64
+        "width": 128
     },
     "tileset.type": 1
 }

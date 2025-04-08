@@ -13,7 +13,9 @@ import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.github.lazireth.AdvancedPlatformer2.GameCore;
+import com.github.lazireth.AdvancedPlatformer2.LevelMap;
 import com.github.lazireth.AdvancedPlatformer2.MapBodyBuilder;
 import com.github.lazireth.AdvancedPlatformer2.objects.InteractableObject;
 import com.github.lazireth.AdvancedPlatformer2.render.TextureMapObjectRenderer;
@@ -40,10 +42,11 @@ public class Overworld extends ScreenAdapter {
     public static TiledMap tiledMap;
     public static World world;
 
+    public static boolean enteringLevel=false;
+    public static boolean inLevel=false;
     public Overworld(int worldNumberIn){System.out.println("Overworld");
         worldNumber=worldNumberIn;
         tiledMap=new TmxMapLoader().load("Map/Worlds/Overworlds/World "+worldNumber+".tmx");
-        TiledMapTileLayer tiledMapTileLayer=(TiledMapTileLayer)tiledMap.getLayers().get("Background");
 
         camera=new OrthographicCamera();
         camera.setToOrtho(false, GAME_WIDTH, GAME_HEIGHT);
@@ -75,8 +78,18 @@ public class Overworld extends ScreenAdapter {
     }
     @Override
     public void render(float deltaTime) {
+        System.out.println("Camera position "+camera.position);
+        if(inLevel){
+            levelMap.render(deltaTime);
+            return;
+        }
+        System.out.println("overworld render");
         OverworldPlayer.input(deltaTime);
-
+        if(enteringLevel){
+            enteringLevel=false;
+            inLevel=true;
+            return;
+        }
         doPhysicsStep(deltaTime);
 
 
@@ -90,21 +103,30 @@ public class Overworld extends ScreenAdapter {
         renderer.renderFullFrame(renderLayer,interactableObjects);
 
     }
+    public static void enterLevel(){
+        System.out.println(((int)OverworldPlayer.body.getPosition().x)+","+((int)OverworldPlayer.body.getPosition().y));
+        int playerX=((int)OverworldPlayer.body.getPosition().x);
+        int playerY=((int)OverworldPlayer.body.getPosition().y);
+        TiledMapTileLayer tiledMapTileLayer=(TiledMapTileLayer)tiledMap.getLayers().get("Background");
+        if(!tiledMapTileLayer.getCell(playerX,playerY).getTile().getProperties().get("relatedObject","none",String.class).equals("none")){
+            //If the tile the center of the player is on, is a valid level entering tile
+            levelMap=new LevelMap(worldNumber,tiledMapTileLayer.getCell(playerX,playerY).getTile().getProperties().get("levelName","none",String.class));
+            enteringLevel=true;
+        }
+    }
     private static void doPhysicsStep(float deltaTime){
         float frameTime=Math.min(deltaTime, 0.25f);
         accumulator += frameTime;
         if(accumulator > -TIME_STEP){
-            System.out.println("world step");
             world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
             accumulator -= TIME_STEP;
         }
         if(accumulator > TIME_STEP/2){
-            System.out.println("world step");
             world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
             accumulator -= TIME_STEP;
         }
     }
-    private void loadMapObjects(){
+    private static void loadMapObjects(){
         MapObjects mapObjects = tiledMap.getLayers().get("Level Objects").getObjects();
 
         for(MapObject mapObject:mapObjects){
@@ -154,39 +176,45 @@ public class Overworld extends ScreenAdapter {
             moving=false;
         }
         public static void input(float deltaTime){
-            System.out.println("Player input");
             float speedCap=5;
             float acceleration=0.3f;
             float decelerationFactor=0.7f;
             //player input
-            if(keys[Keys.UP]&&!keys[Keys.DOWN]&&body.getLinearVelocity().y<speedCap){//up
+            if(keys[Keys.W]&&!keys[Keys.S]&&body.getLinearVelocity().y<speedCap){//up
                 body.setLinearVelocity(body.getLinearVelocity().cpy().add(0,acceleration));
             }
-            if(keys[Keys.RIGHT]&&!keys[Keys.LEFT]&&body.getLinearVelocity().x<speedCap){//right
+            if(keys[Keys.D]&&!keys[Keys.A]&&body.getLinearVelocity().x<speedCap){//right
                 body.setLinearVelocity(body.getLinearVelocity().cpy().add(acceleration,0));
             }
-            if(keys[Keys.DOWN]&&!keys[Keys.UP]&&body.getLinearVelocity().y>-speedCap){//down
+            if(keys[Keys.S]&&!keys[Keys.W]&&body.getLinearVelocity().y>-speedCap){//down
                 body.setLinearVelocity(body.getLinearVelocity().cpy().add(0,-acceleration));
             }
-            if(keys[Keys.LEFT]&&!keys[Keys.RIGHT]&&body.getLinearVelocity().x>-speedCap){//left
+            if(keys[Keys.A]&&!keys[Keys.D]&&body.getLinearVelocity().x>-speedCap){//left
                 body.setLinearVelocity(body.getLinearVelocity().cpy().add(-acceleration,0));
             }
 
             //drag if both keys for an axis not press
-            if(!keys[Keys.UP]&&!keys[Keys.DOWN]){
+            if(!keys[Keys.W]&&!keys[Keys.S]){
                 body.setLinearVelocity(body.getLinearVelocity().x,body.getLinearVelocity().y*decelerationFactor);
             }
-            if(!keys[Keys.LEFT]&&!keys[Keys.RIGHT]){
+            if(!keys[Keys.A]&&!keys[Keys.D]){
                 body.setLinearVelocity(body.getLinearVelocity().x*decelerationFactor,body.getLinearVelocity().y);
             }
-//            //stop if slow enough
-//            if(Math.abs(body.getLinearVelocity().y)<0.2){
-//                body.setLinearVelocity(0,body.getLinearVelocity().y);
-//            }
-//            if(Math.abs(body.getLinearVelocity().x)<0.2){
-//                body.setLinearVelocity(body.getLinearVelocity().x,0);
-//            }
-
+            //stop if slow enough
+            if(Math.abs(body.getLinearVelocity().x)<0.2){
+                body.setLinearVelocity(0,body.getLinearVelocity().y);
+            }
+            if(Math.abs(body.getLinearVelocity().y)<0.2){
+                body.setLinearVelocity(body.getLinearVelocity().x,0);
+            }
+            if(body.getLinearVelocity().x==0&&body.getLinearVelocity().y==0&&keys[Keys.ENTER]){
+                Overworld.enterLevel();
+            }
+            if(keys[Keys.NUM_1]){
+                keys[Keys.NUM_1]=false;
+                levelMap=new LevelMap(worldNumber,"1");
+                enteringLevel=true;
+            }
         }
         public static void render(TextureMapObjectRenderer renderer){
             renderer.renderObject(sprite,body.getPosition().x,body.getPosition().y,1,1);

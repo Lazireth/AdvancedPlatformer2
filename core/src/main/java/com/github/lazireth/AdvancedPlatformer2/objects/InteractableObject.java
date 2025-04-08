@@ -17,7 +17,7 @@ import static com.github.lazireth.AdvancedPlatformer2.GameCore.GlobalVariables.*
 
 public abstract class InteractableObject{
     public Body body;
-    public static final Map<String, ArrayList<TiledMapTile>> tilesByRelatedObject=new HashMap<>();
+    public static Map<String, ArrayList<TiledMapTile>> tilesByRelatedObject;
 
     public static ArrayList<TiledMapTile> getTilesFor(String relatedObject){
         return tilesByRelatedObject.get(relatedObject);
@@ -29,7 +29,10 @@ public abstract class InteractableObject{
         }
         return textureList;
     }
+
+
     public static void loadTiles(TiledMap tiledMap){
+        tilesByRelatedObject=new HashMap<>();
         TiledMapTileSets tileSets = tiledMap.getTileSets();
         for(TiledMapTileSet tileSet:tileSets){
             loadTileset(tileSet);

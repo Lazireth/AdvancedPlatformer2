@@ -1,8 +1,8 @@
 package com.github.lazireth.AdvancedPlatformer2;
 
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.*;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.objects.TiledMapTileMapObject;
@@ -18,8 +18,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.github.lazireth.AdvancedPlatformer2.GameCore.GlobalVariables.*;
+import static java.lang.Math.clamp;
 
-public class LevelMap extends ScreenAdapter {
+public class LevelMap {
     public static final Box2DDebugRenderer debugRenderer=new Box2DDebugRenderer();
 
     private static final ArrayList<InteractableObject> interactableObjects=new ArrayList<>();
@@ -34,18 +35,18 @@ public class LevelMap extends ScreenAdapter {
     public static int[] renderLayer;
 
     public static int worldNumber;
-    public static int levelNumber;
+    public static String levelName;
 
     private static float accumulator=0;
     public static TiledMap tiledMap;
     public static World world;
     public static Player player;
 
-    public LevelMap(int worldNumberIn,int levelNumberIn){
+    public LevelMap(int worldNumberIn,String levelNameIn){
         if(camera==null){camera=new OrthographicCamera(); camera.setToOrtho(false, GAME_WIDTH, GAME_HEIGHT);}
         worldNumber=worldNumberIn;
-        levelNumber=levelNumberIn;
-        tiledMap=new TmxMapLoader().load("Map/Worlds/Levels/"+worldNumber+"-"+levelNumber+".tmx");
+        levelName=levelNameIn;
+        tiledMap=new TmxMapLoader().load("Map/Worlds/Levels/"+worldNumber+"-"+levelName+".tmx");
 
         renderer=new TextureMapObjectRenderer(tiledMap,metersPerPixel);
         renderer.setView(camera);
@@ -58,29 +59,21 @@ public class LevelMap extends ScreenAdapter {
 
         loadMapObjects();
     }
-    public static void moveCameraToPlayer(){
-        camera.position.set(player.getXPosition(),7.5f,camera.position.z);
-        camera.update();
-        renderer.setView(camera);
-    }
+
     private static void makeRenderLayer(){
         if(tiledMap.getLayers().getIndex("Background")==-1){
             renderLayer=new int[]{tiledMap.getLayers().getIndex("Foreground")};// make array of Tile Layers to render
         }else{
             renderLayer=new int[]{
                 tiledMap.getLayers().getIndex("Background"),
+                tiledMap.getLayers().getIndex("Middleground"),
                 tiledMap.getLayers().getIndex("Foreground")};// make array of Tile Layers to render
         }
     }
     public static OrthographicCamera getCamera(){return camera;}
 
-    @Override
-    public void show() {
-
-    }
-
-    @Override
     public void render(float delta) {
+        System.out.println("levelMap render");
         player.input(delta);
 
         doPhysicsStep(delta);
@@ -112,6 +105,7 @@ public class LevelMap extends ScreenAdapter {
         }
     }
     private void loadMapObjects(){
+        System.out.println("loadMapObjects");
         ArrayList<TiledMapTileMapObject> pipes=new ArrayList<>();
         ArrayList<TiledMapTileMapObject> bricks=new ArrayList<>();
         ArrayList<TiledMapTileMapObject> enemies=new ArrayList<>();
@@ -121,25 +115,37 @@ public class LevelMap extends ScreenAdapter {
         MapObjects mapObjects = tiledMap.getLayers().get("Level Objects").getObjects();
 
         for(MapObject mapObject:mapObjects){
-            switch(((TiledMapTileMapObject)mapObject).getTile().getProperties().get("relatedObject","no relatedObject",String.class)){
-                case "Player"-> playerObject=(TiledMapTileMapObject) mapObject;
-                case "Pipe"->   pipes.add((TiledMapTileMapObject) mapObject);
-                case "Brick"->  bricks.add((TiledMapTileMapObject) mapObject);
-                case "Enemy"->  enemies.add((TiledMapTileMapObject) mapObject);
-                case "QuestionBlock"->questionBlocks.add((TiledMapTileMapObject) mapObject);
-                case "no relatedObject"->throw new RuntimeException("A MapObject has no relatedObject");
-                case null, default -> throw new RuntimeException("A MapObject has an invalid relatedObject");
+            if(mapObject.getClass().equals(RectangleMapObject.class)){
+                switch(mapObject.getProperties().get("relatedObject","no relatedObject",String.class)){
+                    case "SemisolidPlatform"-> System.out.println("SemisolidPlatform");
+                    case "semisolidPlatform"-> throw new RuntimeException("A MapObject has no relatedObject");
+                    case "no relatedObject"->throw new RuntimeException("A MapObject has no relatedObject");
+                    case null, default -> throw new RuntimeException("A MapObject has an invalid relatedObject");
+                }
+            }else{
+                switch(((TiledMapTileMapObject)mapObject).getTile().getProperties().get("relatedObject","no relatedObject",String.class)){
+                    case "Player"-> playerObject=(TiledMapTileMapObject) mapObject;
+//                    case "Pipe"->   pipes.add((TiledMapTileMapObject) mapObject);
+//                    case "Brick"->  bricks.add((TiledMapTileMapObject) mapObject);
+//                    case "Enemy"->  enemies.add((TiledMapTileMapObject) mapObject);
+//                    case "QuestionBlock"->questionBlocks.add((TiledMapTileMapObject) mapObject);
+                    case "no relatedObject"->throw new RuntimeException("A MapObject has no relatedObject");
+                    //case null, default -> throw new RuntimeException("A MapObject has an invalid relatedObject");
+                }
             }
         }
         if(playerObject==null){
-            throw new NullPointerException("Level "+worldNumber+"-"+levelNumber+" has no Player object");
+            throw new NullPointerException("Level "+worldNumber+"-"+levelName+" has no Player object");
         }
+        System.out.println("load items");
         loadPipes(pipes);
         loadBricks(bricks);
         loadEnemies(enemies);
         loadQuestionBlocks(questionBlocks);
-
+        InteractableObject.loadTiles(tiledMap);
+        System.out.println("load player");
         player=new Player(playerObject,InteractableObject.getTilesFor("Player"));
+        System.out.println("end loadMapObjects");
     }
     private void loadBricks(ArrayList<TiledMapTileMapObject> bricks){for(TiledMapTileMapObject brick:bricks){interactableObjects.add(new Brick(brick,this));}}
     private void loadPipes(ArrayList<TiledMapTileMapObject> pipes){for(TiledMapTileMapObject pipe:pipes){LevelMap.pipes.add(new Pipe(pipe,this));}}
@@ -152,6 +158,12 @@ public class LevelMap extends ScreenAdapter {
                 }
             }
         }
+    }
+    public static void moveCameraToPlayer(){
+        System.out.println("Camera position "+player.getXPosition()+","+player.getYPosition());
+        camera.position.set(clamp(player.getXPosition(),8,20000), clamp(player.getYPosition(),19,20000),camera.position.z);
+        camera.update();
+        renderer.setView(camera);
     }
     public static void debugRender(){debugRenderer.render(world,camera.combined);}
     public static void updateCamera(){camera.update();}

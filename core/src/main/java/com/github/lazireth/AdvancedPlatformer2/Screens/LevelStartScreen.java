@@ -49,7 +49,7 @@ public class LevelStartScreen extends ScreenAdapter {
     private void draw(){
         renderer.begin();
         ScreenUtils.clear(Color.BLACK);
-        renderer.drawText("Level "+levelNames[currentLevelIndex],calibri128, GAME_WIDTH /2, GAME_HEIGHT /4*3);
+        //renderer.drawText("Level "+levelNames[currentLevelIndex],calibri128, GAME_WIDTH /2, GAME_HEIGHT /4*3);
         renderer.drawText("You have "+ Player.PlayerPersistentData.lives+" lives",calibri64, GAME_WIDTH /2, GAME_HEIGHT /16*8);
         if(countDown){
             renderer.drawText((int)restartTimer+"",calibri64, GAME_WIDTH /2, GAME_HEIGHT /16*4);

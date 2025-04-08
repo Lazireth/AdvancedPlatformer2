@@ -25,18 +25,13 @@ public class GameCore extends Game {
         public static final float metersPerPixel = 1/64f;
         public static final float pixelsPerMeter = 64f;
 
-        public static final float TIME_STEP=1/60f;
+        public static final float TIME_STEP=1/144f;
         public static final int VELOCITY_ITERATIONS=4;
         public static final int POSITION_ITERATIONS=6;
 
-        public static final String[][] levelNames={
-            {"1-1","1-2","1-3"},
-            {"2-1","2-2","2-3"},
-        };
-        public static int currentLevelIndex=0;
         public static Overworld overworld;
         public static LevelMap levelMap;
-
+        public static GameCore gameCore;
     }
     public static TextureMapObjectRenderer renderer;
     public static OrthographicCamera camera;
@@ -57,6 +52,7 @@ public class GameCore extends Game {
         Gdx.app.debug("GameCore.resize","New screen size"+viewport.getScreenWidth()+","+viewport.getScreenHeight());
     }
     public void restartGame(){
+        gameCore=this;
         //InteractableObject.loadTiles(new TmxMapLoader().load("Map/1-1 0.tmx"));
         Gdx.app.setLogLevel(Application.LOG_NONE);
         Gdx.input.setInputProcessor(inputHandler);
@@ -77,7 +73,6 @@ public class GameCore extends Game {
     }
     public void render(){super.render();}
     public void dispose(){}
-    public void setScreenLevelMap(){setScreen(levelMap);}
     public void setScreenOverworld(){setScreen(overworld);}
     public void loadGameStartScreen(){setScreen(gameStartScreen);}
     public void loadLevelStartScreen(){setScreen(levelStartScreen);}

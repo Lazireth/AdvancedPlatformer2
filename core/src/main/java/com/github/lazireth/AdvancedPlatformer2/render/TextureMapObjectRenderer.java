@@ -1,5 +1,6 @@
 package com.github.lazireth.AdvancedPlatformer2.render;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -53,7 +54,7 @@ public class TextureMapObjectRenderer extends OrthogonalTiledMapRenderer {
         batch.end();
     }
     public void renderFullFrame(int[] renderLayer, ArrayList<InteractableObject> interactableObjects, ArrayList<InteractableObject> pipes){
-        ScreenUtils.clear(Color.BLACK);
+        ScreenUtils.clear(Color.BLUE);
         beginRender();
         LevelMap.updateCamera();
         render(renderLayer);
